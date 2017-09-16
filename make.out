@@ -1,0 +1,77 @@
+g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++0x -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o maroloDAQ.o maroloDAQ.cpp
+In file included from /usr/lib64/qt5/include/QtGui/qwindowdefs.h:37:0,
+                 from /usr/lib64/qt5/include/QtWidgets/qwidget.h:37,
+                 from /usr/lib64/qt5/include/QtWidgets/qmainwindow.h:37,
+                 from /usr/lib64/qt5/include/QtWidgets/QMainWindow:1,
+                 from maroloDAQ.h:4,
+                 from maroloDAQ.cpp:1:
+/usr/lib64/qt5/include/QtCore/qglobal.h: In instantiation of ‘class QForeachContainer<QMenu*>’:
+maroloDAQ.cpp:446:5:   required from here
+/usr/lib64/qt5/include/QtCore/qglobal.h:924:32: error: ‘QMenu*’ is not a class, struct, or union type
+     typename T::const_iterator i, e;
+                                ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:924:35: error: ‘QMenu*’ is not a class, struct, or union type
+     typename T::const_iterator i, e;
+                                   ^
+maroloDAQ.cpp: In member function ‘void maroloDAQ::setPortasSeriais(QString, int)’:
+/usr/lib64/qt5/include/QtCore/qglobal.h:950:41: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
+      _container_.control && _container_.i != _container_.e;         \
+                                         ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
+ #    define foreach Q_FOREACH
+                     ^
+maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
+     foreach ( QAction *action, ui->menuPortas ) {
+     ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:950:58: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘e’
+      _container_.control && _container_.i != _container_.e;         \
+                                                          ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
+ #    define foreach Q_FOREACH
+                     ^
+maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
+     foreach ( QAction *action, ui->menuPortas ) {
+     ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:951:20: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
+      ++_container_.i, _container_.control ^= 1)                     \
+                    ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
+ #    define foreach Q_FOREACH
+                     ^
+maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
+     foreach ( QAction *action, ui->menuPortas ) {
+     ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:952:34: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
+     for (variable = *_container_.i; _container_.control; _container_.control = 0)
+                                  ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
+ #    define foreach Q_FOREACH
+                     ^
+maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
+     foreach ( QAction *action, ui->menuPortas ) {
+     ^
+maroloDAQ.cpp:447:61: error: expected ‘)’ before ‘{’ token
+         if ( !(action->isSeparator() or !(action->menu()) ) {
+                                                             ^
+maroloDAQ.cpp:452:5: error: expected primary-expression before ‘}’ token
+     }
+     ^
+maroloDAQ.cpp:445:14: warning: unused variable ‘action’ [-Wunused-variable]
+     QAction *action;
+              ^
+In file included from /usr/lib64/qt5/include/QtGui/qwindowdefs.h:37:0,
+                 from /usr/lib64/qt5/include/QtWidgets/qwidget.h:37,
+                 from /usr/lib64/qt5/include/QtWidgets/qmainwindow.h:37,
+                 from /usr/lib64/qt5/include/QtWidgets/QMainWindow:1,
+                 from maroloDAQ.h:4,
+                 from maroloDAQ.cpp:1:
+/usr/lib64/qt5/include/QtCore/qglobal.h: In instantiation of ‘QForeachContainer<T>::QForeachContainer(const T&) [with T = QMenu*]’:
+maroloDAQ.cpp:446:5:   required from here
+/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: using invalid field ‘QForeachContainer<T>::i’
+     inline QForeachContainer(const T& t) : c(t), i(c.begin()), e(c.end()), control(1) { }
+                                                                                     ^
+/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: request for member ‘begin’ in ‘((QForeachContainer<QMenu*>*)this)->QForeachContainer<QMenu*>::c’, which is of pointer type ‘QMenu* const’ (maybe you meant to use ‘->’ ?)
+/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: using invalid field ‘QForeachContainer<T>::e’
+/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: request for member ‘end’ in ‘((QForeachContainer<QMenu*>*)this)->QForeachContainer<QMenu*>::c’, which is of pointer type ‘QMenu* const’ (maybe you meant to use ‘->’ ?)
+Makefile:713: recipe for target 'maroloDAQ.o' failed
+make: *** [maroloDAQ.o] Error 1

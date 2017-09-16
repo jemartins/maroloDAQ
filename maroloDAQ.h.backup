@@ -54,7 +54,7 @@ private slots:
 
     void on_actionDesconectar_triggered();
 
-    void on_actionFerramentas_triggered();
+    void on_actionSobre_triggered();
 
     void on_actionRecarregar_triggered();
 
