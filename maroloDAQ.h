@@ -22,8 +22,6 @@ private slots:
 
     void WriteData(const QByteArray data);
 
-    void findMaroloDAQ();
-    
     void scanPortas();
 
     void maroloDevClose();
@@ -54,19 +52,9 @@ private slots:
 
     void on_actionDesconectar_triggered();
 
-    void on_actionFerramentas_triggered();
-
     void on_actionRecarregar_triggered();
 
     void setPortasSeriais(QString myAction);
-
-    void toggleStatusbar(QAction *viewst);
-
-    void on_actionDevices_triggered(QAction*);
-
-    //void on_actionACM0_triggered();
-
-    //void on_actionS0_triggered();
 
 private:
     Ui::maroloDAQ *ui;
@@ -77,24 +65,15 @@ private:
     void CarregarInfoDispSerial(void);
     QAction *viewst;
     QAction *actionACM0;
+    QAction *actionACM1;
+    QAction *actionACM2;
+    QAction *actionACM3;
     QAction *actionS0;
+    QAction *actionS1;
+    QAction *actionS2;
+    QAction *actionS3;
     void enumerateMenu(QMenu *menu);
-    //QActionGroup *PortasGroup(QMenu *menu);
     QActionGroup *PortasGroup;
 
 };
-
-typedef enum
-        {
-        devttyACM0=1,
-        devttyACM1,
-        devttyACM2,
-        devttyACM3,
-        devttyS0,
-        devttyS1,
-        devttyS2,
-        devttyS3,
-        MAX_NUM_marolo_SERIAL
-        }marolo_SERIAL;
-
 #endif // PROJMAROLO_H

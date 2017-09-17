@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
-#include <QActionGroup>
+//#include <QActionGroup>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -17,8 +17,8 @@ QMainWindow(parent),
 ui(new Ui::maroloDAQ)
 {
     ui->setupUi(this);
-    QActionGroup *PortasGroup = new QActionGroup(this);
-PortasGroup->setExclusive(true);
+    //QActionGroup *PortasGroup = new QActionGroup(this);
+    //PortasGroup->setExclusive(true);
 
     // Procurando por portar seriais abertas
     scanPortas();
@@ -192,7 +192,6 @@ void maroloDAQ::findMaroloDAQ() {
     }
 }
 
-
 void maroloDAQ::scanPortas() {
     
     QString GetInfoHw;
@@ -255,11 +254,32 @@ void maroloDAQ::scanPortas() {
             setPortasSeriais(minhaSerial);
             
             //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;                    
-            
         }
     }
     else {
         ui->teLog->append("### Nenhuma porta serial foi detectada!");
+    }
+
+    // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
+    PortasGroup = new QActionGroup(this);
+    QStringList myAction_split;
+    foreach (QAction* action, ui->menuPortas->actions())
+    {
+        PortasGroup->addAction(action);
+        
+        myAction_split = action->text().split("]");
+        //qDebug() << "$$$$ AQUI action = " << action->text();
+        if ( myAction_split.length() > 1 ) {
+            if (  myAction_split[1] == "maroloDAQ]") {
+                action->setCheckable(true);
+                action->setChecked(true);
+            }
+        }
+        else {
+            action->setCheckable(true);
+            action->setChecked(false);
+        }
+        connect(PortasGroup,SIGNAL(triggered(QAction*)),this,SLOT(on_actionDevices_triggered(QAction*)));
     }
 }
 
@@ -403,9 +423,9 @@ void maroloDAQ::on_actionDesconectar_triggered()
     }
 }
 
-void maroloDAQ::on_actionSobre_triggered()
+void maroloDAQ::on_actionFerramentas_triggered()
 {
-    ui->teLog->append("### AQUI on_actionSobre_triggered().");
+    ui->teLog->append("### AQUI on_actionFerramentas_triggered().");
 }
 
 void maroloDAQ::on_actionRecarregar_triggered()
@@ -440,38 +460,32 @@ void maroloDAQ::toggleStatusbar(QAction *viewst) {
     }
 }
 
-void maroloDAQ::on_actionACM0_triggered(QAction*) {
+void maroloDAQ::on_actionDevices_triggered(QAction*) {
     
-    if (actionACM0->isChecked()) {
-        
-    } else {
-        
+    /*
+    NAO EH NADA DISSO, SENHOR!    
+    PortasGroup = new QActionGroup(this);
+    foreach (QAction* action, ui->menuPortas->actions())
+    {
+        if (action->isChecked()) {
+            qDebug() << "->->-> Clicaram action = " << action->text();
+        }
     }
-}
+    */
 
-void maroloDAQ::on_actionS0_triggered(QAction*) {
-    
-    if (actionS0->isChecked()) {
-        
-    } else {
-        
-    }
 }
 
 void maroloDAQ::setPortasSeriais(QString myAction) {
     //////////////////////////////////////////////////////
     //ref.: http://zetcode.com/gui/qt5/menusandtoolbars/
-    
-    QActionGroup *PortasGroup = new QActionGroup(this);
-    PortasGroup->setExclusive(true);
-    //viewst = new QAction(myAction, this);
-    
     QString myAction_spare;
     QString myAction_temp;
     QStringList myAction_split;
     myAction = myAction.simplified();
     myAction_temp = myAction;
     myAction_split = myAction.split(" [");
+    myAction = "/dev/"+myAction;
+
     if (myAction_split.length() > 1) {
         myAction_temp = myAction_split[0];
         //qDebug() << "# AQUI myAction_split[0] = " << myAction_split[0];
@@ -512,65 +526,98 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         //viewst->setData(serial_index);
         //viewst->setCheckable(true);
         //viewst->setChecked(false);
-
-        qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
+        
+        //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
+        
         if ( myAction_temp == "ttyACM0" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction("/dev/ttyACM0", this);
+            //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
+            actionACM0 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM0);
-            PortasGroup->addAction(actionACM0);
-            actionACM0->setCheckable(true);
-            actionACM0->setChecked(true);
-            
-            connect(ui->menuPortas, SIGNAL(triggered(QAction*)), this, SLOT(on_actionACM0_triggered(QAction*)));
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyACM1" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM1);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyACM2" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM2);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyACM3" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM3);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
         }
         if (  myAction_temp == "ttyS0") {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionS0 = new QAction("/dev/ttyS0", this);
+            actionS0 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionS0);
-            PortasGroup->addAction(actionS0);
             actionS0->setCheckable(true);
-            actionS0->setChecked(false);
-            
-            connect(ui->menuPortas, SIGNAL(triggered(QAction*)), this, SLOT(on_actionS0_triggered(QAction*)));
         }
-
-        
-        /*    
-        ui->menuPortas->addAction(viewst);        
-        PortasGroup->addAction(viewst);
-        
-        myAction_split = myAction.split(" [");
-        if ( myAction_split.length() > 1 ) {
-            if ( myAction_split[1] == "maroloDAQ]" ) {
-                //qDebug() << "# AQUI maroloDAQ setChecked = true";
-                viewst->setChecked(true);
-            }
+        if (  myAction_temp == "ttyS1") {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionS1 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionS1);
+            actionS1->setCheckable(true);
         }
-        else {
-            viewst->setChecked(false);
+        if (  myAction_temp == "ttyS2") {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionS2 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionS2);
+            actionS2->setCheckable(true);
         }
-        
-        
-        // debugando
-        //enumerateMenu(ui->menuPortas);    
-        
-        //statusBar();
-        
-        //connect(viewst, &QAction::triggered, this, &maroloDAQ::toggleStatusbar());
-        //connect(ui->menuPortas, SIGNAL(triggered(QAction*)), this, SLOT(toggleStatusbar(QAction*)));
-        */
+        if (  myAction_temp == "ttyS3") {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionS3 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionS3);
+            actionS3->setCheckable(true);
+        }
     }
+    /*
+    // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
+    PortasGroup = new QActionGroup(this);
+    foreach (QAction* action, ui->menuPortas->actions())
+    {
+        PortasGroup->addAction(action);
+        actions->setCheckable(true);
+    }
+    connect(PortasGroup,SIGNAL(triggered(QAction*)),this,SLOT(on_actionDevices_triggered(QAction*)));
+    */
 }
 
 void maroloDAQ::enumerateMenu(QMenu *menu) {
     //////////////////////////////////////////////////////
     //ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
-    
+
     foreach (QAction *action, menu->actions()) {
         
         if (action->isSeparator()) {
-            qDebug() << "this action is a separator.";// << "" << endl;
+            //qDebug() << "this action is a separator.";// << "" << endl;
         } else if (action->menu()) {
             qDebug() << "action1: %s:" << qUtf8Printable(action->text());// << endl;
             qDebug() << "this action is associated with a submenu, iterating it recursively...";// << "" << endl;
