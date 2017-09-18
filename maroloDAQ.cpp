@@ -23,13 +23,7 @@ ui(new Ui::maroloDAQ)
     // Procurando por portar seriais abertas
     scanPortas();
     
-    // habilitando|desabilitando menus|actions
-    ui->btnAppClose->setEnabled(true);
-    ui->actionSair->setEnabled(true);
-    ui->actionConectar->setEnabled(true);
-    ui->actionDesconectar->setEnabled(false);
-    ui->actionRecarregar->setEnabled(true);
-    
+    setDesconectado();
 }
 
 maroloDAQ::~maroloDAQ()
@@ -69,8 +63,9 @@ void maroloDAQ::scanPortas() {
     procSerial = new comserial(devserial);
     /* Load Device PortSerial available */
     QStringList DispSeriais = procSerial->CarregarDispositivos();
-    // fechando tudo
-    //bool statusCloseSerial;
+    
+    bool statusCloseSerial;
+    bool statusOpenSerial;
     
     // algumas variaveis temporarias    
     int count = DispSeriais.count();
@@ -84,39 +79,74 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            procSerial->Conectar(minhaSerial,9600);
+            //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
+            
+            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
             
             // aguardando a porta "aquecer" ;_(((
             sleep(2);
             
-            // Se conectou com sucesso no disposito serial
-            
-            // Enviando comando para obter informações do Device
-            WriteData("12\n");
-            // * Recebendo as informações *
-            GetInfoHw = ReadData();
-            GetInfoHw = GetInfoHw.simplified();
-            
-            // * Confirmando se recebeu os dados *
-            if( GetInfoHw.size() > 0 ) {
+            if (statusOpenSerial) {
                 
-                // encontrei maroloDAQ
-                minhaSerial = minhaSerial+" [maroloDAQ]";
-                // escrevendo no terminal
-                ui->teLog->append("### maroloDAQ ABERTO com Sucesso!");
+                // Se conectou com sucesso no disposito serial
                 
-                // fechando a serial com o maroloDAQ
-                //statusCloseSerial = procSerial->Desconectar();
+                // Enviando comando para obter informações do Device
+                WriteData("12\n");
+                // * Recebendo as informações *
+                GetInfoHw = ReadData();
+                GetInfoHw = GetInfoHw.simplified();
                 
-                // encerrando a busca por maroloDAQ
-            }  
-            
-            // criando action para o submenu
-            //minhaSerial = "/dev/"+minhaSerial;
-            setPortasSeriais(minhaSerial);
-            
-            //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;                    
+                //qDebug() << "----------> AQUI GetInfoHW = " << GetInfoHw << endl;
+                
+                // * Confirmando se recebeu os dados *
+                if( GetInfoHw.size() > 0 ) {
+                    
+                    // encontrei maroloDAQ
+                    minhaSerial = minhaSerial+" [maroloDAQ]";
+                    //setPortasSeriais(minhaSerial+" [maroloDAQ]");
+                    
+                    //qDebug() << "AQUI minhaSerial = " << minhaSerial+"[ maroloDAQ]" << endl;
+                    
+                    // escrevendo no terminal
+                    //ui->teLog->append("### maroloDAQ ABERTO com Sucesso!");
+                    
+                }
+                
+                setPortasSeriais(minhaSerial);
+                
+                statusCloseSerial = procSerial->Desconectar();
+                
+                if (statusCloseSerial) {
+                }
+                else {
+                    qDebug() << "FALHA ao FECHAR Serial dev = " << minhaSerial;
+                }
+                
+                //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
+            }
+            else {
+                qDebug() << "FALHA ao ABRIR Serial dev = " << minhaSerial; 
+            }
         }
+        
+        // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
+        foreach (QAction* action, ui->menuPortas->actions()) {
+            PortasGroup->addAction(action);
+            
+            myAction_split = action->text().split("]");
+            //qDebug() << "$$$$ AQUI action = " << action->text();
+            if ( myAction_split.length() > 1 ) {
+                if (  myAction_split[1] == "maroloDAQ]") {
+                    action->setCheckable(true);
+                    action->setChecked(true);
+                }
+            }
+            else {
+                action->setCheckable(true);
+                action->setChecked(false);
+            }
+        }   
+        
     }
     else {
         ui->teLog->append("### Nenhuma porta serial foi detectada!");
@@ -139,8 +169,43 @@ void maroloDAQ::scanPortas() {
             action->setCheckable(true);
             action->setChecked(false);
         }
-        //connect(PortasGroup,SIGNAL(triggered(QAction*)),this,SLOT(on_actionDevices_triggered(QAction*)));
     }
+}
+
+void maroloDAQ::setDesconectado() {
+    
+    // habilitando|desabilitando menus|actions
+    ui->btnAppClose->setEnabled(true);
+    ui->btnDevOpen->setEnabled(true);
+    ui->btnDevClose->setEnabled(false);
+    ui->gbSensor->setEnabled(false);
+    ui->gbTempo->setEnabled(false);
+    ui->gbCalibrar->setEnabled(false);
+    ui->gbMonitor->setEnabled(true);
+    ui->actionSair->setEnabled(true);
+    ui->actionConectar->setEnabled(true);
+    ui->actionDesconectar->setEnabled(false);
+    ui->actionRecarregar->setEnabled(true);
+    
+    ui->editDevCompiler->clear();
+    ui->editDevModel->clear();
+}
+
+void maroloDAQ::setConectado() {
+    
+    // habilitando|desabilitando menus|actions
+    ui->btnAppClose->setEnabled(false);
+    ui->btnDevOpen->setEnabled(false);
+    ui->btnDevClose->setEnabled(true);
+    ui->gbSensor->setEnabled(true);
+    ui->gbTempo->setEnabled(true);
+    ui->gbCalibrar->setEnabled(false);
+    ui->gbMonitor->setEnabled(true);
+    ui->actionSair->setEnabled(false);
+    ui->actionConectar->setEnabled(false);
+    ui->actionDesconectar->setEnabled(true);
+    ui->actionRecarregar->setEnabled(false);
+    
 }
 
 void maroloDAQ::maroloDevClose()
@@ -164,32 +229,17 @@ void maroloDAQ::maroloDevClose()
     // Habilito Sair e Conectar
     
     if (statusCloseSerial) {
-        // habilitando|desabilitando menus|actions
-        //ui->btnDevClose->setEnabled(false);
-        //ui->btnDevOpen->setEnabled(true);
-        ui->btnAppClose->setEnabled(true);
-        ui->actionSair->setEnabled(true);
-        ui->actionConectar->setEnabled(true);
-        ui->actionDesconectar->setEnabled(false);
-        ui->actionRecarregar->setEnabled(true);
-        
-        ui->btnCalibrarSensor->setEnabled(false);
-        ui->btnIniciar->setEnabled(false);
-        ui->btnParar->setEnabled(false);
         
         ui->editDevCompiler->clear();
         ui->editDevModel->clear();
         
+        setDesconectado();
+
         ui->teLog->append("### Porta serial fechada com sucesso!");
     }
     else {
         ui->teLog->append("### Falha ao fechar conexão serial.");
     }
-}
-
-void maroloDAQ::on_btnCalibrarSensor_clicked()
-{
-    
 }
 
 void maroloDAQ::on_btnBWTerminal_clicked()
@@ -222,6 +272,7 @@ void maroloDAQ::on_btnDevOpen_clicked()
     QStringList InfoHW;
     QString devport;
     QStringList devport_list;
+    bool statusOpenSerial;
     
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
@@ -233,7 +284,7 @@ void maroloDAQ::on_btnDevOpen_clicked()
     }
     
     qDebug() << "AQUI btnDevOpen: devport = " << devport;
-    procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,9600);
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -241,60 +292,63 @@ void maroloDAQ::on_btnDevOpen_clicked()
      */
     sleep(2);
     
-    /*
-     * Se conectou com sucesso no disposito serial
-     * Desabilito o botão Conectar e Sair
-     * Habilito Desconectar, Versao, Hardware e Ligar [F10]
-     */
-    
-    // * Enviando comando para obter informações do Device *
-    WriteData("12\n");
-    // * Recebendo as informações *
-    GetInfoHw = ReadData();
-    GetInfoHw = GetInfoHw.simplified();
-    
-    // * Confirmando se recebeu os dados *
-    if( GetInfoHw.size() > 0 ) {
+    if (statusOpenSerial) {
+        /*
+         * Se conectou com sucesso no disposito serial
+         * Desabilito o botão Conectar e Sair
+         * Habilito Desconectar, Versao, Hardware e Ligar [F10]
+         */
         
+        // * Enviando comando para obter informações do Device *
+        WriteData("12\n");
+        // * Recebendo as informações *
+        GetInfoHw = ReadData();
+        GetInfoHw = GetInfoHw.simplified();
         
-        // * Ex: 4.3.2|UNO
-        //  * O que chegou pela serial foi adicionado na variavel GetInfoHW
-        //  * então acima removemos qualquer tabulação e abaixo um split
-        //  * baseado no caractere |, então sera quebrado em 2 posicoes
-        //  * 0 - 4.3.2
-        //  * 1 - UNO
-        //  *
-        InfoHW = GetInfoHw.split("|");
-
-        // habilitando|desabilitando menus|actions
-        ui->btnAppClose->setEnabled(false);
-        ui->actionSair->setEnabled(false);
-        ui->actionConectar->setEnabled(false);
-        ui->actionDesconectar->setEnabled(true);
-        ui->actionRecarregar->setEnabled(false);
-        
-        // Inserindo nos devidos Edits
-        ui->editDevCompiler->setText(InfoHW[0]);
-        ui->editDevModel->setText(InfoHW[1]);
-        
-        ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+        // * Confirmando se recebeu os dados *
+        if( GetInfoHw.size() > 0 ) {
+            
+            
+            // * Ex: 4.3.2|UNO
+            //  * O que chegou pela serial foi adicionado na variavel GetInfoHW
+            //  * então acima removemos qualquer tabulação e abaixo um split
+            //  * baseado no caractere |, então sera quebrado em 2 posicoes
+            //  * 0 - 4.3.2
+            //  * 1 - UNO
+            //  *
+            InfoHW = GetInfoHw.split("|");
+            
+            // Inserindo nos devidos Edits
+            ui->editDevCompiler->setText(InfoHW[0]);
+            ui->editDevModel->setText(InfoHW[1]);
+            
+            setConectado();
+            
+            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+        }
+        else {
+            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        }
     }
     else {
-        // habilitando|desabilitando menus|actions
-        /*
-        ui->btnAppClose->setEnabled(false);
-        ui->actionSair->setEnabled(true);
-        ui->actionConectar->setEnabled(false);
-        ui->actionDesconectar->setEnabled(false);
-        ui->actionRecarregar->setEnabled(true);
-        */
-        ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
 }
 
 void maroloDAQ::on_btnDevClose_clicked()
 {
-    maroloDevClose();
+    bool statusCloseSerial;
+    
+    statusCloseSerial = procSerial->Desconectar();
+    
+    if (statusCloseSerial) {
+        setDesconectado();
+        
+        ui->teLog->append("### Porta serial fechada com sucesso!");
+    }
+    else {
+        ui->teLog->append("### Falha ao fechar conexão serial.");
+    }
 }
 
 void maroloDAQ::on_btnParar_clicked()
@@ -326,81 +380,86 @@ void maroloDAQ::on_actionConectar_triggered()
 {
     QString GetInfoHw;
     QStringList InfoHW;
+    QString devport;
+    QStringList devport_list;
+    bool statusOpenSerial;
     
-    // * Enviando comando para obter informações do Device *
-    WriteData("12\n");
-    // * Recebendo as informações *
-    GetInfoHw = ReadData();
-    GetInfoHw = GetInfoHw.simplified();
-    qDebug() << "AQUI GetInfoHW = " << GetInfoHw;
+    foreach (QAction* action, ui->menuPortas->actions()) {
+        if (action->isChecked()) {
+            devport = action->text();
+            devport = devport.simplified();
+            devport_list = devport.split(" [");
+            devport = devport_list[0];
+        }    
+    }
     
-    // * Confirmando se recebeu os dados *
-    if( GetInfoHw.size() > 0 ) {
+    qDebug() << "AQUI btnDevOpen: devport = " << devport;
+    statusOpenSerial = procSerial->Conectar(devport,9600);
+    
+    /*
+     * aguardando a porta "aquecer" ;_(((
+     *
+     */
+    sleep(2);
+    
+    if (statusOpenSerial) {
+        /*
+         * Se conectou com sucesso no disposito serial
+         * Desabilito o botão Conectar e Sair
+         * Habilito Desconectar, Versao, Hardware e Ligar [F10]
+         */
         
-        // * Ex: 4.3.2|UNO
-        //  * O que chegou pela serial foi adicionado na variavel GetInfoHW
-        //  * então acima removemos qualquer tabulação e abaixo um split
-        //  * baseado no caractere |, então sera quebrado em 2 posicoes
-        //  * 0 - 4.3.2
-        //  * 1 - UNO
-        //  *
-        InfoHW = GetInfoHw.split("|");
+        // * Enviando comando para obter informações do Device *
+        WriteData("12\n");
+        // * Recebendo as informações *
+        GetInfoHw = ReadData();
+        GetInfoHw = GetInfoHw.simplified();
         
-        // habilitando|desabilitando menus|actions
-        ui->btnAppClose->setEnabled(true);
-        ui->actionSair->setEnabled(false);
-        ui->actionConectar->setEnabled(false);
-        ui->actionDesconectar->setEnabled(true);
-        ui->actionRecarregar->setEnabled(false);
-        
-        // Inserindo nos devidos Edits
-        ui->editDevCompiler->setText(InfoHW[0]);
-        ui->editDevModel->setText(InfoHW[1]);
-        
-        ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+        // * Confirmando se recebeu os dados *
+        if( GetInfoHw.size() > 0 ) {
+            
+            
+            // * Ex: 4.3.2|UNO
+            //  * O que chegou pela serial foi adicionado na variavel GetInfoHW
+            //  * então acima removemos qualquer tabulação e abaixo um split
+            //  * baseado no caractere |, então sera quebrado em 2 posicoes
+            //  * 0 - 4.3.2
+            //  * 1 - UNO
+            //  *
+            InfoHW = GetInfoHw.split("|");
+            
+            // Inserindo nos devidos Edits
+            ui->editDevCompiler->setText(InfoHW[0]);
+            ui->editDevModel->setText(InfoHW[1]);
+            
+            setConectado();
+            
+            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+        }
+        else {
+            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        }
     }
     else {
-        ui->teLog->append("### FALHA ao Conectar com maroloDAQ!");
+        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
 }
 
 void maroloDAQ::on_actionDesconectar_triggered()
 {
-    maroloDevClose();
-
-    /*
     bool statusCloseSerial;
+    
     
     statusCloseSerial = procSerial->Desconectar();
     
-    
-    // Descontando a porta serial com sucesso
-    // Desabilito os botões Versao, Desconectar, Hardware, Ligar [F10]
-    // Habilito Sair e Conectar
-    
     if (statusCloseSerial) {
-        // habilitando|desabilitando menus|actions
-        //ui->btnDevClose->setEnabled(false);
-        //ui->btnDevOpen->setEnabled(true);
-        ui->btnAppClose->setEnabled(true);
-        ui->actionSair->setEnabled(true);
-        ui->actionConectar->setEnabled(true);
-        ui->actionDesconectar->setEnabled(false);
-        ui->actionRecarregar->setEnabled(true);
-        
-        ui->btnCalibrarSensor->setEnabled(false);
-        ui->btnIniciar->setEnabled(false);
-        ui->btnParar->setEnabled(false);
-        
-        ui->editDevCompiler->clear();
-        ui->editDevModel->clear();
+        setDesconectado();
         
         ui->teLog->append("### Porta serial fechada com sucesso!");
     }
     else {
         ui->teLog->append("### Falha ao fechar conexão serial.");
     }
-    */
 }
 
 void maroloDAQ::on_actionRecarregar_triggered()
@@ -420,6 +479,9 @@ void maroloDAQ::on_actionRecarregar_triggered()
 }
 
 void maroloDAQ::setPortasSeriais(QString myAction) {
+    
+    //qDebug() << ">>>>> AQUI myAction = " << myAction;
+    
     //////////////////////////////////////////////////////
     //ref.: http://zetcode.com/gui/qt5/menusandtoolbars/
     QString myAction_spare;
@@ -430,33 +492,11 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     myAction_split = myAction.split(" [");
     myAction_temp = myAction_split[0];
     myAction = "/dev/"+myAction;
-
-    /*
-    if (myAction_split.length() > 1) {
-        myAction_temp = myAction_split[0];
-        //qDebug() << "# AQUI myAction_split[0] = " << myAction_split[0];
-        //qDebug() << "# AQUI myAction_split[1] = " << myAction_split[1];
-    }
-    */
+    //qDebug() << ">>>>> AQUI myAction = " << myAction;
     
     int ihavename = 0;
     foreach (QAction *action, ui->menuPortas->actions()) {
         if ( !(action->isSeparator()) || !(action->menu()) ) {
-            //myAction_spare = action->text();
-            /*
-            myAction_spare = myAction_spare.simplified();
-            myAction_sparelt = myAction_spare.split(" [");
-            myAction_spare = myAction_sparelt[0];
-                
-            if (myAction_sparelt.length() > 1) {
-                myAction_spare = myAction_sparelt[0];
-                //qDebug() << "# AQUI myAction_split[0] = " << myAction_split[0];
-                //qDebug() << "# AQUI myAction_split[1] = " << myAction_split[1];
-            }
-            */
-            //qDebug() << "# AQUI myAction = " << myAction;
-            //qDebug() << "# AQUI action->text() = " << action->text();
-            
             //if ( QString::compare(myAction_temp, myAction_spare, Qt::CaseInsensitive) ) {
             if ( myAction == action->text() ) {
                 ihavename = ihavename + 1;
@@ -467,10 +507,9 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
     }
-    
     if ( ihavename == 0 ) {
         //myAction="/dev/"+myAction;
-        //qDebug() << "##################################################################";
+        qDebug() << "##################################################################";
         qDebug() << "###### CRIANDO SUBMENU -- myAction = " << myAction;
         //qDebug() << "##################################################################";
         
@@ -553,7 +592,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         PortasGroup->addAction(action);
         actions->setCheckable(true);
     }
-    connect(PortasGroup,SIGNAL(triggered(QAction*)),this,SLOT(on_actionDevices_triggered(QAction*)));
     */
 }
 

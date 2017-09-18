@@ -24,6 +24,10 @@ private slots:
 
     void scanPortas();
 
+    void setDesconectado();
+
+    void setConectado();
+
     void maroloDevClose();
 
     QString ReadData();
@@ -31,8 +35,6 @@ private slots:
     void on_btnDevOpen_clicked();
 
     void on_btnDevClose_clicked();
-
-    void on_btnCalibrarSensor_clicked();
 
     void on_btnBWTerminal_clicked();
 
