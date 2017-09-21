@@ -178,17 +178,36 @@ void maroloDAQ::setDesconectado() {
     ui->btnAppClose->setEnabled(true);
     ui->btnDevOpen->setEnabled(true);
     ui->btnDevClose->setEnabled(false);
-    ui->gbSensor->setEnabled(false);
-    ui->gbTempo->setEnabled(false);
-    ui->gbCalibrar->setEnabled(false);
+    ui->gbSensor->setEnabled(true);
+    ui->gbTempo->setEnabled(true);
+    ui->gbCalibrar->setEnabled(true);
     ui->gbMonitor->setEnabled(true);
+    ui->btnCalibrar1->setEnabled(false);
+    ui->btnCalibrar2->setEnabled(false);
+    ui->cbSensorList->setEnabled(false);
+    ui->cbPinoList->setEnabled(false);
+    ui->btnIniciar->setEnabled(false);
+    ui->btnParar->setEnabled(false);
     ui->actionSair->setEnabled(true);
     ui->actionConectar->setEnabled(true);
     ui->actionDesconectar->setEnabled(false);
     ui->actionRecarregar->setEnabled(true);
     
+    ui->editDevCompiler->setEnabled(false);
+    ui->editDevModel->setEnabled(false);
+    ui->editAngulo1->setEnabled(false);
+    ui->editAngulo2->setEnabled(false);
+    ui->editErroSensor->setEnabled(false);
+    ui->editDeltaT->setEnabled(false);    
+    ui->editTmax->setEnabled(false);
     ui->editDevCompiler->clear();
     ui->editDevModel->clear();
+    ui->editAngulo1->clear();
+    ui->editAngulo2->clear();
+    ui->editErroSensor->clear();
+    ui->editDeltaT->clear();    
+    ui->editTmax->clear();
+    
 }
 
 void maroloDAQ::setConectado() {
@@ -199,12 +218,33 @@ void maroloDAQ::setConectado() {
     ui->btnDevClose->setEnabled(true);
     ui->gbSensor->setEnabled(true);
     ui->gbTempo->setEnabled(true);
-    ui->gbCalibrar->setEnabled(false);
+    ui->gbCalibrar->setEnabled(true);
     ui->gbMonitor->setEnabled(true);
+    ui->btnCalibrar1->setEnabled(false);
+    ui->btnCalibrar2->setEnabled(false);
+    ui->cbSensorList->setEnabled(true);
+    ui->cbPinoList->setEnabled(true);
+    ui->btnIniciar->setEnabled(false);
+    ui->btnParar->setEnabled(false);
     ui->actionSair->setEnabled(false);
     ui->actionConectar->setEnabled(false);
     ui->actionDesconectar->setEnabled(true);
     ui->actionRecarregar->setEnabled(false);
+
+    ui->editDevCompiler->setEnabled(true);
+    ui->editDevModel->setEnabled(true);
+    ui->editAngulo1->setEnabled(false);
+    ui->editAngulo2->setEnabled(false);
+    ui->editErroSensor->setEnabled(true);
+    ui->editDeltaT->setEnabled(true);    
+    ui->editTmax->setEnabled(true);
+    //ui->editDevCompiler->clear();
+    //ui->editDevModel->clear();
+    ui->editAngulo1->clear();
+    ui->editAngulo2->clear();
+    ui->editErroSensor->clear();
+    ui->editDeltaT->clear();    
+    ui->editTmax->clear();
     
 }
 
@@ -393,7 +433,7 @@ void maroloDAQ::on_actionConectar_triggered()
         }    
     }
     
-    qDebug() << "AQUI btnDevOpen: devport = " << devport;
+    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
     statusOpenSerial = procSerial->Conectar(devport,9600);
     
     /*
@@ -509,8 +549,8 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     }
     if ( ihavename == 0 ) {
         //myAction="/dev/"+myAction;
-        qDebug() << "##################################################################";
-        qDebug() << "###### CRIANDO SUBMENU -- myAction = " << myAction;
+        //qDebug() << "##################################################################"
+        //qDebug() << "###### CRIANDO SUBMENU -- myAction = " << myAction;
         //qDebug() << "##################################################################";
         
         //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
@@ -613,3 +653,17 @@ void maroloDAQ::enumerateMenu(QMenu *menu) {
         }
     }
 }
+
+void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
+{
+    //qDebug() << "----> AQUI cbSensorList e &arg1 = " << arg1;
+    if ( arg1 == "Pêndulo" ) {
+        ui->editAngulo1->setEnabled(true);
+        ui->editAngulo2->setEnabled(true);
+    }
+    else {
+        ui->editAngulo1->setEnabled(false);
+        ui->editAngulo2->setEnabled(false);
+    }
+}
+

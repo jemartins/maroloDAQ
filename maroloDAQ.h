@@ -58,6 +58,9 @@ private slots:
 
     void setPortasSeriais(QString myAction);
 
+    void on_cbSensorList_activated(const QString &arg1);
+
+
 private:
     Ui::maroloDAQ *ui;
 
