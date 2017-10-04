@@ -1,14 +1,17 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-10-02T13:18:28
+# Project created by QtCreator 2017-10-03T14:50:55
 #
 #-------------------------------------------------
+
+INCLUDEPATH="/home/jemartins/Projects/simpl/include"
+LIBS="-L /home/jemartins/Projects/simpl/lib -lsimpl -lsimplmisc -lsimpllog -lm"
 
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = guiStim
+TARGET = guiReceiver
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -23,16 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES += main.cpp \
-    guistim.cpp
+SOURCES += main.cpp\
+        guireceiver.cpp
 
-HEADERS  += quistim.h \
-    receiverMsgs.h \
-    stimulatorMsgs.h \
-    receiverProto.h \
-    simplmiscProto.h \
-    loggerProto.h \
-    simplProto.h
+HEADERS  += include/guireceiver.h \
+    include/guireceiver.h \
+    include/receiverMsgs.h \
+    include/receiverProto.h \
+    include/stimulatorMsgs.h
 
-FORMS    += \
-    guistim.ui
+FORMS    += guireceiver.ui

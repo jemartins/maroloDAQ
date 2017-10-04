@@ -17,8 +17,28 @@ QMainWindow(parent),
 ui(new Ui::maroloDAQ)
 {
     ui->setupUi(this);
-    //QActionGroup *PortasGroup = new QActionGroup(this);
-    //PortasGroup->setExclusive(true);
+    
+    // Formatando entradas
+    ui->editAngulo1->setMaxLength(3);
+    ui->editAngulo1->setValidator(new QIntValidator(-90,90,ui->editAngulo1));
+
+    ui->editAngulo2->setMaxLength(3);
+    ui->editAngulo2->setValidator(new QIntValidator(-90,90,ui->editAngulo2));
+    
+    ui->editErroSensor->setMaxLength(7);
+    QDoubleValidator *dvVal1 = new QDoubleValidator(0,0,0,ui->editErroSensor);
+    dvVal1->setNotation(QDoubleValidator::ScientificNotation);
+    ui->editErroSensor->setValidator(dvVal1);
+
+    ui->editDeltaT->setMaxLength(7);
+    QDoubleValidator *dvVal2 = new QDoubleValidator(0,0,1,ui->editDeltaT);
+    dvVal2->setNotation(QDoubleValidator::ScientificNotation);
+    ui->editDeltaT->setValidator(dvVal2);
+
+    ui->editTmax->setMaxLength(7);
+    QDoubleValidator *dvVal3 = new QDoubleValidator(0,0,1,ui->editErroSensor);
+    dvVal3->setNotation(QDoubleValidator::ScientificNotation);
+    ui->editTmax->setValidator(dvVal3);
 
     // Procurando por portar seriais abertas
     scanPortas();
@@ -75,6 +95,11 @@ void maroloDAQ::scanPortas() {
     
     if(DispSeriais.length() > 0) {
         
+        foreach (QAction* action, ui->menuPortas->actions()) {
+            PortasGroup->removeAction(action);
+            ui->menuPortas->removeAction(action);
+        }
+        
         for(int i=0;i<count;i++) {
             
             minhaSerial = DispSeriais[i];
@@ -119,13 +144,13 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    qDebug() << "FALHA ao FECHAR Serial dev = " << minhaSerial;
+                    //qDebug() << "FALHA ao FECHAR Serial dev = " << minhaSerial;
                 }
                 
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             }
             else {
-                qDebug() << "FALHA ao ABRIR Serial dev = " << minhaSerial; 
+                //qDebug() << "FALHA ao ABRIR Serial dev = " << minhaSerial; 
             }
         }
         
@@ -146,15 +171,13 @@ void maroloDAQ::scanPortas() {
                 action->setChecked(false);
             }
         }   
-        
     }
     else {
         ui->teLog->append("### Nenhuma porta serial foi detectada!");
     }
-
+    /*
     // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
-    foreach (QAction* action, ui->menuPortas->actions())
-    {
+    foreach (QAction* action, ui->menuPortas->actions()) {
         PortasGroup->addAction(action);
         
         myAction_split = action->text().split("]");
@@ -170,6 +193,7 @@ void maroloDAQ::scanPortas() {
             action->setChecked(false);
         }
     }
+    */
 }
 
 void maroloDAQ::setDesconectado() {
@@ -323,7 +347,7 @@ void maroloDAQ::on_btnDevOpen_clicked()
         }    
     }
     
-    qDebug() << "AQUI btnDevOpen: devport = " << devport;
+    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
     statusOpenSerial = procSerial->Conectar(devport,9600);
     
     /*
@@ -540,8 +564,8 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             //if ( QString::compare(myAction_temp, myAction_spare, Qt::CaseInsensitive) ) {
             if ( myAction == action->text() ) {
                 ihavename = ihavename + 1;
-                qDebug() << "# AQUI myAction = " << myAction;
-                qDebug() << "# AQUI action->text() = " << action->text();
+                //qDebug() << "# AQUI myAction = " << myAction;
+                //qDebug() << "# AQUI action->text() = " << action->text();
                 //qDebug("# action->text() isn't menu: %s", qUtf8Printable(action->text()));
                 //qDebug() << "#####################################################";
             }
@@ -644,12 +668,12 @@ void maroloDAQ::enumerateMenu(QMenu *menu) {
         if (action->isSeparator()) {
             //qDebug() << "this action is a separator.";// << "" << endl;
         } else if (action->menu()) {
-            qDebug() << "action1: %s:" << qUtf8Printable(action->text());// << endl;
-            qDebug() << "this action is associated with a submenu, iterating it recursively...";// << "" << endl;
+            //qDebug() << "action1: %s:" << qUtf8Printable(action->text());// << endl;
+            //qDebug() << "this action is associated with a submenu, iterating it recursively...";// << "" << endl;
             enumerateMenu(action->menu());
-            qDebug() << "finished iterating the submenu";// << "" << endl;
+            //qDebug() << "finished iterating the submenu";// << "" << endl;
         } else {
-            qDebug() << "action2: %s" << qUtf8Printable(action->text());// << endl;
+            //qDebug() << "action2: %s" << qUtf8Printable(action->text());// << endl;
         }
     }
 }

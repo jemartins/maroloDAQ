@@ -1,13 +1,11 @@
-#include "guistim.h"
+#include "include/guireceiver.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
-//int main(int argc, char **argv, char **envp)
 {
-
     QApplication a(argc, argv);
-    guiStim w;
+    guiReceiver w;
     w.show();
-    
+
     return a.exec();
 }

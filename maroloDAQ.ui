@@ -114,38 +114,6 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbDevDesc">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>73</width>
-          <height>35</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>73</width>
-          <height>35</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Compilador:</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="editDevCompiler">
         <property name="enabled">
@@ -175,6 +143,9 @@
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>Versão do GCC</string>
         </property>
         <property name="maxLength">
          <number>80</number>
@@ -243,8 +214,43 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Modelo da Placa</string>
+        </property>
         <property name="maxLength">
          <number>80</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbDevDesc">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>73</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>73</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Compilador:</string>
         </property>
        </widget>
       </item>
@@ -473,6 +479,9 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Intervalo de Tempo entre Cada Medição</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -519,6 +528,9 @@
           <width>40</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Tempo Máximo de Medição</string>
         </property>
        </widget>
       </item>
@@ -729,6 +741,9 @@
           <bold>false</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Tipo de Sensor</string>
+        </property>
         <item>
          <property name="text">
           <string>Onda Sonora</string>
@@ -816,6 +831,9 @@
           <bold>false</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Pino em que Está Conectado o Sensor</string>
+        </property>
         <item>
          <property name="text">
           <string>A0</string>
@@ -877,7 +895,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QTextEdit" name="editErroSensor">
+       <widget class="QLineEdit" name="editErroSensor">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -901,6 +919,9 @@
           <width>0</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Erro na Medida do Sensor</string>
         </property>
        </widget>
       </item>
@@ -1079,6 +1100,9 @@
        <weight>50</weight>
        <bold>false</bold>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>Envia os Dados Adquiridos Diretamente à Janela do Programa Grace</string>
      </property>
      <property name="text">
       <string>ao Grace</string>
@@ -1292,7 +1316,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QTextEdit" name="editAngulo1">
+       <widget class="QLineEdit" name="editAngulo1">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -1311,10 +1335,16 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string> Menor Ângulo (graus)</string>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhNone</set>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QTextEdit" name="editAngulo2">
+       <widget class="QLineEdit" name="editAngulo2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -1338,6 +1368,9 @@
           <width>0</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Maior  Ângulo (graus)</string>
         </property>
        </widget>
       </item>

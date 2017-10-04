@@ -1,69 +1,49 @@
-#include "guistim.h"
-#include "ui_guistim.h"
-#include <QDebug>
+#include "include/guireceiver.h"
+#include "ui_guireceiver.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 
-#if 0
-#include <fcntl.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/timeb.h>
-#include <sys/time.h>
-#endif
+#include "include/receiverMsgs.h"
+#include "include/stimulatorMsgs.h"
 
-#include "receiverMsgs.h"
-
-#define _ALLOC
-#include "receiver.h"
+#define _ALLOC extern
+_ALLOC int logger_ID;
+_ALLOC char logBuf[LOGGER_BUFFER_SIZE];
+_ALLOC char loggerArea[TRACE_MAX_BUFFER_SIZE];
+_ALLOC char inArea[MAX_MSG_SIZE];
+_ALLOC char outArea[MAX_MSG_SIZE];
 #undef _ALLOC
 
 #include "simpl.h"
-#include "receiverProto.h"
 #include "simplProto.h"
 #include "loggerProto.h"
 #include "simplmiscProto.h"
+#include "include/receiverProto.h"
 
-guiStim::guiStim(QWidget *parent) :
-QWidget(parent),
-ui(new Ui::guiStim)
+guiReceiver::guiReceiver(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::guiReceiver)
 {
     ui->setupUi(this);
-    QPalette paleta;
-    
-    //notifier = (STDIN_FILENO, QSocketNotifier::Read, parent);
-    
-    
-    paleta.setColor(QPalette::Base,Qt::black);
-    paleta.setColor(QPalette::Text,Qt::white);
-    ui->teLog->setPalette(paleta);
 }
 
-guiStim::~guiStim()
+guiReceiver::~guiReceiver()
 {
     delete ui;
 }
 
-void guiStim::on_pbExit_clicked()
+void guiReceiver::on_pbSair_clicked()
 {
-    //name_detach();
     exit(0);
 }
 
-void guiStim::on_editSendCmd_returnPressed()
-{
-}
-
 /*============================================
-	initialize - entry point
+    initialize - entry point
 ============================================*/
-void initialize(int argc, char **argv)
-{
+void initialize(int argc, char **argv) {
 static char *fn="initialize";
 int i;                          /* loop variable */
 char myName[20];
@@ -88,31 +68,31 @@ for(i=1; i<=argc; ++i)
                         {
                         case 'n':
                                 for(;*p != 0; p++);
-				sprintf(myName,"%s",++p);
-				myslot=name_attach(myName, NULL);
-				if(myslot == -1)
-					{
-					printf("%s: unable to attach as <%s>\n",
-						fn,
-						myName);
-					exit(0);
-					}
-				else
-					printf("attached as <%s> myslot=%d\n",myName,myslot);
+                sprintf(myName,"%s",++p);
+                myslot=name_attach(myName, NULL);
+                if(myslot == -1)
+                    {
+                    printf("%s: unable to attach as <%s>\n",
+                        fn,
+                        myName);
+                    exit(0);
+                    }
+                else
+                    printf("attached as <%s> myslot=%d\n",myName,myslot);
                                 break;
 
-			case 'l':
+            case 'l':
                                 for(;*p != 0; p++);
-				sprintf(loggerName,"%.19s",++p);
-				break;
+                sprintf(loggerName,"%.19s",++p);
+                break;
 
-			case 'm':
-				if(*++p == 0) p++;
+            case 'm':
+                if(*++p == 0) p++;
 				globalMask=atoh(&p[2]);  // skip 0x
-				break;
+                break;
 
                         default:
-				printf("%s:unknown arg %s\n",fn, p);
+                printf("%s:unknown arg %s\n",fn, p);
                                 break;
                         }/*end switch*/
                 } /* end if *p */
@@ -120,35 +100,34 @@ for(i=1; i<=argc; ++i)
 
 // check for compulsory args
 if(myName[0] == 0)
-	{
-	myUsage();
-	exit(0);
-	}
+    {
+    myUsage();
+    exit(0);
+    }
 
 // try to connect to trace logger
 logger_ID = is_logger_upx(loggerName);
 
 fcLogx(__FILE__, fn,
-	0xff,
-	RECV_MARK,
-	"myName=<%s> myslot=%d",
-	myName,
-	myslot
-	);
+    0xff,
+    RECV_MARK,
+    "myName=<%s> myslot=%d",
+    myName,
+    myslot
+    );
 
 fcLogx(__FILE__, fn,
-	0xff,
-	RECV_MARK,
-	"trace logger mask = 0x%04X",
-	globalMask);
+    0xff,
+    RECV_MARK,
+    "trace logger mask = 0x%04X",
+    globalMask);
 
 } /* end initialize */
 
 /*===================================================
-	myUsage - entry point
+    myUsage - entry point
 ===================================================*/
-void myUsage()
-{
+void myUsage() {
 printf("====================== usage =============================\n");
 printf(" usage for receiver:\n");
 printf("      receiver -n <myName> <optionals>\n");
