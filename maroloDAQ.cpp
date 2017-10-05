@@ -19,26 +19,34 @@ ui(new Ui::maroloDAQ)
     ui->setupUi(this);
     
     // Formatando entradas
-    ui->editAngulo1->setMaxLength(3);
     ui->editAngulo1->setValidator(new QIntValidator(-90,90,ui->editAngulo1));
+    ui->editAngulo1->setMaxLength(3);
+    //ui->editAngulo1->setInputMask("#99");
 
-    ui->editAngulo2->setMaxLength(3);
     ui->editAngulo2->setValidator(new QIntValidator(-90,90,ui->editAngulo2));
+    ui->editAngulo2->setMaxLength(3);
+    //ui->editAngulo2->setInputMask("#99");
     
-    ui->editErroSensor->setMaxLength(7);
-    QDoubleValidator *dvVal1 = new QDoubleValidator(0,0,0,ui->editErroSensor);
+    QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
     dvVal1->setNotation(QDoubleValidator::ScientificNotation);
     ui->editErroSensor->setValidator(dvVal1);
+    ui->editErroSensor->setMaxLength(7);
+    //ui->editErroSensor->setInputMask("9e#99");
+    
+    ui->editDeltaT->setValidator(new QDoubleValidator(0,999,2,ui->editDeltaT));
+    //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
+    //ui->editDeltaT->setValidator(dvVal2);
+    ui->editDeltaT->setMaxLength(3);
+    //ui->editDeltaT->setInputMask("999");
 
-    ui->editDeltaT->setMaxLength(7);
-    QDoubleValidator *dvVal2 = new QDoubleValidator(0,0,1,ui->editDeltaT);
-    dvVal2->setNotation(QDoubleValidator::ScientificNotation);
-    ui->editDeltaT->setValidator(dvVal2);
-
-    ui->editTmax->setMaxLength(7);
-    QDoubleValidator *dvVal3 = new QDoubleValidator(0,0,1,ui->editErroSensor);
-    dvVal3->setNotation(QDoubleValidator::ScientificNotation);
-    ui->editTmax->setValidator(dvVal3);
+    ui->editTmax->setValidator(new QDoubleValidator(0,99999,1,ui->editErroSensor));
+    //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
+    //ui->editTmax->setValidator(dvVal3);
+    ui->editTmax->setMaxLength(5);
+    //ui->editTmax->setInputMask("99999");
+    
+    ui->editDevCompiler->setReadOnly(true);
+    ui->editDevModel->setReadOnly(true);
 
     // Procurando por portar seriais abertas
     scanPortas();
@@ -198,6 +206,15 @@ void maroloDAQ::scanPortas() {
 
 void maroloDAQ::setDesconectado() {
     
+    // limpando os edits
+    ui->editDevCompiler->clear();
+    ui->editDevModel->clear();
+    ui->editAngulo1->clear();
+    ui->editAngulo2->clear();
+    ui->editErroSensor->clear();
+    ui->editDeltaT->clear();    
+    ui->editTmax->clear();
+
     // habilitando|desabilitando menus|actions
     ui->btnAppClose->setEnabled(true);
     ui->btnDevOpen->setEnabled(true);
@@ -224,17 +241,18 @@ void maroloDAQ::setDesconectado() {
     ui->editErroSensor->setEnabled(false);
     ui->editDeltaT->setEnabled(false);    
     ui->editTmax->setEnabled(false);
-    ui->editDevCompiler->clear();
-    ui->editDevModel->clear();
+    }
+
+void maroloDAQ::setConectado() {
+
+    // limpando os edits
+    //ui->editDevCompiler->clear();
+    //ui->editDevModel->clear();
     ui->editAngulo1->clear();
     ui->editAngulo2->clear();
     ui->editErroSensor->clear();
     ui->editDeltaT->clear();    
     ui->editTmax->clear();
-    
-}
-
-void maroloDAQ::setConectado() {
     
     // habilitando|desabilitando menus|actions
     ui->btnAppClose->setEnabled(false);
@@ -262,14 +280,6 @@ void maroloDAQ::setConectado() {
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);    
     ui->editTmax->setEnabled(true);
-    //ui->editDevCompiler->clear();
-    //ui->editDevModel->clear();
-    ui->editAngulo1->clear();
-    ui->editAngulo2->clear();
-    ui->editErroSensor->clear();
-    ui->editDeltaT->clear();    
-    ui->editTmax->clear();
-    
 }
 
 void maroloDAQ::maroloDevClose()
@@ -397,7 +407,8 @@ void maroloDAQ::on_btnDevOpen_clicked()
     else {
         ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
-}
+    
+} // end on_btnDevOpen_clicked
 
 void maroloDAQ::on_btnDevClose_clicked()
 {
@@ -406,8 +417,7 @@ void maroloDAQ::on_btnDevClose_clicked()
     statusCloseSerial = procSerial->Desconectar();
     
     if (statusCloseSerial) {
-        setDesconectado();
-        
+        setDesconectado();        
         ui->teLog->append("### Porta serial fechada com sucesso!");
     }
     else {
@@ -507,7 +517,8 @@ void maroloDAQ::on_actionConectar_triggered()
     else {
         ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
-}
+    
+} // end on_actionConectar_triggered
 
 void maroloDAQ::on_actionDesconectar_triggered()
 {
@@ -657,7 +668,7 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         actions->setCheckable(true);
     }
     */
-}
+} // end setPortasSeriais
 
 void maroloDAQ::enumerateMenu(QMenu *menu) {
     //////////////////////////////////////////////////////
@@ -691,3 +702,6 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
     }
 }
 
+void validarEntradas() {
+    
+} // end validarEntradas

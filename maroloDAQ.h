@@ -30,8 +30,6 @@ private slots:
 
     void maroloDevClose();
 
-    QString ReadData();
-
     void on_btnDevOpen_clicked();
 
     void on_btnDevClose_clicked();
@@ -59,6 +57,10 @@ private slots:
     void setPortasSeriais(QString myAction);
 
     void on_cbSensorList_activated(const QString &arg1);
+
+    void validarEntradas ();
+
+    QString ReadData();
 
 
 private:

@@ -150,6 +150,9 @@
         <property name="maxLength">
          <number>80</number>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -219,6 +222,9 @@
         </property>
         <property name="maxLength">
          <number>80</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -417,7 +423,7 @@
       <rect>
        <x>9</x>
        <y>30</y>
-       <width>91</width>
+       <width>98</width>
        <height>71</height>
       </rect>
      </property>
@@ -480,7 +486,10 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Intervalo de Tempo entre Cada Medição</string>
+         <string>Intervalo de Tempo entre Cada Medição em segundos</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -513,13 +522,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>60</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>50</width>
+          <width>60</width>
           <height>30</height>
          </size>
         </property>
@@ -530,7 +539,10 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Tempo Máximo de Medição</string>
+         <string>Tempo Máximo de Medição em segundos</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -904,13 +916,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>40</width>
-          <height>0</height>
+          <width>70</width>
+          <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>50</width>
+          <width>70</width>
           <height>30</height>
          </size>
         </property>
@@ -921,7 +933,10 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Erro na Medida do Sensor</string>
+         <string>Erro na Medida do Sensor (em notação científica, ex: 1e-10</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -1076,6 +1091,9 @@
           <height>45</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Leituras Vindas do Sensor (unidade de medida depende do tipo de sensor)</string>
+        </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
@@ -1189,6 +1207,9 @@
           <width>0</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Instante da Medição</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
@@ -1336,10 +1357,13 @@
          </size>
         </property>
         <property name="toolTip">
-         <string> Menor Ângulo (graus)</string>
+         <string>Menor  Ângulo (válido apenas inteiros)</string>
         </property>
         <property name="inputMethodHints">
          <set>Qt::ImhNone</set>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -1370,7 +1394,10 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Maior  Ângulo (graus)</string>
+         <string>Maior  Ângulo (válido apenas inteiros)</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
