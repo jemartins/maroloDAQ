@@ -58,7 +58,7 @@ private slots:
 
     void on_cbSensorList_activated(const QString &arg1);
 
-    void validarEntradas ();
+    //void validarEntradas();
 
     QString ReadData();
 
