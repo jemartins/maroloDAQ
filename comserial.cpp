@@ -19,7 +19,7 @@ comserial::comserial(QSerialPort *myDev)
  * @brief CommSerial::CarregarDispositivos
  *
  * Função que verifica todas as portas disponiveis /dev/tty*
- * e na sequencia seta a porta com serial.setport e testar se é uma
+ * e na sequência seta a porta com serial.setport e testar se é uma
  * porta serial
  *
  * @param void
