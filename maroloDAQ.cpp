@@ -266,7 +266,8 @@ void maroloDAQ::setConectado() {
     ui->btnCalibrar2->setEnabled(false);
     ui->cbSensorList->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
-    ui->btnIniciar->setEnabled(false);
+    //modificado para teste btnIniciar
+    ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
     ui->actionSair->setEnabled(false);
     ui->actionConectar->setEnabled(false);
@@ -432,6 +433,7 @@ void maroloDAQ::on_btnParar_clicked()
 
 void maroloDAQ::on_btnIniciar_clicked()
 {
+    validarEntradas();
     
 }
 
@@ -702,6 +704,18 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
     }
 }
 
-void validarEntradas() {
-    
+void maroloDAQ::validarEntradas() {
+    if(ui->editErroSensor->text()==NULL){
+        //chama dialog.ui
+    }else{
+        if(ui->editDeltaT->text()==NULL){
+            //chama dialog.ui
+        }else{
+            if(ui->editTmax->text()==NULL){
+                //chama dialog.ui
+            }else{
+                return;
+            }
+        }
+    }
 } // end validarEntradas

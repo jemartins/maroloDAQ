@@ -332,6 +332,7 @@ void ProcStatesUARTRx(char *buffRx)
 
 void CheckUARTRx(char *buffRx)
 {
+  //posicao inicial no buffer
   static unsigned int pos_buf_rx = 0;
   /* Caso tenha algo na serial, ira tratar e/ou guardar no buffer */
   if( Serial.available()>0 ) {
