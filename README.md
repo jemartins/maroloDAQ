@@ -1,5 +1,2 @@
 # maroloDAQ
-O objetivo deste projeto é criar um sistema de sensoriamento com dois componentes interconectados:
-1 - Arduino(software)
-2 - Aplicação
-A comunicação entre o Arduino e a Aplicação ocorrerá por meio de portas seriais e de um cabo USB. Ela será bidirecional e permitirá que o Arduino receba comandos e transmita dados.
+O objetivo deste projeto é criar um sistema de sensoriamento com dois componentes interconectados: arduino e aplicação. A comunicação entre os componentes ocorrerá por meio de portas seriais e de cabo USB. Ela será bidirecional e permitirá que o arduino receba comandos e transmita dados para a aplicação. O arduino é um microcontrolador com uma plataforma de programação embutida. Ele será utilizado para medir a tensão elétrica em um sensor, que estará fixado no objeto da medida, e transformá-la em um valor útil. Este valor será transmitido para a aplicação, que se responsabilizará pela configuração de parâmetros de sensoriamento e pela apresentação dos dados.
