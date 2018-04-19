@@ -7,7 +7,7 @@ A comunicação entre eles ocorre por meio de portas seriais e de cabo USB. Ela 
 
 O Arduino é um micro-controlador com uma plataforma de execução embutida. Ele é utilizado, para medir a tensão elétrica em um sensor, que é fixado ao objeto da medida, e transmiti-la ao Software.
 
-(fluxograma do firware)
+(fluxograma do firmware)
 
 O Software, desenvolvido com o framework Qt, configura os parâmetros de sensoriamento (erro, intervalo de amostragem e tempo de captura), transforma a tensão em valores úteis e armazena os dados.
 
