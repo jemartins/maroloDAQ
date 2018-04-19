@@ -52,12 +52,10 @@ OBJECTS_DIR   = ./
 
 SOURCES       = main.cpp \
 		maroloDAQ.cpp \
-		comserial.cpp \
-		dialog.cpp moc_maroloDAQ.cpp
+		comserial.cpp moc_maroloDAQ.cpp
 OBJECTS       = main.o \
 		maroloDAQ.o \
 		comserial.o \
-		dialog.o \
 		moc_maroloDAQ.o
 DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/common/unix.conf \
@@ -242,11 +240,9 @@ DIST          = ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/yacc.prf \
 		../../Qt/5.10.1/gcc_64/mkspecs/features/lex.prf \
 		maroloDAQ.pro maroloDAQ.h \
-		comserial.h \
-		dialog.h main.cpp \
+		comserial.h main.cpp \
 		maroloDAQ.cpp \
-		comserial.cpp \
-		dialog.cpp
+		comserial.cpp
 QMAKE_TARGET  = maroloDAQ
 DESTDIR       = 
 TARGET        = maroloDAQ
@@ -255,7 +251,7 @@ TARGET        = maroloDAQ
 first: all
 ####### Build rules
 
-$(TARGET): ui_maroloDAQ.h ui_dialog.h $(OBJECTS)  
+$(TARGET): ui_maroloDAQ.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: maroloDAQ.pro ../../Qt/5.10.1/gcc_64/mkspecs/linux-g++/qmake.conf ../../Qt/5.10.1/gcc_64/mkspecs/features/spec_pre.prf \
@@ -648,9 +644,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt/5.10.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents maroloDAQ.h comserial.h dialog.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp maroloDAQ.cpp comserial.cpp dialog.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents maroloDAQ.ui dialog.ui $(DISTDIR)/
+	$(COPY_FILE) --parents maroloDAQ.h comserial.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp maroloDAQ.cpp comserial.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents maroloDAQ.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -817,16 +813,12 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_maroloDAQ.h ui_dialog.h
+compiler_uic_make_all: ui_maroloDAQ.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_maroloDAQ.h ui_dialog.h
+	-$(DEL_FILE) ui_maroloDAQ.h
 ui_maroloDAQ.h: maroloDAQ.ui \
 		../../Qt/5.10.1/gcc_64/bin/uic
 	/home/rafael/Qt/5.10.1/gcc_64/bin/uic maroloDAQ.ui -o ui_maroloDAQ.h
-
-ui_dialog.h: dialog.ui \
-		../../Qt/5.10.1/gcc_64/bin/uic
-	/home/rafael/Qt/5.10.1/gcc_64/bin/uic dialog.ui -o ui_dialog.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -1224,9 +1216,6 @@ comserial.o: comserial.cpp comserial.h \
 		../../Qt/5.10.1/gcc_64/include/QtSerialPort/QSerialPortInfo \
 		../../Qt/5.10.1/gcc_64/include/QtSerialPort/qserialportinfo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o comserial.o comserial.cpp
-
-dialog.o: dialog.cpp dialog.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dialog.o dialog.cpp
 
 moc_maroloDAQ.o: moc_maroloDAQ.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_maroloDAQ.o moc_maroloDAQ.cpp

@@ -428,13 +428,23 @@ void maroloDAQ::on_btnDevClose_clicked()
 
 void maroloDAQ::on_btnParar_clicked()
 {
-    
+    ui->editErroSensor->setEnabled(true);
+    ui->editDeltaT->setEnabled(true);
+    ui->editTmax->setEnabled(true);
+    ui->btnIniciar->setEnabled(true);
+    ui->btnParar->setEnabled(false);
 }
 
 void maroloDAQ::on_btnIniciar_clicked()
 {
-    validarEntradas();
-    
+    if(validarEntradas()){
+        //inicia coleta de dados
+        ui->editErroSensor->setEnabled(false);
+        ui->editDeltaT->setEnabled(false);
+        ui->editTmax->setEnabled(false);
+        ui->btnIniciar->setEnabled(false);
+        ui->btnParar->setEnabled(true);
+    }
 }
 
 void maroloDAQ::on_actionSalvar_como_triggered()
@@ -704,17 +714,27 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
     }
 }
 
-void maroloDAQ::validarEntradas() {
+bool maroloDAQ::validarEntradas() {
+
     if(ui->editErroSensor->text()==NULL){
-        //chama dialog.ui
+        info.setText("Digite o Erro");
+        info.exec();
+        ui->editErroSensor->setFocus();
+        return false;
     }else{
         if(ui->editDeltaT->text()==NULL){
-            //chama dialog.ui
+            info.setText("Digite o intervalo de amostragem");
+            info.exec();
+            ui->editDeltaT->setFocus();
+            return false;
         }else{
             if(ui->editTmax->text()==NULL){
-                //chama dialog.ui
+                info.setText("Digite o tempo máximo da amostra");
+                info.exec();
+                ui->editTmax->setFocus();
+                return false;
             }else{
-                return;
+                return true;
             }
         }
     }

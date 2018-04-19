@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QActionGroup>
 #include "comserial.h"
+#include <QMessageBox>
 
 namespace Ui {
 class maroloDAQ;
@@ -58,7 +59,7 @@ private slots:
 
     void on_cbSensorList_activated(const QString &arg1);
 
-    void validarEntradas();
+    bool validarEntradas();
 
     QString ReadData();
 
@@ -81,6 +82,7 @@ private:
     QAction *actionS3;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
+    QMessageBox info;
 
 };
 #endif // PROJMAROLO_H
