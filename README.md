@@ -3,7 +3,7 @@ O objetivo deste projeto é criar um sistema de medição assistida por computad
 
 A comunicação entre eles ocorre por meio de portas seriais e de cabo USB. Ela é bidirecional, permitindo que ambos recebam e transmitam comandos ou dados entre si.
 
-(fluxograma de dados)
+[Comunicação](https://github.com/jemartins/maroloDAQ/blob/rafael/com_soft-firm.jpg)
 
 O Arduino é um micro-controlador com uma plataforma de execução embutida. Ele é utilizado, para medir a tensão elétrica em um sensor, que é fixado ao objeto da medida, e transmiti-la ao Software.
 
