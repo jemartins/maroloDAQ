@@ -6,6 +6,7 @@
 #include <QActionGroup>
 #include "comserial.h"
 #include <QMessageBox>
+#include <QTimer>
 
 namespace Ui {
 class maroloDAQ;
@@ -63,6 +64,8 @@ private slots:
 
     QString ReadData();
 
+    void update();
+
 
 private:
     Ui::maroloDAQ *ui;
@@ -83,6 +86,7 @@ private:
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
     QMessageBox info;
-
+    QTimer *timer=new QTimer(this);
+    int TD=0;
 };
 #endif // PROJMAROLO_H

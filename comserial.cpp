@@ -143,11 +143,11 @@ bool comserial::Desconectar()
  * @param const char *cmd
  * @return void
  */
-qint64 comserial::Write(const char *cmd)
+int comserial::Write(const char *cmd)
 {
-    qint64 tamanhoEscrito;
+    int tamanhoEscrito;
     tamanhoEscrito = devSerial->write(cmd,qstrlen(cmd));
-
+    qDebug() << tamanhoEscrito <<endl;
     return tamanhoEscrito;
 }
 

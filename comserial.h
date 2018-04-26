@@ -21,7 +21,7 @@ public:
     bool Conectar(QString Port, u_int32_t bd);
     bool Desconectar(void);
 
-    qint64 Write(const char *cmd);
+    int Write(const char *cmd);
     QString Read();
     QString Read(int TamanhoBuffer);
 

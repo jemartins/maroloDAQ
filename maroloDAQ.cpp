@@ -52,6 +52,9 @@ ui(new Ui::maroloDAQ)
     scanPortas();
     
     setDesconectado();
+
+    //Conectando SIGNAL de Timer a função update
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 maroloDAQ::~maroloDAQ()
@@ -101,7 +104,7 @@ void maroloDAQ::scanPortas() {
     //const char * meuAction_tmp;
     QString minhaSerial;
     
-    if(DispSeriais.length() > 0) {
+    if(count > 0) {
         
         foreach (QAction* action, ui->menuPortas->actions()) {
             PortasGroup->removeAction(action);
@@ -433,6 +436,13 @@ void maroloDAQ::on_btnParar_clicked()
     ui->editTmax->setEnabled(true);
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
+    ui->cbPinoList->setEnabled(true);
+    ui->cbSensorList->setEnabled(true);
+    //nao testado
+    if(timer->isActive()){
+        timer->stop();
+    }
+
 }
 
 void maroloDAQ::on_btnIniciar_clicked()
@@ -444,6 +454,34 @@ void maroloDAQ::on_btnIniciar_clicked()
         ui->editTmax->setEnabled(false);
         ui->btnIniciar->setEnabled(false);
         ui->btnParar->setEnabled(true);
+        ui->cbPinoList->setEnabled(false);
+        ui->cbSensorList->setEnabled(false);
+
+        //Inicia relógio com DeltaT de argumento
+        timer->start(ui->editDeltaT->text().toDouble()*1000);
+    }
+}
+
+void maroloDAQ::update()
+{
+    //Variável que conta o numero de amostras que já foram feitas
+    TD=TD+1;
+
+    //Escreve no teLog o status do LED
+    WriteData("11\n");
+    ui->teLog->append(ReadData());
+
+    //Se TD > Tmax/DeltaT então o relógio é parado e TD é zerado
+    if(TD>=(ui->editTmax->text().toDouble()/ui->editDeltaT->text().toDouble())){
+        timer->stop();
+        TD=0;
+        ui->editErroSensor->setEnabled(true);
+        ui->editDeltaT->setEnabled(true);
+        ui->editTmax->setEnabled(true);
+        ui->btnIniciar->setEnabled(true);
+        ui->btnParar->setEnabled(false);
+        ui->cbPinoList->setEnabled(true);
+        ui->cbSensorList->setEnabled(true);
     }
 }
 
@@ -715,7 +753,10 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
 }
 
 bool maroloDAQ::validarEntradas() {
-
+    //Se ERRO for vazio apresenta mensagem de erro e para operação, senão...
+    //Se DeltaT for vazio apresenta mensagem de erro e para operação, senão...
+    //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
+    //Tudo ok e continua a operação.
     if(ui->editErroSensor->text()==NULL){
         info.setText("Digite o Erro");
         info.exec();
