@@ -466,11 +466,45 @@ void maroloDAQ::update()
 {
     //Variável que conta o numero de amostras que já foram feitas
     TD=TD+1;
-
-    //Escreve no teLog o status do LED
-    WriteData("11\n");
-    ui->teLog->append(ReadData());
-
+    //Qual o pino selecionado?
+    switch(ui->cbPinoList->currentIndex()){
+    case 0:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("14\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    case 1:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("15\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    case 2:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("16\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    case 3:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("17\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    case 4:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("18\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    case 5:
+        //Envia comando de piscar LED para Arduino;
+        WriteData("19\n");
+        //Escreve no teLog o valor atual do LED no Arduino;
+        ui->teLog->append(ReadData());
+        break;
+    }
     //Se TD > Tmax/DeltaT então o relógio é parado e TD é zerado
     if(TD>=(ui->editTmax->text().toDouble()/ui->editDeltaT->text().toDouble())){
         timer->stop();
@@ -758,20 +792,20 @@ bool maroloDAQ::validarEntradas() {
     //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
     //Tudo ok e continua a operação.
     if(ui->editErroSensor->text()==NULL){
-        info.setText("Digite o Erro");
-        info.exec();
+        msgBox.setText("Digite o Erro");
+        msgBox.exec();
         ui->editErroSensor->setFocus();
         return false;
     }else{
         if(ui->editDeltaT->text()==NULL){
-            info.setText("Digite o intervalo de amostragem");
-            info.exec();
+            msgBox.setText("Digite o intervalo de amostragem");
+            msgBox.exec();
             ui->editDeltaT->setFocus();
             return false;
         }else{
             if(ui->editTmax->text()==NULL){
-                info.setText("Digite o tempo máximo da amostra");
-                info.exec();
+                msgBox.setText("Digite o tempo máximo da amostra");
+                msgBox.exec();
                 ui->editTmax->setFocus();
                 return false;
             }else{

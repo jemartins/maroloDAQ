@@ -147,7 +147,7 @@ int comserial::Write(const char *cmd)
 {
     int tamanhoEscrito;
     tamanhoEscrito = devSerial->write(cmd,qstrlen(cmd));
-    qDebug() << tamanhoEscrito <<endl;
+    //qDebug() << tamanhoEscrito <<endl;
     return tamanhoEscrito;
 }
 

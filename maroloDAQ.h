@@ -85,7 +85,7 @@ private:
     QAction *actionS3;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
-    QMessageBox info;
+    QMessageBox msgBox;
     QTimer *timer=new QTimer(this);
     int TD=0;
 };
