@@ -448,7 +448,7 @@ void maroloDAQ::on_btnParar_clicked()
 void maroloDAQ::on_btnIniciar_clicked()
 {
     if(validarEntradas()){
-        //inicia coleta de dados
+        //hablita/desabilita objetos
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
