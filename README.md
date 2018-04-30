@@ -11,7 +11,7 @@ O Arduino é um micro-controlador com uma plataforma de execução embutida. Ele
 
 O Software, desenvolvido com o framework Qt, configura os parâmetros de sensoriamento (erro, intervalo de amostragem e tempo de captura), transforma a tensão em valores úteis e armazena os dados.
 
-(fluxograma do software)
+[Software](https://github.com/jemartins/maroloDAQ/blob/rafael/fluxogramas/maroloDAQ_soft_iniciar.jpg)
 
 A sistemática de instalação é a seguinte:
 1- Descarregue e instale o ambiente de desenvolvimento do [Arduino](http://www.arduino.cc);
