@@ -14,9 +14,9 @@ O Software, desenvolvido com o framework Qt, configura os parâmetros de sensori
 (fluxograma do software)
 
 A sistemática de instalação é a seguinte:
-1- Descarregue e instale o ambiente de desenvolvimento do [Arduino](www.arduino.cc);
+1- Descarregue e instale o ambiente de desenvolvimento do [Arduino](http://www.arduino.cc);
 2- Descarregue o arquivo fw_maroloDAQ.ino da pasta fw_maroloDAQ, compile e injete o código numa placa Arduino;
-3- Descarregue e instale o [Qt 5](www.qt.io);
+3- Descarregue e instale o [Qt 5](http://www.qt.io);
 4- Descarregue os arquivos da pasta raiz do projeto;
 5- Configure o Makefile para a pontar a varável “QMAKE” para o Qt;
 6- Execute o Makefile;
