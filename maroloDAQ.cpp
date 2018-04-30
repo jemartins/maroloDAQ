@@ -469,40 +469,63 @@ void maroloDAQ::update()
     //Qual o pino selecionado?
     switch(ui->cbPinoList->currentIndex()){
     case 0:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A0 no Arduino
         WriteData("14\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A0 no Arduino [0,1023]
+        AdcReadString = ReadData();
+        //Qual o valor tipo do dado?
+        if(ui->cbSensorList->currentIndex()==5){
+            //tranforma String em Int e transforma Int em Temp
+            AdcReadInt =AdcReadString.toInt();
+            Temperatura = scale_temp(AdcReadInt);
+            //Escreve valor recebido na tela
+            //ui->teLog->append(Temperatura);
+        }
         break;
     case 1:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A1
         WriteData("15\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A1
+        AdcReadString = ReadData();
+        //Escreve valor recebido na tela
+        ui->teLog->append(AdcReadString);
+        if(ui->cbSensorList->currentIndex()==5){
+            //tranforma String em Int
+            AdcReadInt =AdcReadString.toInt();
+            Temperatura = scale_temp(AdcReadInt);
+        }
         break;
     case 2:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A2
         WriteData("16\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A2
+        AdcReadString = ReadData();
+        //Escreve valor recebido na tela
+        ui->teLog->append(AdcReadString);
         break;
     case 3:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A3
         WriteData("17\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A3
+        AdcReadString = ReadData();
+        //Escreve valor recebido na tela
+        ui->teLog->append(AdcReadString);
         break;
     case 4:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A4
         WriteData("18\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A4
+        AdcReadString = ReadData();
+        //Escreve valor recebido na tela
+        ui->teLog->append(AdcReadString);
         break;
     case 5:
-        //Envia comando de piscar LED para Arduino;
+        //Envia comando de ler pino A5
         WriteData("19\n");
-        //Escreve no teLog o valor atual do LED no Arduino;
-        ui->teLog->append(ReadData());
+        //Recebe valor do pino A5
+        AdcReadString = ReadData();
+        //Escreve valor recebido na tela
+        ui->teLog->append(AdcReadString);
         break;
     }
     //Se TD > Tmax/DeltaT então o relógio é parado e TD é zerado
@@ -814,3 +837,23 @@ bool maroloDAQ::validarEntradas() {
         }
     }
 } // end validarEntradas
+
+//funçao para transformar valor de leitura do ADC em valor de temperatura
+int maroloDAQ::scale_temp(int adcCount)
+{
+    int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
+        double scaleFactor;
+        for (i=0; i<100; i++)
+        {
+            if (adcCount >= temp[i][0] && adcCount < temp[i+1][0])
+            {
+                    diffScaled = temp[i][1] - temp[i+1][1];
+                    diffRaw = temp[i+1][0] - temp[i][0];
+                    scaleFactor = (double)diffScaled / (double)diffRaw;
+                    diffAdc = adcCount - temp[i][0];
+                    scaledValue = temp[i][1] - (diffAdc * scaleFactor);
+                    return scaledValue;
+            }
+    }
+    return -1;
+}
