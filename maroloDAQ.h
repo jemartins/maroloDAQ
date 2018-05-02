@@ -68,6 +68,8 @@ private slots:
 
     int scale_temp(int adcCount);
 
+    QString inttoQString(int sensorValue);
+
 
 private:
     Ui::maroloDAQ *ui;

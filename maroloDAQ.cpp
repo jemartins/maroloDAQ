@@ -448,7 +448,7 @@ void maroloDAQ::on_btnParar_clicked()
 void maroloDAQ::on_btnIniciar_clicked()
 {
     if(validarEntradas()){
-        //hablita/desabilita objetos
+        //hablita/desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
@@ -476,10 +476,10 @@ void maroloDAQ::update()
         //Qual o valor tipo do dado?
         if(ui->cbSensorList->currentIndex()==5){
             //tranforma String em Int e transforma Int em Temp
-            AdcReadInt =AdcReadString.toInt();
+            AdcReadInt = AdcReadString.toInt();
             Temperatura = scale_temp(AdcReadInt);
             //Escreve valor recebido na tela
-            //ui->teLog->append(Temperatura);
+            ui->teLog->append(AdcReadString+" "+inttoQString(Temperatura));
         }
         break;
     case 1:
@@ -487,8 +487,6 @@ void maroloDAQ::update()
         WriteData("15\n");
         //Recebe valor do pino A1
         AdcReadString = ReadData();
-        //Escreve valor recebido na tela
-        ui->teLog->append(AdcReadString);
         if(ui->cbSensorList->currentIndex()==5){
             //tranforma String em Int
             AdcReadInt =AdcReadString.toInt();
@@ -856,4 +854,22 @@ int maroloDAQ::scale_temp(int adcCount)
             }
     }
     return -1;
+}
+/* Convertendo inteiro (int) em character (Qstring) */
+QString maroloDAQ::inttoQString(int sensorValue){
+QString sensorValueChar;
+  int len = 0;
+  for(; sensorValue > 0; ++len)
+  {
+    sensorValueChar[len] = sensorValue%10+'0';
+    sensorValue/=10;
+  }
+  sensorValueChar[len] = 0; //null-terminating
+
+  //now we need to reverse res
+  for(int i = 0; i < len/2; ++i)
+  {
+      QChar c = sensorValueChar[i]; sensorValueChar[i] = sensorValueChar[len-i-1]; sensorValueChar[len-i-1] = c;
+  }
+  return sensorValueChar;
 }
