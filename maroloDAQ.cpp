@@ -441,6 +441,9 @@ void maroloDAQ::on_btnParar_clicked()
     //nao testado
     if(timer->isActive()){
         timer->stop();
+        amostra=0;
+        //teste
+        //ui->lcdMonitorX->display(0);
     }
 
 }
@@ -448,7 +451,7 @@ void maroloDAQ::on_btnParar_clicked()
 void maroloDAQ::on_btnIniciar_clicked()
 {
     if(validarEntradas()){
-        //hablita/desabilita entradas
+        //hablita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
@@ -457,79 +460,100 @@ void maroloDAQ::on_btnIniciar_clicked()
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
 
-        //Inicia relógio com DeltaT de argumento
+        //Objeto timer é iniciado e envia um sinal a cada DeltaT*1000 milisegundos
         timer->start(ui->editDeltaT->text().toDouble()*1000);
     }
 }
 
+/*
+ *  Esta função é executada pelo sinal do objeto "timer"
+ */
 void maroloDAQ::update()
 {
-    //Variável que conta o numero de amostras que já foram feitas
-    TD=TD+1;
-    //Qual o pino selecionado?
+    //Verifica qual dos pinos no ARDUINO foi escolhido para leitura
     switch(ui->cbPinoList->currentIndex()){
     case 0:
-        //Envia comando de ler pino A0 no Arduino
+        //Envia comando de leitura do pino AO para ARDUINO
         WriteData("14\n");
-        //Recebe valor do pino A0 no Arduino [0,1023]
+        //Recebe valor do pino A0
         AdcReadString = ReadData();
-        //Qual o valor tipo do dado?
-        if(ui->cbSensorList->currentIndex()==5){
-            //tranforma String em Int e transforma Int em Temp
-            AdcReadInt = AdcReadString.toInt();
-            Temperatura = scale_temp(AdcReadInt);
-            //Escreve valor recebido na tela
-            ui->teLog->append(AdcReadString+" "+inttoQString(Temperatura));
-        }
+        //incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     case 1:
-        //Envia comando de ler pino A1
+        //Envia comando de leitura do pino A1
         WriteData("15\n");
         //Recebe valor do pino A1
         AdcReadString = ReadData();
-        if(ui->cbSensorList->currentIndex()==5){
-            //tranforma String em Int
-            AdcReadInt =AdcReadString.toInt();
-            Temperatura = scale_temp(AdcReadInt);
-        }
+        //incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     case 2:
-        //Envia comando de ler pino A2
+        //Envia comando de leitura do pino A2
         WriteData("16\n");
         //Recebe valor do pino A2
         AdcReadString = ReadData();
-        //Escreve valor recebido na tela
-        ui->teLog->append(AdcReadString);
+        //incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     case 3:
-        //Envia comando de ler pino A3
+        //Envia comando de leitura do pino A3
         WriteData("17\n");
         //Recebe valor do pino A3
         AdcReadString = ReadData();
-        //Escreve valor recebido na tela
-        ui->teLog->append(AdcReadString);
+        //incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     case 4:
-        //Envia comando de ler pino A4
+        //Envia comando de leitura do pino A4
         WriteData("18\n");
         //Recebe valor do pino A4
         AdcReadString = ReadData();
-        //Escreve valor recebido na tela
-        ui->teLog->append(AdcReadString);
+        //incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     case 5:
-        //Envia comando de ler pino A5
+        //Envia comando de leitura do pino A5
         WriteData("19\n");
         //Recebe valor do pino A5
         AdcReadString = ReadData();
-        //Escreve valor recebido na tela
-        ui->teLog->append(AdcReadString);
+        //Incrementa a variavél que conta o número de amostras já realizadas
+        amostra++;
+        //teste
+        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
+        //Dado será interpretado de que maneira?
+        tratarLeitura(AdcReadString);
         break;
     }
-    //Se TD > Tmax/DeltaT então o relógio é parado e TD é zerado
-    if(TD>=(ui->editTmax->text().toDouble()/ui->editDeltaT->text().toDouble())){
+    //Número de amostras > Tmax/DeltaT
+    if(amostra>=(int)(ui->editTmax->text().toDouble()/ui->editDeltaT->text().toDouble())){
+        //Relógio é parado
         timer->stop();
-        TD=0;
+        //Número de amostras é zerado
+        amostra=0;
+        //teste
+        //ui->lcdMonitorX->display(0);
+        //GUI é reabilitado
         ui->editErroSensor->setEnabled(true);
         ui->editDeltaT->setEnabled(true);
         ui->editTmax->setEnabled(true);
@@ -537,6 +561,21 @@ void maroloDAQ::update()
         ui->btnParar->setEnabled(false);
         ui->cbPinoList->setEnabled(true);
         ui->cbSensorList->setEnabled(true);
+    }
+}
+
+void maroloDAQ::tratarLeitura(QString AdcReadString){
+    //A amostra é uma temperatura
+    if(ui->cbSensorList->currentIndex()==5){
+        //Converte QString em inteiro
+        AdcReadInt = AdcReadString.toInt();
+        //Converte inteiro em Temperatura
+        Temperatura = scale_temp(AdcReadInt);
+        //Converte inteiro em Qstring e escreve valor na teLog
+        ui->teLog->append(AdcReadString+","+inttoQString(Temperatura));
+    }else{
+        //A amostra não é uma temperatura
+        ui->teLog->append(AdcReadString);
     }
 }
 
@@ -836,7 +875,7 @@ bool maroloDAQ::validarEntradas() {
     }
 } // end validarEntradas
 
-//funçao para transformar valor de leitura do ADC em valor de temperatura
+//Converte valor de leitura do ADC em valor de temperatura
 int maroloDAQ::scale_temp(int adcCount)
 {
     int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
