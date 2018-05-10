@@ -438,19 +438,19 @@ void maroloDAQ::on_btnParar_clicked()
     ui->btnParar->setEnabled(false);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
+
     //nao testado
     if(timer->isActive()){
         timer->stop();
-        amostra=0;
-        //teste
-        //ui->lcdMonitorX->display(0);
+        amostras = 0;
     }
 
 }
 
 void maroloDAQ::on_btnIniciar_clicked()
 {
-    if(validarEntradas()){
+    if(validarEntradas())
+    {
         //hablita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
@@ -460,122 +460,39 @@ void maroloDAQ::on_btnIniciar_clicked()
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
 
-        //Objeto timer é iniciado e envia um sinal a cada DeltaT*1000 milisegundos
+        //Configura myCALL com o valor do pino do Aduino
+        switch(ui->cbPinoList->currentIndex())
+        {
+        case 0:
+            // Ler pino A0 no Arduino
+            myCALL = "14\n";
+            break;
+        case 1:
+            // Ler pino A1 no Arduino
+            myCALL = "15\n";
+            break;
+        case 2:
+            // Ler pino A2 no Arduino
+            myCALL = "16\n";
+            break;
+        case 3:
+            // Ler pino A3 no Arduino
+            myCALL = "17\n";
+            break;
+        case 4:
+            // Ler pino A4 no Arduino
+            myCALL = "18\n";
+            break;
+        case 5:
+            // Ler pino A5 no Arduino
+            myCALL = "19\n";
+            break;
+        }
+        //Inicia relógio
+        time.start();
+
+        //Inicia Cronometro para trigerar função update()
         timer->start(ui->editDeltaT->text().toDouble()*1000);
-    }
-}
-
-/*
- *  Esta função é executada pelo sinal do objeto "timer"
- */
-void maroloDAQ::update()
-{
-    //Verifica qual dos pinos no ARDUINO foi escolhido para leitura
-    switch(ui->cbPinoList->currentIndex()){
-    case 0:
-        //Envia comando de leitura do pino AO para ARDUINO
-        WriteData("14\n");
-        //Recebe valor do pino A0
-        AdcReadString = ReadData();
-        //incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    case 1:
-        //Envia comando de leitura do pino A1
-        WriteData("15\n");
-        //Recebe valor do pino A1
-        AdcReadString = ReadData();
-        //incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    case 2:
-        //Envia comando de leitura do pino A2
-        WriteData("16\n");
-        //Recebe valor do pino A2
-        AdcReadString = ReadData();
-        //incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    case 3:
-        //Envia comando de leitura do pino A3
-        WriteData("17\n");
-        //Recebe valor do pino A3
-        AdcReadString = ReadData();
-        //incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    case 4:
-        //Envia comando de leitura do pino A4
-        WriteData("18\n");
-        //Recebe valor do pino A4
-        AdcReadString = ReadData();
-        //incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    case 5:
-        //Envia comando de leitura do pino A5
-        WriteData("19\n");
-        //Recebe valor do pino A5
-        AdcReadString = ReadData();
-        //Incrementa a variavél que conta o número de amostras já realizadas
-        amostra++;
-        //teste
-        ui->lcdMonitorX->display(ui->editDeltaT->text().toDouble()*amostra);
-        //Dado será interpretado de que maneira?
-        tratarLeitura(AdcReadString);
-        break;
-    }
-    //Número de amostras > Tmax/DeltaT
-    if(amostra>=(int)(ui->editTmax->text().toDouble()/ui->editDeltaT->text().toDouble())){
-        //Relógio é parado
-        timer->stop();
-        //Número de amostras é zerado
-        amostra=0;
-        //teste
-        //ui->lcdMonitorX->display(0);
-        //GUI é reabilitado
-        ui->editErroSensor->setEnabled(true);
-        ui->editDeltaT->setEnabled(true);
-        ui->editTmax->setEnabled(true);
-        ui->btnIniciar->setEnabled(true);
-        ui->btnParar->setEnabled(false);
-        ui->cbPinoList->setEnabled(true);
-        ui->cbSensorList->setEnabled(true);
-    }
-}
-
-void maroloDAQ::tratarLeitura(QString AdcReadString){
-    //A amostra é uma temperatura
-    if(ui->cbSensorList->currentIndex()==5){
-        //Converte QString em inteiro
-        AdcReadInt = AdcReadString.toInt();
-        //Converte inteiro em Temperatura
-        Temperatura = scale_temp(AdcReadInt);
-        //Converte inteiro em Qstring e escreve valor na teLog
-        ui->teLog->append(AdcReadString+","+inttoQString(Temperatura));
-    }else{
-        //A amostra não é uma temperatura
-        ui->teLog->append(AdcReadString);
     }
 }
 
@@ -875,6 +792,128 @@ bool maroloDAQ::validarEntradas() {
     }
 } // end validarEntradas
 
+//
+void maroloDAQ::update()
+{
+    if(amostras==0)
+    {
+    //reinicia relógio e escreve na teLog o tempo decorrido
+    ui->teLog->append(QString::number(time.restart()));
+    }
+    //intervalo de tempo para as leituras
+    double deltaT = (ui->editDeltaT->text().toDouble());
+
+    // tolerância no tempo máximo de leitura
+    double tolerance = (deltaT/1000) * 0.01;
+
+    // Tempo decorrido nas leituras
+    double time_elapsed = (double)time.elapsed()/1000;
+
+    //Inicia leitura
+    if(time_elapsed<=ui->editTmax->text().toDouble()+tolerance)
+    {
+        amostras++;
+
+        ui->teLog->append(QString::number(amostras));
+
+        //Qual Sensor foi Selecionado
+        switch(ui->cbSensorList->currentIndex())
+            {
+            case 0:
+                //mywave = readSOUNDWAVE(myCALL);
+                mywave = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(mywave, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 1:
+                //mysound = readSOUNLEVEL(myCALL);
+                mysound = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(mysound, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 2:
+                //myvoltage = readVOLTAGE(myCALL);
+                myvoltage = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 3:
+                //myresistence = readRESISTENCE(myCALL);
+                myresistence = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(myresistence, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 4:
+                //myph = readPH(myCALL);
+                myph = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(myph, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 5:
+                mytemperature = readTEMPERATURE(myCALL);
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(mytemperature, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            case 6:
+                //mylight = readLIGHT(myCALL);
+                mylight = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(mylight, 'f', 2));
+                break;
+            case 7:
+                // myangle = readPENDULO(myCALL);
+                myangle = 0;
+                // Envia o valor medido ao lcdMonitorY
+                ui->lcdMonitorY->display(QString::number(myangle, 'f', 2));
+                // Envia o tempo decorrido para o lcdMonitorX
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                break;
+            } // end switch sensor
+    }else{
+
+        //Cronometro é parado
+        timer->stop();
+
+        //GUI é reabilitado
+        ui->editErroSensor->setEnabled(true);
+        ui->editDeltaT->setEnabled(true);
+        ui->editTmax->setEnabled(true);
+        ui->btnIniciar->setEnabled(true);
+        ui->btnParar->setEnabled(false);
+        ui->cbPinoList->setEnabled(true);
+        ui->cbSensorList->setEnabled(true);
+        amostras = 0;
+    }
+}
+
+double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
+{
+    //Envia comando para Arduino ler pino
+    WriteData(myCALL);
+
+    //recebe valor lido pelo ADC no pino do sensor
+    AdcReadString = ReadData();
+
+    //converte String em Inteiro
+    AdcReadInt = AdcReadString.toInt();
+
+    //Converte Inteiro em Temperatura
+    return 333.81 + 0.04867 * AdcReadInt - 4.8123e-5 * (AdcReadInt^2);
+
+}
+
 //Converte valor de leitura do ADC em valor de temperatura
 int maroloDAQ::scale_temp(int adcCount)
 {
@@ -893,22 +932,4 @@ int maroloDAQ::scale_temp(int adcCount)
             }
     }
     return -1;
-}
-/* Convertendo inteiro (int) em character (Qstring) */
-QString maroloDAQ::inttoQString(int sensorValue){
-QString sensorValueChar;
-  int len = 0;
-  for(; sensorValue > 0; ++len)
-  {
-    sensorValueChar[len] = sensorValue%10+'0';
-    sensorValue/=10;
-  }
-  sensorValueChar[len] = 0; //null-terminating
-
-  //now we need to reverse res
-  for(int i = 0; i < len/2; ++i)
-  {
-      QChar c = sensorValueChar[i]; sensorValueChar[i] = sensorValueChar[len-i-1]; sensorValueChar[len-i-1] = c;
-  }
-  return sensorValueChar;
 }

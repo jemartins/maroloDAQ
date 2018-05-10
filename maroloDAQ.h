@@ -7,6 +7,7 @@
 #include "comserial.h"
 #include <QMessageBox>
 #include <QTimer>
+#include <QTime>
 
 namespace Ui {
 class maroloDAQ;
@@ -68,9 +69,7 @@ private slots:
 
     int scale_temp(int adcCount);
 
-    QString inttoQString(int sensorValue);
-
-    void tratarLeitura(QString AdcReadString);
+    double readTEMPERATURE(QByteArray AdcReadString);
 
 
 private:
@@ -90,11 +89,15 @@ private:
     QAction *actionS3;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
+    //variáveis adicionas por Rafael
     QMessageBox msgBox;
     QTimer *timer=new QTimer(this);
-    int amostra=0;
-    int AdcReadInt,Temperatura;
+    QTime time;
+    QByteArray myCALL;
+    double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
     QString AdcReadString;
+    int AdcReadInt,amostras=0;
+    //tabela
     const int temp[101][2] = {
     {14,1500},
     {24,1333},
