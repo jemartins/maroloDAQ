@@ -54,7 +54,7 @@ ui(new Ui::maroloDAQ)
     setDesconectado();
 
     //Conectando SIGNAL de Timer a função update
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 maroloDAQ::~maroloDAQ()
@@ -92,6 +92,8 @@ void maroloDAQ::scanPortas() {
     devserial = new QSerialPort(this);
     /* Create Object the Class comserial to manipulate read/write of the my way */
     procSerial = new comserial(devserial);
+    //aponta procSerial para Sleeper procserial
+    amostra->procSerial=procSerial;
     /* Load Device PortSerial available */
     QStringList DispSeriais = procSerial->CarregarDispositivos();
     
@@ -439,19 +441,13 @@ void maroloDAQ::on_btnParar_clicked()
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
 
-    //nao testado
-    if(timer->isActive()){
-        timer->stop();
-        amostras = 0;
-    }
-
 }
 
 void maroloDAQ::on_btnIniciar_clicked()
 {
     if(validarEntradas())
     {
-        //hablita ou desabilita entradas
+        //Configura GUI
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
@@ -488,11 +484,21 @@ void maroloDAQ::on_btnIniciar_clicked()
             myCALL = "19\n";
             break;
         }
-        //Inicia relógio
-        time.start();
 
-        //Inicia Cronometro para trigerar função update()
-        timer->start(ui->editDeltaT->text().toDouble()*1000);
+
+        amostra->doReadings(ui->cbSensorList->currentIndex(),
+                           (int)(ui->editDeltaT->text().toDouble()*1000),
+                           (int)(ui->editTmax->text().toDouble()*1000),
+                           myCALL);
+
+        //GUI é reabilitado
+//        ui->editErroSensor->setEnabled(true);
+//        ui->editDeltaT->setEnabled(true);
+//        ui->editTmax->setEnabled(true);
+//        ui->btnIniciar->setEnabled(true);
+//        ui->btnParar->setEnabled(false);
+//        ui->cbPinoList->setEnabled(true);
+//        ui->cbSensorList->setEnabled(true);
     }
 }
 
@@ -793,143 +799,123 @@ bool maroloDAQ::validarEntradas() {
 } // end validarEntradas
 
 //
-void maroloDAQ::update()
-{
-    if(amostras==0)
-    {
-    //reinicia relógio e escreve na teLog o tempo decorrido
-    ui->teLog->append(QString::number(time.restart()));
-    }
-    //intervalo de tempo para as leituras
-    double deltaT = (ui->editDeltaT->text().toDouble());
+//void maroloDAQ::doReadings()
+//{
+//    // Tempo decorrido nas leituras ms
+//    double time_elapsed = 0;
 
-    // tolerância no tempo máximo de leitura
-    double tolerance = (deltaT/1000) * 0.01;
+//    //Inicia Relogio do tempo total
+//    Relogio1.start();
 
-    // Tempo decorrido nas leituras
-    double time_elapsed = (double)time.elapsed()/1000;
+//    //Inicia leitura
+//    while(time_elapsed<= ui->editTmax->text().toDouble() + ui->editDeltaT->text().toDouble()*0.01)
+//    {
+//        //Inica Relógio do Intervalo
+//        //Relogio2.restart();
 
-    //Inicia leitura
-    if(time_elapsed<=ui->editTmax->text().toDouble()+tolerance)
-    {
-        amostras++;
+//        //Qual Sensor foi Selecionado
+//        switch(ui->cbSensorList->currentIndex())
+//        {
+//        case 0:
+//            //mywave = readSOUNDWAVE(myCALL);
+//            mywave = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(mywave, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 1:
+//            //mysound = readSOUNLEVEL(myCALL);
+//            mysound = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(mysound, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 2:
+//            //myvoltage = readVOLTAGE(myCALL);
+//            myvoltage = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 3:
+//            //myresistence = readRESISTENCE(myCALL);
+//            myresistence = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(myresistence, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 4:
+//            //myph = readPH(myCALL);
+//            myph = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(myph, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 5:
+//            mytemperature = readTEMPERATURE(myCALL);
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(mytemperature, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        case 6:
+//            //mylight = readLIGHT(myCALL);
+//            mylight = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(mylight, 'f', 2));
+//            break;
+//        case 7:
+//            // myangle = readPENDULO(myCALL);
+//            myangle = 0;
+//            // Envia o valor medido ao lcdMonitorY
+//            ui->lcdMonitorY->display(QString::number(myangle, 'f', 2));
+//            // Envia o tempo decorrido para o lcdMonitorX
+//            ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+//            break;
+//        } // end switch sensor
 
-        ui->teLog->append(QString::number(amostras));
+//        //this->msleep(ui->editDeltaT->text().toDouble()*1000);
+//        //amostra.teste=false;
 
-        //Qual Sensor foi Selecionado
-        switch(ui->cbSensorList->currentIndex())
-            {
-            case 0:
-                //mywave = readSOUNDWAVE(myCALL);
-                mywave = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(mywave, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 1:
-                //mysound = readSOUNLEVEL(myCALL);
-                mysound = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(mysound, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 2:
-                //myvoltage = readVOLTAGE(myCALL);
-                myvoltage = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 3:
-                //myresistence = readRESISTENCE(myCALL);
-                myresistence = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(myresistence, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 4:
-                //myph = readPH(myCALL);
-                myph = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(myph, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 5:
-                mytemperature = readTEMPERATURE(myCALL);
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(mytemperature, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            case 6:
-                //mylight = readLIGHT(myCALL);
-                mylight = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(mylight, 'f', 2));
-                break;
-            case 7:
-                // myangle = readPENDULO(myCALL);
-                myangle = 0;
-                // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(myangle, 'f', 2));
-                // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
-                break;
-            } // end switch sensor
-    }else{
+//        //atualiza tempo total decorrido
+//        time_elapsed = (double)Relogio1.elapsed()/1000;
 
-        //Cronometro é parado
-        timer->stop();
+//        //tempo decorrido desde a ultima leitura
+//        //ui->teLog->append(QString::number(qtd++));
 
-        //GUI é reabilitado
-        ui->editErroSensor->setEnabled(true);
-        ui->editDeltaT->setEnabled(true);
-        ui->editTmax->setEnabled(true);
-        ui->btnIniciar->setEnabled(true);
-        ui->btnParar->setEnabled(false);
-        ui->cbPinoList->setEnabled(true);
-        ui->cbSensorList->setEnabled(true);
-        amostras = 0;
-    }
-}
+//    }//end while
 
-double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
-{
-    //Envia comando para Arduino ler pino
-    WriteData(myCALL);
-
-    //recebe valor lido pelo ADC no pino do sensor
-    AdcReadString = ReadData();
-
-    //converte String em Inteiro
-    AdcReadInt = AdcReadString.toInt();
-
-    //Converte Inteiro em Temperatura
-    return 333.81 + 0.04867 * AdcReadInt - 4.8123e-5 * (AdcReadInt^2);
-
-}
+//    //GUI é reabilitado
+//    ui->editErroSensor->setEnabled(true);
+//    ui->editDeltaT->setEnabled(true);
+//    ui->editTmax->setEnabled(true);
+//    ui->btnIniciar->setEnabled(true);
+//    ui->btnParar->setEnabled(false);
+//    ui->cbPinoList->setEnabled(true);
+//    ui->cbSensorList->setEnabled(true);
+//}
 
 //Converte valor de leitura do ADC em valor de temperatura
-int maroloDAQ::scale_temp(int adcCount)
-{
-    int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
-        double scaleFactor;
-        for (i=0; i<100; i++)
-        {
-            if (adcCount >= temp[i][0] && adcCount < temp[i+1][0])
-            {
-                    diffScaled = temp[i][1] - temp[i+1][1];
-                    diffRaw = temp[i+1][0] - temp[i][0];
-                    scaleFactor = (double)diffScaled / (double)diffRaw;
-                    diffAdc = adcCount - temp[i][0];
-                    scaledValue = temp[i][1] - (diffAdc * scaleFactor);
-                    return scaledValue;
-            }
-    }
-    return -1;
-}
+//int maroloDAQ::scale_temp(int adcCount)
+//{
+//    int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
+//        double scaleFactor;
+//        for (i=0; i<100; i++)
+//        {
+//            if (adcCount >= temp[i][0] && adcCount < temp[i+1][0])
+//            {
+//                    diffScaled = temp[i][1] - temp[i+1][1];
+//                    diffRaw = temp[i+1][0] - temp[i][0];
+//                    scaleFactor = (double)diffScaled / (double)diffRaw;
+//                    diffAdc = adcCount - temp[i][0];
+//                    scaledValue = temp[i][1] - (diffAdc * scaleFactor);
+//                    return scaledValue;
+//            }
+//    }
+//    return -1;
+//}

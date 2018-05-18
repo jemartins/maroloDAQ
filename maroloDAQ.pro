@@ -25,11 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         maroloDAQ.cpp \
-    comserial.cpp
+    comserial.cpp \
+    sleeper.cpp
 
 
 HEADERS  += maroloDAQ.h \
-    comserial.h
+    comserial.h \
+    sleeper.h
 
 FORMS    += maroloDAQ.ui
 
