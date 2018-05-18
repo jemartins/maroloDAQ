@@ -33,17 +33,17 @@ ui(new Ui::maroloDAQ)
     ui->editErroSensor->setMaxLength(7);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0,999,2,ui->editDeltaT));
+    ui->editDeltaT->setValidator(new QDoubleValidator(0,99999,1,ui->editDeltaT));
     //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editDeltaT->setValidator(dvVal2);
-    ui->editDeltaT->setMaxLength(3);
-    //ui->editDeltaT->setInputMask("999");
+    ui->editDeltaT->setMaxLength(5);
+    //ui->editDeltaT->setInputMask("99999");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0,99999,1,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0,999999,1,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
-    ui->editTmax->setMaxLength(5);
-    //ui->editTmax->setInputMask("99999");
+    ui->editTmax->setMaxLength(6);
+    //ui->editTmax->setInputMask("999999");
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
@@ -798,23 +798,26 @@ void maroloDAQ::update()
     if(amostras==0)
     {
     //reinicia relógio e escreve na teLog o tempo decorrido
-    ui->teLog->append(QString::number(time.restart()));
+    //ui->teLog->append(QString::number(time.restart()));
     }
     //intervalo de tempo para as leituras
     double deltaT = (ui->editDeltaT->text().toDouble());
+    //erro indicado no gui para o sensor
+    double erroY = (ui->editErroSensor->text().toDouble());
 
     // tolerância no tempo máximo de leitura
-    double tolerance = (deltaT/1000) * 0.01;
+    double tolerance = (deltaT) * 0.5;
 
     // Tempo decorrido nas leituras
     double time_elapsed = (double)time.elapsed()/1000;
-
+    //double time_elapsed = 0;
+    
     //Inicia leitura
     if(time_elapsed<=ui->editTmax->text().toDouble()+tolerance)
     {
         amostras++;
 
-        ui->teLog->append(QString::number(amostras));
+        //ui->teLog->append(QString::number(amostras));
 
         //Qual Sensor foi Selecionado
         switch(ui->cbSensorList->currentIndex())
@@ -861,10 +864,15 @@ void maroloDAQ::update()
                 break;
             case 5:
                 mytemperature = readTEMPERATURE(myCALL);
+                //qDebug() << "AQUI myCall = " << myCALL << endl;
+                qDebug() << "AQUI mytemperature = " << mytemperature << endl;
+                qDebug() << "AQUI time_elapsed = " << time_elapsed << endl;
+                
                 // Envia o valor medido ao lcdMonitorY
-                ui->lcdMonitorY->display(QString::number(mytemperature, 'f', 2));
+                ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                 // Envia o tempo decorrido para o lcdMonitorX
-                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
+                ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 3));
+                ui->teLog->append((QString::number(time_elapsed, 'f', 3))+"    "+(QString::number(mytemperature/10, 'f', 1))+"    "+(QString::number(deltaT, 'f', 3))+"    "+(QString::number(erroY, 'f', 2)));
                 break;
             case 6:
                 //mylight = readLIGHT(myCALL);
@@ -880,6 +888,10 @@ void maroloDAQ::update()
                 // Envia o tempo decorrido para o lcdMonitorX
                 ui->lcdMonitorX->display(QString::number(time_elapsed, 'f', 2));
                 break;
+                
+                // Tempo decorrido nas leituras
+                time_elapsed = time_elapsed + deltaT;
+
             } // end switch sensor
     }else{
 
@@ -905,12 +917,15 @@ double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
 
     //recebe valor lido pelo ADC no pino do sensor
     AdcReadString = ReadData();
+    qDebug() << "AQUI AdcReadSting [temperature] = " << AdcReadString << endl;
 
     //converte String em Inteiro
     AdcReadInt = AdcReadString.toInt();
 
     //Converte Inteiro em Temperatura
-    return 333.81 + 0.04867 * AdcReadInt - 4.8123e-5 * (AdcReadInt^2);
+    int temperature = scale_temp(AdcReadInt*(4096/1024));
+    return temperature;
+    //return 333.81 + 0.04867 * AdcReadInt - 4.8123e-5 * (AdcReadInt^2);
 
 }
 
@@ -925,7 +940,7 @@ int maroloDAQ::scale_temp(int adcCount)
             {
                     diffScaled = temp[i][1] - temp[i+1][1];
                     diffRaw = temp[i+1][0] - temp[i][0];
-                    scaleFactor = (double)diffScaled / (double)diffRaw;
+                    scaleFactor = ((double)diffScaled ) / (double)diffRaw;
                     diffAdc = adcCount - temp[i][0];
                     scaledValue = temp[i][1] - (diffAdc * scaleFactor);
                     return scaledValue;
