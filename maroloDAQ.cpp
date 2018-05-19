@@ -900,6 +900,7 @@ void maroloDAQ::doReadings()
 		    // Tempo decorrido nas medicoes
 		    tempo_atual = (timer.elapsed() - tempo_inicial);
 
+		    QCoreApplication::processEvents();
                     //qDebug() << "AQUI myCall = " << myCALL << endl;
                     qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
                     qDebug() << "AQUI tempo_atual = " << tempo_atual << endl;
