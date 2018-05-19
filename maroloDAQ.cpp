@@ -904,6 +904,7 @@ void maroloDAQ::doReadings()
                     qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
                     qDebug() << "AQUI tempo_atual = " << tempo_atual << endl;
                     
+		    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -935,22 +936,18 @@ void maroloDAQ::doReadings()
 	    //QThread::msleep(milisegundos);
 	    //QThread::msleep(deltaT);
 
-    }
-    //}else{
+    } // end timout
 
-        //Cronometro é parado
-        //timer->stop();
+        
+    //GUI é reabilitado
+    ui->editErroSensor->setEnabled(true);
+    ui->editDeltaT->setEnabled(true);
+    ui->editTmax->setEnabled(true);
+    ui->btnIniciar->setEnabled(true);
+    ui->btnParar->setEnabled(false);
+    ui->cbPinoList->setEnabled(true);
+    ui->cbSensorList->setEnabled(true);
 
-        //GUI é reabilitado
-        ui->editErroSensor->setEnabled(true);
-        ui->editDeltaT->setEnabled(true);
-        ui->editTmax->setEnabled(true);
-        ui->btnIniciar->setEnabled(true);
-        ui->btnParar->setEnabled(false);
-        ui->cbPinoList->setEnabled(true);
-        ui->cbSensorList->setEnabled(true);
-        //amostras = 0;
-    //}
 }
 
 double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
