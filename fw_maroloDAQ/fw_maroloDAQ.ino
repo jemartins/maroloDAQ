@@ -125,7 +125,7 @@ void ProcGetA0()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(1);
 }
 
 void ProcGetA1()
