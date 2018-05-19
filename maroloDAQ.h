@@ -6,8 +6,7 @@
 #include <QActionGroup>
 #include "comserial.h"
 #include <QMessageBox>
-//#include <QTimer>
-//#include <QTime>
+#include <QElapsedTimer>
 
 namespace Ui {
 class maroloDAQ;
@@ -22,55 +21,30 @@ public:
     ~maroloDAQ();
 
 private slots:
-
     void WriteData(const QByteArray data);
-
     void scanPortas();
-
     void setDesconectado();
-
     void setConectado();
-
     void maroloDevClose();
-
     void on_btnDevOpen_clicked();
-
     void on_btnDevClose_clicked();
-
     void on_btnBWTerminal_clicked();
-
     void on_btnIniciar_clicked();
-
     void on_btnParar_clicked();
-
     void on_btnAppClose_clicked();
-
     void on_actionSalvar_como_triggered();
-
     void on_actionSalvar_triggered();
-
     void on_actionSair_triggered();
-
     void on_actionConectar_triggered();
-
     void on_actionDesconectar_triggered();
-
     void on_actionRecarregar_triggered();
-
     void setPortasSeriais(QString myAction);
-
     void on_cbSensorList_activated(const QString &arg1);
-
     bool validarEntradas();
-
     QString ReadData();
-
     void doReadings();
-
     int scale_temp(int adcCount);
-
     double readTEMPERATURE(QByteArray AdcReadString);
-
 
 private:
     Ui::maroloDAQ *ui;
@@ -91,13 +65,13 @@ private:
     QActionGroup *PortasGroup;
     //variáveis adicionas por Rafael
     QMessageBox msgBox;
-    //QTimer *timer=new QTimer(this);
-    //QTime time;
     QByteArray myCALL;
-    double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
+    //double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
     QString AdcReadString;
-    //int AdcReadInt,amostras=0;
-    int AdcReadInt;
+    
+    // definindo o relogio
+    QElapsedTimer timer;
+    
     //tabela
     const int temp[101][2] = {
         {55,1500},

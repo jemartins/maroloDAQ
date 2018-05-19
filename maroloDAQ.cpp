@@ -5,14 +5,12 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
-//#include <QActionGroup>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
 #include <cstring>
 #include <string>
 #include <QThread>
-#include <QElapsedTimer>
 
 
 maroloDAQ::maroloDAQ(QWidget *parent) :
@@ -803,50 +801,31 @@ bool maroloDAQ::validarEntradas() {
 //
 void maroloDAQ::doReadings()
 {
-    /*
-    if(amostras==0)
-    {
-    //reinicia relógio e escreve na teLog o tempo decorrido
-    //ui->teLog->append(QString::number(time.restart()));
-    }
-    */
-    
+    double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
     // contador
     int cont = 0;
-    
-    // definindo o relogio
-    QElapsedTimer timer;
-    // inicializando o relogio
-    timer.start();
-    // instante inicial das medicoes
-    double tempo_inicial = timer.elapsed();
-    // tempo decorrido das medicoes
-    double tempo_atual = timer.elapsed() - tempo_inicial;
-    
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
     //tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
     //erro indicado no gui para o sensor
     double erroY = ui->editErroSensor->text().toDouble();
-
     // tolerância no tempo máximo de leitura
-    double tolerance = deltaT * 0.2;
+    double tolerance = deltaT * 0.3;
 
-    // Tempo decorrido nas leituras
-    //double tempo_atual = (double)time.elapsed()/1000;
-    //double tempo_atual = 0;
-    
-    
+    // definindo o relogio
+    //QElapsedTimer timer;
+    // inicializando o relogio
+    timer.start();
+    // instante inicial das medicoes
+    double tempo_inicial = timer.elapsed();
+    // momento da medicao
+    double tempo_atual = 0 ;
     // define timeout
     double timeout = Tmax + tolerance;
 
-    //if(tempo_atual<=ui->editTmax->text().toDouble()+tolerance)
     while (!timer.hasExpired(timeout))
     {
-        //amostras++;
-
-        //ui->teLog->append(QString::number(amostras));
         
         if (timer.hasExpired(cont * deltaT))
         {
@@ -897,9 +876,6 @@ void maroloDAQ::doReadings()
                 case 5:
                     mytemperature = readTEMPERATURE(myCALL);
 
-		    // Tempo decorrido nas medicoes
-		    tempo_atual = (timer.elapsed() - tempo_inicial);
-
 		    QCoreApplication::processEvents();
                     //qDebug() << "AQUI myCall = " << myCALL << endl;
                     qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
@@ -909,8 +885,11 @@ void maroloDAQ::doReadings()
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 3))+"    "+(QString::number(mytemperature/10, 'f', 1))+"    "+(QString::number(deltaT/1000, 'f', 3))+"    "+(QString::number(erroY, 'f', 3)));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+				    (QString::number(mytemperature/10, 'f', 1))+"    "+\
+				    (QString::number(deltaT/1000, 'f', 2))+"    "+\
+				    (QString::number(erroY, 'f', 3)));
                     break;
                 case 6:
                     //mylight = readLIGHT(myCALL);
@@ -930,14 +909,13 @@ void maroloDAQ::doReadings()
             } // end switch sensor
             
             cont++;
-            
-        } // end if
-        
-        // espera deltaT em milisegundos
-	    //QThread::msleep(milisegundos);
-	    //QThread::msleep(deltaT);
 
-    } // end timout
+        } // end if deltaT
+	    
+	// Atualiza o tempo decorrido na medicao
+	tempo_atual = (timer.elapsed() - tempo_inicial);
+        
+    } // end while timeout
 
         
     //GUI é reabilitado
@@ -961,12 +939,11 @@ double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
     qDebug() << "AQUI AdcReadSting [temperature] = " << AdcReadString << endl;
 
     //converte String em Inteiro
-    AdcReadInt = AdcReadString.toInt();
+    double AdcReadDouble = AdcReadString.toDouble();
 
     //Converte Inteiro em Temperatura
-    int temperature = scale_temp(AdcReadInt*(4096/1024));
+    int temperature = scale_temp(int(AdcReadDouble * (4096/1024)));
     return temperature;
-    //return 333.81 + 0.04867 * AdcReadInt - 4.8123e-5 * (AdcReadInt^2);
 
 }
 
