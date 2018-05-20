@@ -781,6 +781,7 @@ bool maroloDAQ::validarEntradas() {
 
 //
 void maroloDAQ::doReadings() {
+    
     //Configura myCALL com o valor do pino do Aduino
     QByteArray myCALL;
     switch(ui->cbPinoList->currentIndex())
@@ -928,6 +929,7 @@ void maroloDAQ::doReadings() {
 }
 
 double maroloDAQ::readTemperature(QByteArray myCALL) {
+    
     //Envia comando para Arduino ler pino
     WriteData(myCALL);
 
@@ -945,6 +947,7 @@ double maroloDAQ::readTemperature(QByteArray myCALL) {
 
 //Converte valor de leitura do ADC em valor de temperatura
 double maroloDAQ::scale_temp(double adcCount) {
+    
     //int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
     int i, diffScaled, diffRaw, diffAdc;
         //double scaleFactor;
@@ -963,6 +966,45 @@ double maroloDAQ::scale_temp(double adcCount) {
     }
     return -1;
 }
+
+void maroloDAQ::angleCalibrate(double myangle, int index) {
+    
+    //Configura myCALL com o valor do pino do Aduino
+    QByteArray myCALL;
+    switch(ui->cbPinoList->currentIndex())
+    {
+        case 0:
+            // Ler pino A0 no Arduino
+            myCALL = "14\n";
+            break;
+        case 1:
+            // Ler pino A1 no Arduino
+            myCALL = "15\n";
+            break;
+        case 2:
+            // Ler pino A2 no Arduino
+            myCALL = "16\n";
+            break;
+        case 3:
+            // Ler pino A3 no Arduino
+            myCALL = "17\n";
+            break;
+        case 4:
+            // Ler pino A4 no Arduino
+            myCALL = "18\n";
+            break;
+        case 5:
+            // Ler pino A5 no Arduino
+            myCALL = "19\n";
+            break;
+    }
+    
+    double myvoltage = readVoltage(myCALL);
+    
+    calibrationArray[index].angle = myangle;
+    calibrationArray[index].voltage = myvoltage;
+        
+} // end angleCalibrate
 
 double maroloDAQ::readAngle(QByteArray myCALL) {
 	

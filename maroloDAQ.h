@@ -46,6 +46,7 @@ private slots:
     void doReadings();
     double scale_temp(double adcCount);
     double readTemperature(QByteArray myCALL);
+    void angleCalibrate(double myangle, int index);
     double readAngle(QByteArray myCALL);
     double readVoltage(QByteArray myCALL);
     double scale_light(double adcCount);

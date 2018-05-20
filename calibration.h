@@ -174,8 +174,8 @@ static int light[11][2] = {
 
 typedef struct
 {
-    float angle;
-    int voltage;
+    double angle;
+    double voltage;
 }CALIBRATION;
 
 CALIBRATION calibrationArray[2];
