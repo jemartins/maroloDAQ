@@ -889,8 +889,8 @@ void maroloDAQ::doReadings()
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
 				    (QString::number(mytemperature/10, 'f', 1))+"    "+\
-				    (QString::number(deltaT/1000, 'f', 2))+"    "+\
-				    (QString::number(erroY, 'f', 3)));
+				    (QString::number(0.01, 'f', 2))+"    "+\
+				    (QString::number(erroY, 'f', 1)));
                     break;
                 case 6:
                     //mylight = readLIGHT(myCALL);
