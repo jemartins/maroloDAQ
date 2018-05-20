@@ -12,8 +12,6 @@
 #include <cstring>
 #include <string>
 #include <math.h>
-#include <QThread>
-
 
 maroloDAQ::maroloDAQ(QWidget *parent) :
 QMainWindow(parent),
