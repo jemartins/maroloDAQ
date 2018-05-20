@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cstring>
 #include <string>
+#include <math.h>
 #include <QThread>
 
 
@@ -464,42 +465,8 @@ void maroloDAQ::on_btnIniciar_clicked()
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
 
-        //Configura myCALL com o valor do pino do Aduino
-        switch(ui->cbPinoList->currentIndex())
-        {
-        case 0:
-            // Ler pino A0 no Arduino
-            myCALL = "14\n";
-            break;
-        case 1:
-            // Ler pino A1 no Arduino
-            myCALL = "15\n";
-            break;
-        case 2:
-            // Ler pino A2 no Arduino
-            myCALL = "16\n";
-            break;
-        case 3:
-            // Ler pino A3 no Arduino
-            myCALL = "17\n";
-            break;
-        case 4:
-            // Ler pino A4 no Arduino
-            myCALL = "18\n";
-            break;
-        case 5:
-            // Ler pino A5 no Arduino
-            myCALL = "19\n";
-            break;
-        }
-        //Inicia relógio
-        //time.start();
-
-        //Inicia Cronometro para trigerar função update()
-        //timer->start(ui->editDeltaT->text().toDouble()*1000);
-	
-	// inicia medicoes
-	doReadings();
+        // inicia medicoes
+        doReadings();
     }
 }
 
@@ -757,8 +724,7 @@ void maroloDAQ::enumerateMenu(QMenu *menu) {
     }
 }
 
-void maroloDAQ::on_cbSensorList_activated(const QString &arg1)
-{
+void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
     //qDebug() << "----> AQUI cbSensorList e &arg1 = " << arg1;
     if ( arg1 == "Pêndulo" ) {
         ui->editAngulo1->setEnabled(true);
@@ -800,9 +766,38 @@ bool maroloDAQ::validarEntradas() {
 } // end validarEntradas
 
 //
-void maroloDAQ::doReadings()
-{
-    double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
+void maroloDAQ::doReadings() {
+    //Configura myCALL com o valor do pino do Aduino
+    QByteArray myCALL;
+    switch(ui->cbPinoList->currentIndex())
+    {
+        case 0:
+            // Ler pino A0 no Arduino
+            myCALL = "14\n";
+            break;
+        case 1:
+            // Ler pino A1 no Arduino
+            myCALL = "15\n";
+            break;
+        case 2:
+            // Ler pino A2 no Arduino
+            myCALL = "16\n";
+            break;
+        case 3:
+            // Ler pino A3 no Arduino
+            myCALL = "17\n";
+            break;
+        case 4:
+            // Ler pino A4 no Arduino
+            myCALL = "18\n";
+            break;
+        case 5:
+            // Ler pino A5 no Arduino
+            myCALL = "19\n";
+            break;
+    }
+    
+    double mysound,myvoltage,myresistence,mytemperature, mylight,myangle;
     // contador
     int cont = 0;
     //intervalo de tempo para as leituras
@@ -859,14 +854,9 @@ void maroloDAQ::doReadings()
                     ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
                     break;
                 case 3:
-                    mytemperature = readTEMPERATURE(myCALL);
-
-		    QCoreApplication::processEvents();
-                    //qDebug() << "AQUI myCall = " << myCALL << endl;
-                    //qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
-                    //qDebug() << "AQUI tempo_atual = " << tempo_atual << endl;
-                    
-		    QCoreApplication::processEvents();
+                    mytemperature = readTemperature(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -914,14 +904,12 @@ void maroloDAQ::doReadings()
 
 }
 
-double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
-{
+double maroloDAQ::readTemperature(QByteArray myCALL) {
     //Envia comando para Arduino ler pino
     WriteData(myCALL);
 
     //recebe valor lido pelo ADC no pino do sensor
-    AdcReadString = ReadData();
-    //qDebug() << "AQUI AdcReadSting [temperature] = " << AdcReadString << endl;
+    QString AdcReadString = ReadData();
 
     //converte String em Inteiro
     double AdcReadDouble = AdcReadString.toDouble();
@@ -933,8 +921,7 @@ double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
 }
 
 //Converte valor de leitura do ADC em valor de temperatura
-int maroloDAQ::scale_temp(int adcCount)
-{
+int maroloDAQ::scale_temp(int adcCount) {
     int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
         double scaleFactor;
         for (i=0; i<100; i++)
@@ -950,4 +937,121 @@ int maroloDAQ::scale_temp(int adcCount)
             }
     }
     return -1;
+}
+
+double maroloDAQ::readAngle(QByteArray myCALL) {
+	
+	int voltage;
+	float angle;
+	
+	float a;
+	float b;
+	float pi=3.1415926;
+	float v0;
+	float v1;
+	float teta0;
+	float teta1;
+
+	v0 = (float)calibrationArray[0].voltage;	
+	v1 = (float)calibrationArray[1].voltage;
+	teta0 = (float)(calibrationArray[0].angle);
+	teta1 = (float)(calibrationArray[1].angle);
+	
+	teta0 = (teta0)*(pi/180); // conversion to rad
+	teta1 = (teta1)*(pi/180); // conversion to rad
+	
+	a = (v0-v1)/(sin(teta0)-sin(teta1));
+	b = v0-a*sin(teta0);
+
+	voltage = readVoltage(myCALL);
+
+	// Here, conversion voltage into degree
+	angle = (180/pi)*asin((voltage-b)/a);
+	
+	return angle;
+}
+
+double maroloDAQ::readVoltage(QByteArray myCALL) {
+    //Envia comando para Arduino ler pino
+    WriteData(myCALL);
+
+    //recebe valor lido pelo ADC no pino do sensor
+    QString AdcReadString = ReadData();
+
+    //converte String em Inteiro
+    double AdcReadDouble = AdcReadString.toDouble();
+
+    //Converte Inteiro em Temperatura
+    int voltage = (int(AdcReadDouble * (5/1024)));
+    return voltage;
+}
+
+double maroloDAQ::readLight(QByteArray myCALL) {
+    //Envia comando para Arduino ler pino
+    WriteData(myCALL);
+
+    //recebe valor lido pelo ADC no pino do sensor
+    QString AdcReadString = ReadData();
+
+    //converte String em Inteiro
+    double AdcReadDouble = AdcReadString.toDouble();
+
+    //Converte Inteiro em Temperatura
+    int light = scale_light(int(AdcReadDouble * (4096/1024)));
+    return light;
+
+}
+
+int scale_light(int adcCount)
+{
+        int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
+        double scaleFactor;
+        for (i=0; i<10; i++)
+        {
+                if (adcCount >= light[i][0] && adcCount < light[i+1][0])
+                {
+                        diffScaled = light[i+1][1] - light[i][1];
+                        diffRaw = light[i+1][0] - light[i][0];
+                        scaleFactor = (double)diffScaled / (double)diffRaw;
+                        diffAdc = adcCount - light[i][0];
+                        scaledValue = (diffAdc * scaleFactor) + light[i][1];
+                        return scaledValue;
+                }
+        }
+        return -1;
+}
+
+double maroloDAQ::readSound(QByteArray myCALL) {
+    //Envia comando para Arduino ler pino
+    WriteData(myCALL);
+
+    //recebe valor lido pelo ADC no pino do sensor
+    QString AdcReadString = ReadData();
+
+    //converte String em Inteiro
+    double AdcReadDouble = AdcReadString.toDouble();
+
+    //Converte Inteiro em Temperatura
+    int sound = scale_sound(int(AdcReadDouble * (4096/1024)));
+    return sound;
+
+}
+
+int scale_sound(int adcCount)
+{
+        int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
+        double scaleFactor;
+        for (i=0; i<47; i++)
+        {
+                if (adcCount >= sound[i][0] && adcCount < sound[i+1][0])
+                {
+                        diffScaled = sound[i+1][1] - sound[i][1];
+                        diffRaw = sound[i+1][0] - sound[i][0];
+                        scaleFactor = (double)diffScaled / (double)diffRaw;
+                        diffAdc = adcCount - sound[i][0];
+                        scaledValue = (diffAdc * scaleFactor) + sound[i][1];
+                        return scaledValue;
+                }
+        }
+        return -1;
 }

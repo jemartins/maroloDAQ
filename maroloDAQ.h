@@ -44,7 +44,13 @@ private slots:
     QString ReadData();
     void doReadings();
     int scale_temp(int adcCount);
-    double readTEMPERATURE(QByteArray AdcReadString);
+    double readTemperature(QByteArray myCALL);
+    double readAngle(QByteArray myCALL);
+    double readVoltage(QByteArray myCALL);
+    int scale_light(int adcCount);
+    double readLight(QByteArray myCALL);
+    int scale_sound(int adcCount);
+    double readSound(QByteArray myCALL);
 
 private:
     Ui::maroloDAQ *ui;
@@ -65,8 +71,6 @@ private:
     QActionGroup *PortasGroup;
     //variáveis adicionas por Rafael
     QMessageBox msgBox;
-    QByteArray myCALL;
-    //double mywave, mysound,myvoltage,myresistence,myph,mytemperature, mylight,myangle;
     QString AdcReadString;
     
     // definindo o relogio
