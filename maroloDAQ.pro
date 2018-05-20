@@ -29,7 +29,8 @@ SOURCES += main.cpp\
 
 
 HEADERS  += maroloDAQ.h \
-    comserial.h
+    comserial.h \
+    calibration.h
 
 FORMS    += maroloDAQ.ui
 

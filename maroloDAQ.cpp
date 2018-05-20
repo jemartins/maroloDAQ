@@ -1,5 +1,6 @@
 #include "maroloDAQ.h"
 #include "ui_maroloDAQ.h"
+#include "calibration.h"
 
 #include <QMessageBox>
 #include <QMenu>
