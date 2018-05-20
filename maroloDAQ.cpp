@@ -1087,14 +1087,19 @@ double maroloDAQ::scale_sound(double adcCount) {
  */
 int maroloDAQ::setupGrace () {
     if (GraceIsOpen()) {
-        GracePrintf ("s%d on", 0);
-        GracePrintf ("s%d symbol 1", 0);
-        GracePrintf ("s%d symbol size 0.3", 0);
-        GracePrintf ("s%d symbol color %d", 0, 1);
-        GracePrintf ("s%d symbol fill pattern %d", 0, 1);
-        GracePrintf ("s%d line color %d", 0, 1);
-	GracePrintf ("title \"Insira AQUI o Título\"");
+	GracePrintf ("type xydxdy");
+	GracePrintf ("title \"Insira Aqui o Título\"");
 	GracePrintf ("subtitle \"insira aqui o subtítulo\"");
+	GracePrintf ("xaxis  label \"insira aqui no eixoX (unid)\"");
+	GracePrintf ("yaxis  label \"insira aqui no eixoY (unid)\"");
+        GracePrintf ("g0.s%d on", 0);
+        GracePrintf ("g0.s%d symbol 1", 0);
+        GracePrintf ("g0.s%d symbol size 0.3", 0);
+        GracePrintf ("g0.s%d symbol color %d", 0, 1);
+        GracePrintf ("g0.s%d symbol fill pattern %d", 0, 1);
+        GracePrintf ("g0.s%d line color %d", 0, 1);
+	GracePrintf ("g0.s%d legend  \"AQUI legenda\"", 0);
+	GracePrintf ("g0.s%d line type %d", 0, 0);
         return 0;
     } else {
         return -1;
