@@ -12,6 +12,7 @@
 #include <cstring>
 #include <string>
 #include <math.h>
+//#include <grace_np.h>
 
 maroloDAQ::maroloDAQ(QWidget *parent) :
 QMainWindow(parent),
@@ -440,20 +441,10 @@ void maroloDAQ::on_btnParar_clicked()
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
 
-    //nao testado
-    /*
-    if(timer->isActive()){
-        timer->stop();
-        amostras = 0;
-    }
-    */
-
 }
 
-void maroloDAQ::on_btnIniciar_clicked()
-{
-    if(validarEntradas())
-    {
+void maroloDAQ::on_btnIniciar_clicked() {
+    if(validarEntradas()) {
         //hablita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
@@ -462,9 +453,16 @@ void maroloDAQ::on_btnIniciar_clicked()
         ui->btnParar->setEnabled(true);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
-
-        // inicia medicoes
-        doReadings();
+        
+        /* Start Grace with a buffer size of 4096 and open the pipe */
+        if (GraceOpenVA("xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
+            //fprintf(stderr, "Can't run Grace. \n");
+            ui->teLog->append("Can't run Grace. \n");
+            exit(EXIT_FAILURE);
+        } else {
+            // inicia medicoes
+            doReadings();
+        }
     }
 }
 
@@ -1055,3 +1053,34 @@ double maroloDAQ::scale_sound(double adcCount) {
         }
         return -1;
 }
+
+/* 
+ * Coisas para o GRACE
+ * inicio
+ */
+int maroloDAQ::setSimbolo () {
+    if (GraceIsOpen()) {
+        GracePrintf ("s%d on", 0);
+        GracePrintf ("s%d symbol 1", 0);
+        GracePrintf ("s%d symbol size 0.3", 0);
+        GracePrintf ("s%d symbol color %d", 0, 1);
+        GracePrintf ("s%d symbol fill pattern %d", 0, 1);
+        GracePrintf ("s%d line color %d", 0, 1);        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    } // end if
+} // end SetSimbolo
+
+int maroloDAQ::plotaGrace (float x, float y, float dx, float dy) {
+    if (GraceIsOpen()) {
+        GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+        return EXIT_SUCCESS;
+    } else {
+        return EXIT_FAILURE;
+    }
+}
+/* 
+ * Coisas para o GRACE
+ * Fim
+ */
+

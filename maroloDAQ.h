@@ -7,7 +7,7 @@
 #include <QMessageBox>
 #include <QElapsedTimer>
 #include "comserial.h"
-//#include "graceutils.h"
+#include <grace_np.h>
 
 namespace Ui {
 class maroloDAQ;
@@ -52,6 +52,8 @@ private slots:
     double readLight(QByteArray myCALL);
     double scale_sound(double adcCount);
     double readSound(QByteArray myCALL);
+    int setSimbolo ();
+    int plotaGrace (float x, float y, float dx, float dy);
 
 private:
     Ui::maroloDAQ *ui;

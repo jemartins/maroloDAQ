@@ -34,4 +34,6 @@ HEADERS  += maroloDAQ.h \
 
 FORMS    += maroloDAQ.ui
 
+LIBS     += -lgrace_np
+
 DISTFILES +=
