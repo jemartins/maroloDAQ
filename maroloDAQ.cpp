@@ -428,6 +428,17 @@ void maroloDAQ::on_btnDevClose_clicked()
     else {
         ui->teLog->append("### Falha ao fechar conexão serial.");
     }
+    
+    if (GraceIsOpen()) {
+        /* Tell Grace to save the data */
+        //GracePrintf("saveall \"sample.agr\"");
+        /* Flush the output buffer and close Grace */
+        GraceClose();
+        /* We are done */
+        exit(0);
+    } else {
+        exit(-1);
+    }
 }
 
 void maroloDAQ::on_btnParar_clicked()
@@ -866,6 +877,11 @@ void maroloDAQ::doReadings() {
                     
                     if (ui->checkBoxGrace->isEnabled()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
                     }
                     break;
                 case 4:
@@ -1072,6 +1088,8 @@ int maroloDAQ::setupGrace () {
         GracePrintf ("s%d symbol color %d", 0, 1);
         GracePrintf ("s%d symbol fill pattern %d", 0, 1);
         GracePrintf ("s%d line color %d", 0, 1);
+	GracePrintf ("title \"Insira AQUI o Título\"");
+	GracePrintf ("subtitle \"insira aqui o subtítulo\"");
         return 0;
     } else {
         return -1;
