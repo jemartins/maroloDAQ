@@ -1,77 +1,33 @@
-g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++0x -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o maroloDAQ.o maroloDAQ.cpp
-In file included from /usr/lib64/qt5/include/QtGui/qwindowdefs.h:37:0,
-                 from /usr/lib64/qt5/include/QtWidgets/qwidget.h:37,
-                 from /usr/lib64/qt5/include/QtWidgets/qmainwindow.h:37,
-                 from /usr/lib64/qt5/include/QtWidgets/QMainWindow:1,
-                 from maroloDAQ.h:4,
-                 from maroloDAQ.cpp:1:
-/usr/lib64/qt5/include/QtCore/qglobal.h: In instantiation of ‘class QForeachContainer<QMenu*>’:
-maroloDAQ.cpp:446:5:   required from here
-/usr/lib64/qt5/include/QtCore/qglobal.h:924:32: error: ‘QMenu*’ is not a class, struct, or union type
-     typename T::const_iterator i, e;
-                                ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:924:35: error: ‘QMenu*’ is not a class, struct, or union type
-     typename T::const_iterator i, e;
-                                   ^
-maroloDAQ.cpp: In member function ‘void maroloDAQ::setPortasSeriais(QString, int)’:
-/usr/lib64/qt5/include/QtCore/qglobal.h:950:41: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
-      _container_.control && _container_.i != _container_.e;         \
-                                         ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
- #    define foreach Q_FOREACH
-                     ^
-maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
-     foreach ( QAction *action, ui->menuPortas ) {
-     ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:950:58: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘e’
-      _container_.control && _container_.i != _container_.e;         \
-                                                          ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
- #    define foreach Q_FOREACH
-                     ^
-maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
-     foreach ( QAction *action, ui->menuPortas ) {
-     ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:951:20: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
-      ++_container_.i, _container_.control ^= 1)                     \
-                    ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
- #    define foreach Q_FOREACH
-                     ^
-maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
-     foreach ( QAction *action, ui->menuPortas ) {
-     ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:952:34: error: ‘class QForeachContainer<QMenu*>’ has no member named ‘i’
-     for (variable = *_container_.i; _container_.control; _container_.control = 0)
-                                  ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:1006:21: note: in expansion of macro ‘Q_FOREACH’
- #    define foreach Q_FOREACH
-                     ^
-maroloDAQ.cpp:446:5: note: in expansion of macro ‘foreach’
-     foreach ( QAction *action, ui->menuPortas ) {
-     ^
-maroloDAQ.cpp:447:61: error: expected ‘)’ before ‘{’ token
-         if ( !(action->isSeparator() or !(action->menu()) ) {
-                                                             ^
-maroloDAQ.cpp:452:5: error: expected primary-expression before ‘}’ token
-     }
-     ^
-maroloDAQ.cpp:445:14: warning: unused variable ‘action’ [-Wunused-variable]
-     QAction *action;
-              ^
-In file included from /usr/lib64/qt5/include/QtGui/qwindowdefs.h:37:0,
-                 from /usr/lib64/qt5/include/QtWidgets/qwidget.h:37,
-                 from /usr/lib64/qt5/include/QtWidgets/qmainwindow.h:37,
-                 from /usr/lib64/qt5/include/QtWidgets/QMainWindow:1,
-                 from maroloDAQ.h:4,
-                 from maroloDAQ.cpp:1:
-/usr/lib64/qt5/include/QtCore/qglobal.h: In instantiation of ‘QForeachContainer<T>::QForeachContainer(const T&) [with T = QMenu*]’:
-maroloDAQ.cpp:446:5:   required from here
-/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: using invalid field ‘QForeachContainer<T>::i’
-     inline QForeachContainer(const T& t) : c(t), i(c.begin()), e(c.end()), control(1) { }
-                                                                                     ^
-/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: request for member ‘begin’ in ‘((QForeachContainer<QMenu*>*)this)->QForeachContainer<QMenu*>::c’, which is of pointer type ‘QMenu* const’ (maybe you meant to use ‘->’ ?)
-/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: using invalid field ‘QForeachContainer<T>::e’
-/usr/lib64/qt5/include/QtCore/qglobal.h:922:85: error: request for member ‘end’ in ‘((QForeachContainer<QMenu*>*)this)->QForeachContainer<QMenu*>::c’, which is of pointer type ‘QMenu* const’ (maybe you meant to use ‘->’ ?)
-Makefile:713: recipe for target 'maroloDAQ.o' failed
-make: *** [maroloDAQ.o] Error 1
+g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o main.o main.cpp
+g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o maroloDAQ.o maroloDAQ.cpp
+gcc -c -pipe -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o graceutils.o graceutils.c
+/usr/lib64/qt5/bin/moc -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB --include ./moc_predefs.h -I/usr/lib64/qt5/mkspecs/linux-g++ -I/home/jemartins/Projects/maroloDAQ -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I/usr/include/c++/5.5.0 -I/usr/include/c++/5.5.0/x86_64-mageia-linux-gnu -I/usr/include/c++/5.5.0/backward -I/usr/lib/gcc/x86_64-mageia-linux-gnu/5.5.0/include -I/usr/local/include -I/usr/include maroloDAQ.h -o moc_maroloDAQ.cpp
+g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o moc_maroloDAQ.o moc_maroloDAQ.cpp
+g++ -Wl,-O1 -o maroloDAQ main.o maroloDAQ.o comserial.o graceutils.o moc_maroloDAQ.o   -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGL -lpthread 
+graceutils.o: In function `OpenGrace':
+/home/jemartins/Projects/maroloDAQ/graceutils.c:6: undefined reference to `GraceOpen'
+graceutils.o: In function `SetEscala':
+/home/jemartins/Projects/maroloDAQ/graceutils.c:15: undefined reference to `GraceIsOpen'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:17: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:18: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:19: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:20: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:21: undefined reference to `GracePrintf'
+graceutils.o:/home/jemartins/Projects/maroloDAQ/graceutils.c:22: more undefined references to `GracePrintf' follow
+graceutils.o: In function `SetSimbolo':
+/home/jemartins/Projects/maroloDAQ/graceutils.c:34: undefined reference to `GraceIsOpen'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:46: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:47: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:48: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:49: undefined reference to `GracePrintf'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:50: undefined reference to `GracePrintf'
+graceutils.o:/home/jemartins/Projects/maroloDAQ/graceutils.c:51: more undefined references to `GracePrintf' follow
+graceutils.o: In function `PlotaGrace':
+/home/jemartins/Projects/maroloDAQ/graceutils.c:68: undefined reference to `GraceIsOpen'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:69: undefined reference to `GracePrintf'
+graceutils.o: In function `GravaDados':
+/home/jemartins/Projects/maroloDAQ/graceutils.c:78: undefined reference to `GraceIsOpen'
+/home/jemartins/Projects/maroloDAQ/graceutils.c:80: undefined reference to `GracePrintf'
+collect2: error: ld returned 1 exit status
+Makefile:163: recipe for target 'maroloDAQ' failed
+make: *** [maroloDAQ] Error 1

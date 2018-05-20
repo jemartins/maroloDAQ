@@ -7,7 +7,7 @@
 #include <QMessageBox>
 #include <QElapsedTimer>
 #include "comserial.h"
-#include "graceutils.h"
+//#include "graceutils.h"
 
 namespace Ui {
 class maroloDAQ;
@@ -44,13 +44,13 @@ private slots:
     bool validarEntradas();
     QString ReadData();
     void doReadings();
-    int scale_temp(int adcCount);
+    double scale_temp(double adcCount);
     double readTemperature(QByteArray myCALL);
     double readAngle(QByteArray myCALL);
     double readVoltage(QByteArray myCALL);
-    int scale_light(int adcCount);
+    double scale_light(double adcCount);
     double readLight(QByteArray myCALL);
-    int scale_sound(int adcCount);
+    double scale_sound(double adcCount);
     double readSound(QByteArray myCALL);
 
 private:
@@ -73,7 +73,6 @@ private:
     //variáveis adicionas por Rafael
     QMessageBox msgBox;
     QString AdcReadString;
-    
     // definindo o relogio
     QElapsedTimer timer;
     

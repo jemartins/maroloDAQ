@@ -1,7 +1,7 @@
 #include "graceutils.h"
+#include <grace_np.h>
 
-int OpenGrace(void)
-{
+int OpenGrace(void) {
     /* Start Grace with a buffer size of 2048 and open the pipe */
     if (GraceOpen(2048) == -1) {
         return EXIT_FAILURE;
@@ -11,24 +11,23 @@ int OpenGrace(void)
     
 }
 
-int SetEscala (float max_x, float max_y, float min_y, float major_tick_x, float minor_tick_x, float major_tick_y, float minor_tick_y)
-{
- if (GraceIsOpen()) {
-    /* Send some initialization commands to Grace */
-    GracePrintf ("world xmax %5.2f", max_x);
-    GracePrintf ("world ymax %5.2f", max_y);
-    GracePrintf ("world ymin %5.2f", min_y);
-    GracePrintf ("xaxis tick major %5.2f", major_tick_x);
-    GracePrintf ("xaxis tick minor %5.2f", minor_tick_x);
-    GracePrintf ("yaxis tick major %5.2f", major_tick_y);
-    GracePrintf ("yaxis tick minor %5.2f", minor_tick_y);
-    return EXIT_SUCCESS;
- } else {
-    return EXIT_FAILURE;
- }
+int SetEscala (float max_x, float max_y, float min_y, float major_tick_x, float minor_tick_x, float major_tick_y, float minor_tick_y) {
+    if (GraceIsOpen()) {
+        /* Send some initialization commands to Grace */
+        GracePrintf ("world xmax %5.2f", max_x);
+        GracePrintf ("world ymax %5.2f", max_y);
+        GracePrintf ("world ymin %5.2f", min_y);
+        GracePrintf ("xaxis tick major %5.2f", major_tick_x);
+        GracePrintf ("xaxis tick minor %5.2f", minor_tick_x);
+        GracePrintf ("yaxis tick major %5.2f", major_tick_y);
+        GracePrintf ("yaxis tick minor %5.2f", minor_tick_y);
+        return EXIT_SUCCESS;
+    } else {
+       return EXIT_FAILURE;
+    }
 }
 
-int SetSimbolo (int nchan) {
+int SetSimbolo () {
 
 	//int i;
 
@@ -65,27 +64,13 @@ int SetSimbolo (int nchan) {
 
 } // end SetSimbolo
 
-int PlotaGrace (float x, float y, int nchan)
-{
-
-int i;
+int PlotaGrace (float x, float y, float dx, float dy) {
     if (GraceIsOpen()) {
-
-        if (nchan==1) {
-            GracePrintf ("g0.s0 point %5.2f, %5.2f", x, y);
-        }
-        else if (nchan==2) {
-            GracePrintf ("g0.s1 point %5.2f, %5.2f", x, y);
-        }
-        else {
-            return EXIT_FAILURE;
-        }
-
+        GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
         return EXIT_SUCCESS;
-
     } else {
         return EXIT_FAILURE;
-    }             
+    }
 }
 
 int GravaDados (void)

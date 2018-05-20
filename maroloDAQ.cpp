@@ -913,15 +913,17 @@ double maroloDAQ::readTemperature(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     //Converte Inteiro em Temperatura
-    int temperature = scale_temp(int(AdcReadDouble * (4096/1024)));
+    double temperature = scale_temp(AdcReadDouble * (4096/1024));
     return temperature;
 
 }
 
 //Converte valor de leitura do ADC em valor de temperatura
-int maroloDAQ::scale_temp(int adcCount) {
-    int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
-        double scaleFactor;
+double maroloDAQ::scale_temp(double adcCount) {
+    //int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
+    int i, diffScaled, diffRaw, diffAdc;
+        //double scaleFactor;
+        double scaleFactor, scaledValue=0;
         for (i=0; i<100; i++)
         {
             if (adcCount >= temp[i][0] && adcCount < temp[i+1][0])
@@ -980,7 +982,8 @@ double maroloDAQ::readVoltage(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     //Converte Inteiro em Temperatura
-    int voltage = (int(AdcReadDouble * (5/1024)));
+    //int voltage = (int(AdcReadDouble * (5/1024)));
+    double voltage = AdcReadDouble;
     return voltage;
 }
 
@@ -995,12 +998,12 @@ double maroloDAQ::readLight(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     //Converte Inteiro em Temperatura
-    int light = scale_light(int(AdcReadDouble * (4096/1024)));
+    double light = scale_light(AdcReadDouble * (4096/1024));
     return light;
 
 }
 
-int scale_light(int adcCount)
+double maroloDAQ::scale_light(double adcCount)
 {
         int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
         double scaleFactor;
@@ -1030,13 +1033,12 @@ double maroloDAQ::readSound(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     //Converte Inteiro em Temperatura
-    int sound = scale_sound(int(AdcReadDouble * (4096/1024)));
+    double sound = scale_sound(AdcReadDouble * (4096/1024));
     return sound;
 
 }
 
-int scale_sound(int adcCount)
-{
+double maroloDAQ::scale_sound(double adcCount) {
         int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
         double scaleFactor;
         for (i=0; i<47; i++)
