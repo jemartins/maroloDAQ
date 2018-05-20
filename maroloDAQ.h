@@ -53,7 +53,7 @@ private slots:
     double scale_sound(double adcCount);
     double readSound(QByteArray myCALL);
     int setSimbolo ();
-    int plotaGrace (float x, float y, float dx, float dy);
+    int plotaGrace (double x, double y, double dx, double dy);
 
 private:
     Ui::maroloDAQ *ui;

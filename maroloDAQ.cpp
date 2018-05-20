@@ -454,12 +454,12 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         
-        /* Start Grace with a buffer size of 4096 and open the pipe */
-        if (GraceOpenVA("xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
-            //fprintf(stderr, "Can't run Grace. \n");
-            ui->teLog->append("Can't run Grace. \n");
-            exit(EXIT_FAILURE);
-        } else {
+        if (ui->checkBoxGrace->isEnabled()) {
+            /* Start Grace with a buffer size of 4096 and open the pipe */
+            if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
+                //fprintf(stderr, "Can't run Grace. \n");
+                ui->teLog->append("Can't run Grace. \n");
+            }
             // inicia medicoes
             doReadings();
         }
@@ -858,9 +858,13 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-				    (QString::number(mytemperature/10, 'f', 1))+"    "+\
-				    (QString::number(0.01, 'f', 2))+"    "+\
-				    (QString::number(erroY, 'f', 1)));
+                        (QString::number(mytemperature/10, 'f', 1))+"    "+\
+                        (QString::number(0.01, 'f', 2))+"    "+\
+                        (QString::number(erroY, 'f', 1)));
+                    
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
+                    }
                     break;
                 case 4:
                     //mylight = readLIGHT(myCALL);
@@ -1065,18 +1069,19 @@ int maroloDAQ::setSimbolo () {
         GracePrintf ("s%d symbol size 0.3", 0);
         GracePrintf ("s%d symbol color %d", 0, 1);
         GracePrintf ("s%d symbol fill pattern %d", 0, 1);
-        GracePrintf ("s%d line color %d", 0, 1);        return EXIT_SUCCESS;
+        GracePrintf ("s%d line color %d", 0, 1);
+        return 0;
     } else {
-        return EXIT_FAILURE;
+        return -1;
     } // end if
 } // end SetSimbolo
 
-int maroloDAQ::plotaGrace (float x, float y, float dx, float dy) {
+int maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     if (GraceIsOpen()) {
         GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
-        return EXIT_SUCCESS;
+        return 0;
     } else {
-        return EXIT_FAILURE;
+        return -1;
     }
 }
 /* 
