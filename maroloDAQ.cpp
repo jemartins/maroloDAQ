@@ -12,7 +12,6 @@
 #include <cstring>
 #include <string>
 #include <math.h>
-//#include <grace_np.h>
 
 maroloDAQ::maroloDAQ(QWidget *parent) :
 QMainWindow(parent),
@@ -459,9 +458,12 @@ void maroloDAQ::on_btnIniciar_clicked() {
             if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                 //fprintf(stderr, "Can't run Grace. \n");
                 ui->teLog->append("Can't run Grace. \n");
+            } else {
+                // ajuste no visual do Grace
+                setupGrace();
+                // inicia medicoes
+                doReadings();
             }
-            // inicia medicoes
-            doReadings();
         }
     }
 }
@@ -1062,7 +1064,7 @@ double maroloDAQ::scale_sound(double adcCount) {
  * Coisas para o GRACE
  * inicio
  */
-int maroloDAQ::setSimbolo () {
+int maroloDAQ::setupGrace () {
     if (GraceIsOpen()) {
         GracePrintf ("s%d on", 0);
         GracePrintf ("s%d symbol 1", 0);

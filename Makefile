@@ -516,7 +516,6 @@ moc_maroloDAQ.cpp: /usr/lib64/qt5/include/QtWidgets/QMainWindow \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportglobal.h \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPortInfo \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportinfo.h \
-		grace_np.h \
 		maroloDAQ.h \
 		moc_predefs.h \
 		/usr/lib64/qt5/bin/moc
@@ -666,8 +665,7 @@ main.o: main.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtSerialPort/qserialport.h \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportglobal.h \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPortInfo \
-		/usr/lib64/qt5/include/QtSerialPort/qserialportinfo.h \
-		grace_np.h
+		/usr/lib64/qt5/include/QtSerialPort/qserialportinfo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 maroloDAQ.o: maroloDAQ.cpp maroloDAQ.h \
@@ -796,15 +794,67 @@ maroloDAQ.o: maroloDAQ.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportglobal.h \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPortInfo \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportinfo.h \
-		grace_np.h \
 		ui_maroloDAQ.h \
-		calibration.h \
+		/usr/lib64/qt5/include/QtCore/QVariant \
+		/usr/lib64/qt5/include/QtWidgets/QAction \
+		/usr/lib64/qt5/include/QtWidgets/QButtonGroup \
+		/usr/lib64/qt5/include/QtWidgets/qbuttongroup.h \
+		/usr/lib64/qt5/include/QtWidgets/QCheckBox \
+		/usr/lib64/qt5/include/QtWidgets/qcheckbox.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractbutton.h \
+		/usr/lib64/qt5/include/QtWidgets/QComboBox \
+		/usr/lib64/qt5/include/QtWidgets/qcombobox.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractitemdelegate.h \
+		/usr/lib64/qt5/include/QtWidgets/qstyleoption.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractspinbox.h \
+		/usr/lib64/qt5/include/QtGui/qvalidator.h \
+		/usr/lib64/qt5/include/QtCore/qregularexpression.h \
+		/usr/lib64/qt5/include/QtWidgets/qslider.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractslider.h \
+		/usr/lib64/qt5/include/QtWidgets/qstyle.h \
+		/usr/lib64/qt5/include/QtWidgets/qtabbar.h \
+		/usr/lib64/qt5/include/QtWidgets/qrubberband.h \
+		/usr/lib64/qt5/include/QtWidgets/qframe.h \
+		/usr/lib64/qt5/include/QtCore/qabstractitemmodel.h \
+		/usr/lib64/qt5/include/QtWidgets/QFormLayout \
+		/usr/lib64/qt5/include/QtWidgets/qformlayout.h \
+		/usr/lib64/qt5/include/QtWidgets/QLayout \
+		/usr/lib64/qt5/include/QtWidgets/qlayout.h \
+		/usr/lib64/qt5/include/QtWidgets/qlayoutitem.h \
+		/usr/lib64/qt5/include/QtWidgets/qboxlayout.h \
+		/usr/lib64/qt5/include/QtWidgets/qgridlayout.h \
+		/usr/lib64/qt5/include/QtWidgets/QGroupBox \
+		/usr/lib64/qt5/include/QtWidgets/qgroupbox.h \
+		/usr/lib64/qt5/include/QtWidgets/QHeaderView \
+		/usr/lib64/qt5/include/QtWidgets/qheaderview.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractitemview.h \
+		/usr/lib64/qt5/include/QtWidgets/qabstractscrollarea.h \
+		/usr/lib64/qt5/include/QtCore/qitemselectionmodel.h \
+		/usr/lib64/qt5/include/QtWidgets/QLCDNumber \
+		/usr/lib64/qt5/include/QtWidgets/qlcdnumber.h \
+		/usr/lib64/qt5/include/QtWidgets/QLabel \
+		/usr/lib64/qt5/include/QtWidgets/qlabel.h \
+		/usr/lib64/qt5/include/QtWidgets/QLineEdit \
+		/usr/lib64/qt5/include/QtWidgets/qlineedit.h \
+		/usr/lib64/qt5/include/QtGui/qtextcursor.h \
+		/usr/lib64/qt5/include/QtGui/qtextformat.h \
+		/usr/lib64/qt5/include/QtGui/qpen.h \
+		/usr/lib64/qt5/include/QtGui/qtextoption.h \
 		/usr/lib64/qt5/include/QtWidgets/QMenu \
 		/usr/lib64/qt5/include/QtWidgets/qmenu.h \
 		/usr/lib64/qt5/include/QtWidgets/QMenuBar \
 		/usr/lib64/qt5/include/QtWidgets/qmenubar.h \
+		/usr/lib64/qt5/include/QtWidgets/QPushButton \
+		/usr/lib64/qt5/include/QtWidgets/qpushbutton.h \
 		/usr/lib64/qt5/include/QtWidgets/QStatusBar \
-		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h
+		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h \
+		/usr/lib64/qt5/include/QtWidgets/QTextEdit \
+		/usr/lib64/qt5/include/QtWidgets/qtextedit.h \
+		/usr/lib64/qt5/include/QtGui/qtextdocument.h \
+		/usr/lib64/qt5/include/QtWidgets/QToolBar \
+		/usr/lib64/qt5/include/QtWidgets/qtoolbar.h \
+		/usr/lib64/qt5/include/QtWidgets/QWidget \
+		calibration.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o maroloDAQ.o maroloDAQ.cpp
 
 comserial.o: comserial.cpp comserial.h \
