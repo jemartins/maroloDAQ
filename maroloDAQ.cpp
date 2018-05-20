@@ -472,8 +472,6 @@ void maroloDAQ::on_btnIniciar_clicked() {
             } else {
                 // ajuste no visual do Grace
                 setupGrace();
-                // inicia medicoes
-                doReadings();
             } 
         } else if (GraceIsOpen()) {
             /* Tell Grace to save the data */
@@ -482,6 +480,9 @@ void maroloDAQ::on_btnIniciar_clicked() {
             GraceClose();
         }
     }
+                
+    // inicia medicoes
+    doReadings();
 }
 
 void maroloDAQ::on_actionSalvar_como_triggered()
