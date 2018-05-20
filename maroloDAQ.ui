@@ -758,11 +758,6 @@
         </property>
         <item>
          <property name="text">
-          <string>Onda Sonora</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>Nível Sonoro</string>
          </property>
         </item>
@@ -774,11 +769,6 @@
         <item>
          <property name="text">
           <string>Resistência</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>pH</string>
          </property>
         </item>
         <item>

@@ -835,14 +835,6 @@ void maroloDAQ::doReadings()
             switch(ui->cbSensorList->currentIndex())
             {
                 case 0:
-                    //mywave = readSOUNDWAVE(myCALL);
-                    mywave = 0;
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mywave, 'f', 2));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
-                    break;
-                case 1:
                     //mysound = readSOUNLEVEL(myCALL);
                     mysound = 0;
                     // Envia o valor medido ao lcdMonitorY
@@ -850,7 +842,7 @@ void maroloDAQ::doReadings()
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
                     break;
-                case 2:
+                case 1:
                     //myvoltage = readVOLTAGE(myCALL);
                     myvoltage = 0;
                     // Envia o valor medido ao lcdMonitorY
@@ -858,7 +850,7 @@ void maroloDAQ::doReadings()
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
                     break;
-                case 3:
+                case 2:
                     //myresistence = readRESISTENCE(myCALL);
                     myresistence = 0;
                     // Envia o valor medido ao lcdMonitorY
@@ -866,15 +858,7 @@ void maroloDAQ::doReadings()
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
                     break;
-                case 4:
-                    //myph = readPH(myCALL);
-                    myph = 0;
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myph, 'f', 2));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
-                    break;
-                case 5:
+                case 3:
                     mytemperature = readTEMPERATURE(myCALL);
 
 		    QCoreApplication::processEvents();
@@ -892,13 +876,13 @@ void maroloDAQ::doReadings()
 				    (QString::number(0.01, 'f', 2))+"    "+\
 				    (QString::number(erroY, 'f', 1)));
                     break;
-                case 6:
+                case 4:
                     //mylight = readLIGHT(myCALL);
                     mylight = 0;
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mylight, 'f', 2));
                     break;
-                case 7:
+                case 5:
                     // myangle = readPENDULO(myCALL);
                     myangle = 0;
                     // Envia o valor medido ao lcdMonitorY
