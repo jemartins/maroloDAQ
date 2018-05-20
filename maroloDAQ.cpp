@@ -879,8 +879,8 @@ void maroloDAQ::doReadings()
 
 		    QCoreApplication::processEvents();
                     //qDebug() << "AQUI myCall = " << myCALL << endl;
-                    qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
-                    qDebug() << "AQUI tempo_atual = " << tempo_atual << endl;
+                    //qDebug() << "AQUI mytemperature = " << mytemperature/10 << endl;
+                    //qDebug() << "AQUI tempo_atual = " << tempo_atual << endl;
                     
 		    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
@@ -937,7 +937,7 @@ double maroloDAQ::readTEMPERATURE(QByteArray myCALL)
 
     //recebe valor lido pelo ADC no pino do sensor
     AdcReadString = ReadData();
-    qDebug() << "AQUI AdcReadSting [temperature] = " << AdcReadString << endl;
+    //qDebug() << "AQUI AdcReadSting [temperature] = " << AdcReadString << endl;
 
     //converte String em Inteiro
     double AdcReadDouble = AdcReadString.toDouble();
