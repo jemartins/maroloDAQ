@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QElapsedTimer>
 #include "comserial.h"
+#include "graceutils.h"
 
 namespace Ui {
 class maroloDAQ;

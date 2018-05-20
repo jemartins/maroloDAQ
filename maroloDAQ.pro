@@ -25,12 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         maroloDAQ.cpp \
-    comserial.cpp
+    comserial.cpp \
+    graceutils.c
 
 
 HEADERS  += maroloDAQ.h \
     comserial.h \
-    calibration.h
+    calibration.h \
+    graceutils.h
 
 FORMS    += maroloDAQ.ui
 

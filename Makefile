@@ -52,10 +52,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = main.cpp \
 		maroloDAQ.cpp \
-		comserial.cpp moc_maroloDAQ.cpp
+		comserial.cpp \
+		graceutils.c moc_maroloDAQ.cpp
 OBJECTS       = main.o \
 		maroloDAQ.o \
 		comserial.o \
+		graceutils.o \
 		moc_maroloDAQ.o
 DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/common/unix.conf \
@@ -144,9 +146,11 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/lex.prf \
 		maroloDAQ.pro maroloDAQ.h \
 		comserial.h \
-		calibration.h main.cpp \
+		calibration.h \
+		graceutils.h main.cpp \
 		maroloDAQ.cpp \
-		comserial.cpp
+		comserial.cpp \
+		graceutils.c
 QMAKE_TARGET  = maroloDAQ
 DESTDIR       = 
 TARGET        = maroloDAQ
@@ -354,8 +358,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents maroloDAQ.h comserial.h calibration.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp maroloDAQ.cpp comserial.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents maroloDAQ.h comserial.h calibration.h graceutils.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp maroloDAQ.cpp comserial.cpp graceutils.c $(DISTDIR)/
 	$(COPY_FILE) --parents maroloDAQ.ui $(DISTDIR)/
 
 
@@ -801,9 +805,7 @@ maroloDAQ.o: maroloDAQ.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtWidgets/QMenuBar \
 		/usr/lib64/qt5/include/QtWidgets/qmenubar.h \
 		/usr/lib64/qt5/include/QtWidgets/QStatusBar \
-		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h \
-		/usr/lib64/qt5/include/QtCore/QThread \
-		/usr/lib64/qt5/include/QtCore/qthread.h
+		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o maroloDAQ.o maroloDAQ.cpp
 
 comserial.o: comserial.cpp comserial.h \
@@ -874,6 +876,9 @@ comserial.o: comserial.cpp comserial.h \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPortInfo \
 		/usr/lib64/qt5/include/QtSerialPort/qserialportinfo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o comserial.o comserial.cpp
+
+graceutils.o: graceutils.c graceutils.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o graceutils.o graceutils.c
 
 moc_maroloDAQ.o: moc_maroloDAQ.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_maroloDAQ.o moc_maroloDAQ.cpp
