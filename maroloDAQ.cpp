@@ -474,7 +474,12 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 setupGrace();
                 // inicia medicoes
                 doReadings();
-            }
+            } 
+        } else if (GraceIsOpen()) {
+            /* Tell Grace to save the data */
+            //GracePrintf("saveall \"sample.agr\"");
+            /* Flush the output buffer and close Grace */
+            GraceClose();
         }
     }
 }
