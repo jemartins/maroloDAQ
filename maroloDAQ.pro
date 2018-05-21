@@ -29,8 +29,7 @@ SOURCES += main.cpp\
 
 
 HEADERS  += maroloDAQ.h \
-    calibration.h \
-    graceutils.h
+    	calibration.h 
 
 FORMS    += maroloDAQ.ui
 

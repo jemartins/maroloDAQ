@@ -405,10 +405,6 @@ void maroloDAQ::on_btnDevClose_clicked() {
         //GracePrintf("saveall \"sample.agr\"");
         /* Flush the output buffer and close Grace */
         GraceClose();
-        /* We are done */
-        exit(0);
-    } else {
-        exit(-1);
     }
 } // end on_btnDevClose_clicked
 
@@ -437,20 +433,18 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         
-        if (ui->checkBoxGrace->isEnabled()) {
-            /* Start Grace with a buffer size of 4096 and open the pipe */
-            if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
-                //fprintf(stderr, "Can't run Grace. \n");
-                ui->teLog->append("Can't run Grace. \n");
-            } else {
-                // ajuste no visual do Grace
-                setupGrace();
-            } 
-        } else if (GraceIsOpen()) {
-            /* Tell Grace to save the data */
-            //GracePrintf("saveall \"sample.agr\"");
-            /* Flush the output buffer and close Grace */
-            GraceClose();
+        // send to Grace?
+        if (ui->checkBoxGrace->isChecked()) {
+            if (!GraceIsOpen()) {
+                /* Start Grace with a buffer size of 4096 and open the pipe */
+                if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
+                    //fprintf(stderr, "Can't run Grace. \n");
+                    ui->teLog->append("Can't run Grace. \n");
+                } else {
+                    // ajuste no visual do Grace
+                    setupGrace();
+                } 
+            }
         }
     }
     
@@ -794,7 +788,8 @@ void maroloDAQ::doReadings() {
                     (QString::number(erroY, 'f', 1)));
                     
                     if (ui->checkBoxGrace->isEnabled()) {
-                        plotaGrace(tempo_atual/1000, mysound, 0.01, erroY);
+                        //plotaGrace(tempo_atual/1000, mysound, 0.01, erroY);
+                        GracePrintf((const char*)"g0.s0 point tempo_atual/1000, mysound, 0.01, erroY");
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             //GracePrintf ("autoscale");
