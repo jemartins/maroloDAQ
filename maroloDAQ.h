@@ -44,6 +44,7 @@ private slots:
     bool validarEntradas();
     QString ReadData();
     void doReadings();
+    QByteArray infoCALL();
     double scale_temp(double adcCount);
     double readTemperature(QByteArray myCALL);
     void angleCalibrate(double myangle, int index);
