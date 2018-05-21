@@ -217,6 +217,8 @@ void maroloDAQ::setDesconectado() {
     ui->editErroSensor->setEnabled(false);
     ui->editDeltaT->setEnabled(false);    
     ui->editTmax->setEnabled(false);
+    ui->checkBoxGrace->setEnabled(false);
+
     }
 
 void maroloDAQ::setConectado() {
@@ -257,6 +259,7 @@ void maroloDAQ::setConectado() {
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);    
     ui->editTmax->setEnabled(true);
+    ui->checkBoxGrace->setEnabled(true);
 }
 
 void maroloDAQ::maroloDevClose()
