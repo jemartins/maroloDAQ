@@ -836,38 +836,77 @@ void maroloDAQ::doReadings() {
     // define timeout
     double timeout = Tmax + tolerance;
 
-    while (!timer.hasExpired(timeout))
-    {
+    while (!timer.hasExpired(timeout)) {
         
-        if (timer.hasExpired(cont * deltaT))
-        {
+        if (timer.hasExpired(cont * deltaT)) {
             
             //Qual Sensor foi Selecionado
-            switch(ui->cbSensorList->currentIndex())
-            {
+            switch(ui->cbSensorList->currentIndex()) {
                 case 0:
-                    //mysound = readSOUNLEVEL(myCALL);
-                    mysound = 0;
+                    mysound = readSound(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mysound, 'f', 2));
+                    ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    (QString::number(mysound, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
+                    
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, mysound, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
+                    }
                     break;
                 case 1:
-                    //myvoltage = readVOLTAGE(myCALL);
-                    myvoltage = 0;
+                    myvoltage = readVoltage(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 2));
+                    ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    (QString::number(myvoltage, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
+                    
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, myvoltage, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
+                    }
                     break;
                 case 2:
-                    //myresistence = readRESISTENCE(myCALL);
-                    myresistence = 0;
+                    myresistence = readResistence(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myresistence, 'f', 2));
+                    ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    (QString::number(myresistence, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
+                    
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, myresistence, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
+                    }
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
@@ -878,9 +917,9 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                        (QString::number(mytemperature/10, 'f', 1))+"    "+\
-                        (QString::number(0.01, 'f', 2))+"    "+\
-                        (QString::number(erroY, 'f', 1)));
+                    (QString::number(mytemperature/10, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
                     
                     if (ui->checkBoxGrace->isEnabled()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
@@ -892,20 +931,49 @@ void maroloDAQ::doReadings() {
                     }
                     break;
                 case 4:
-                    //mylight = readLIGHT(myCALL);
-                    mylight = 0;
+                    mylight = readLight(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mylight, 'f', 2));
+                    ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
+                    // Envia o tempo decorrido para o lcdMonitorX
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    (QString::number(mylight, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
+                    
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, mylight, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
+                    }
                     break;
                 case 5:
-                    // myangle = readPENDULO(myCALL);
-                    myangle = 0;
+                    myangle = readAngle(myCALL);
+                    // desongelando o GUI
+                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myangle, 'f', 2));
+                    ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual, 'f', 2));
-                    break;
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    (QString::number(myangle, 'f', 1))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'f', 1)));
                     
+                    if (ui->checkBoxGrace->isEnabled()) {
+                        plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
+                        /* Update the Grace display after every five steps */
+                        if (cont % 5 == 0) {
+                            //GracePrintf ("autoscale");
+                            GracePrintf ("redraw");
+                        }
+                    }
+                    break;
             } // end switch sensor
             
             cont++;
@@ -999,12 +1067,10 @@ void maroloDAQ::angleCalibrate(double myangle, int index) {
             myCALL = "19\n";
             break;
     }
-    
     double myvoltage = readVoltage(myCALL);
     
     calibrationArray[index].angle = myangle;
     calibrationArray[index].voltage = myvoltage;
-        
 } // end angleCalibrate
 
 double maroloDAQ::readAngle(QByteArray myCALL) {
@@ -1035,7 +1101,6 @@ double maroloDAQ::readAngle(QByteArray myCALL) {
 
 	// Here, conversion voltage into degree
 	angle = (180/pi)*asin((voltage-b)/a);
-	
 	return angle;
 }
 
@@ -1068,7 +1133,6 @@ double maroloDAQ::readLight(QByteArray myCALL) {
     //Converte Inteiro em Temperatura
     double light = scale_light(AdcReadDouble * (4096/1024));
     return light;
-
 }
 
 double maroloDAQ::scale_light(double adcCount)
@@ -1103,7 +1167,6 @@ double maroloDAQ::readSound(QByteArray myCALL) {
     //Converte Inteiro em Temperatura
     double sound = scale_sound(AdcReadDouble * (4096/1024));
     return sound;
-
 }
 
 double maroloDAQ::scale_sound(double adcCount) {
@@ -1122,6 +1185,21 @@ double maroloDAQ::scale_sound(double adcCount) {
                 }
         }
         return -1;
+}
+
+double maroloDAQ::readResistence(QByteArray myCALL) {
+    //Envia comando para Arduino ler pino
+    WriteData(myCALL);
+
+    //recebe valor lido pelo ADC no pino do sensor
+    QString AdcReadString = ReadData();
+
+    //converte String em Inteiro
+    double AdcReadDouble = AdcReadString.toDouble();
+
+    //Converte Inteiro em Temperatura
+    double resistence = AdcReadDouble;
+    return resistence;
 }
 
 /* 

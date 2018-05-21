@@ -53,6 +53,7 @@ private slots:
     double readLight(QByteArray myCALL);
     double scale_sound(double adcCount);
     double readSound(QByteArray myCALL);
+    double readResistence(QByteArray myCALL);
     int setupGrace ();
     int plotaGrace (double x, double y, double dx, double dy);
 
