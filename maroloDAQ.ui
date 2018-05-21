@@ -758,27 +758,27 @@
         </property>
         <item>
          <property name="text">
-          <string>Nível Sonoro</string>
+          <string>Nível Sonoro (dB)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Voltagem</string>
+	  <string>Voltagem [(5/1024)V]</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Resistência</string>
+          <string>Resistência (Ohm)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Temperatura</string>
+          <string>Temperatura (°C)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Luz</string>
+          <string>Luz (lux)</string>
          </property>
         </item>
         <item>

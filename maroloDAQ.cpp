@@ -116,8 +116,6 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
-            
             statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
             
             // aguardando a porta "aquecer" ;_(((
@@ -133,20 +131,11 @@ void maroloDAQ::scanPortas() {
                 GetInfoHw = ReadData();
                 GetInfoHw = GetInfoHw.simplified();
                 
-                //qDebug() << "----------> AQUI GetInfoHW = " << GetInfoHw << endl;
-                
                 // * Confirmando se recebeu os dados *
                 if( GetInfoHw.size() > 0 ) {
                     
                     // encontrei maroloDAQ
                     minhaSerial = minhaSerial+" [maroloDAQ]";
-                    //setPortasSeriais(minhaSerial+" [maroloDAQ]");
-                    
-                    //qDebug() << "AQUI minhaSerial = " << minhaSerial+"[ maroloDAQ]" << endl;
-                    
-                    // escrevendo no terminal
-                    //ui->teLog->append("### maroloDAQ ABERTO com Sucesso!");
-                    
                 }
                 
                 setPortasSeriais(minhaSerial);
@@ -156,17 +145,19 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    //qDebug() << "FALHA ao FECHAR Serial dev = " << minhaSerial;
+                    ui->teLog->append("### FALHA ao FECHAR Porta Serial!");
                 }
                 
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
-            }
-            else {
-                //qDebug() << "FALHA ao ABRIR Serial dev = " << minhaSerial; 
+            } else {
+                ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
             }
         }
         
-        // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
+        /* 
+         * ref.: https://stackoverflow.com/questions/9399840/ \
+         * how-to-iterate-through-a-menus-actions-in-qt
+         */
         foreach (QAction* action, ui->menuPortas->actions()) {
             PortasGroup->addAction(action);
             
@@ -187,25 +178,6 @@ void maroloDAQ::scanPortas() {
     else {
         ui->teLog->append("### Nenhuma porta serial foi detectada!");
     }
-    /*
-    // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
-    foreach (QAction* action, ui->menuPortas->actions()) {
-        PortasGroup->addAction(action);
-        
-        myAction_split = action->text().split("]");
-        //qDebug() << "$$$$ AQUI action = " << action->text();
-        if ( myAction_split.length() > 1 ) {
-            if (  myAction_split[1] == "maroloDAQ]") {
-                action->setCheckable(true);
-                action->setChecked(true);
-            }
-        }
-        else {
-            action->setCheckable(true);
-            action->setChecked(false);
-        }
-    }
-    */
 }
 
 void maroloDAQ::setDesconectado() {
@@ -480,7 +452,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
             GraceClose();
         }
     }
-                
+    
     // inicia medicoes
     doReadings();
     
@@ -587,18 +559,8 @@ void maroloDAQ::on_actionDesconectar_triggered() {
 
 void maroloDAQ::on_actionRecarregar_triggered() {
     
-    /*
-    // Serials Port Group
-    PortasGroup = new QActionGroup(this);
-    // removing all ations in PortasGroup
-    QStringList myAction_split;
-    
-    foreach (QAction* action, ui->menuPortas->actions()) {
-        PortasGroup->removeAction(action);
-        ui->menuPortas->removeAction(action);
-    }
-    */
     scanPortas();
+    
 }
 
 void maroloDAQ::setPortasSeriais(QString myAction) {
@@ -746,38 +708,38 @@ bool maroloDAQ::validarEntradas() {
     //Se DeltaT for vazio apresenta mensagem de erro e para operação, senão...
     //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
     //Tudo ok e continua a operação.
-    if(ui->editErroSensor->text()==NULL){
+    if(ui->editErroSensor->text()==NULL) {
         msgBox.setText("Digite o Erro");
         msgBox.exec();
         ui->editErroSensor->setFocus();
         return false;
-    }else{
+    } else {
         if(ui->editDeltaT->text()==NULL){
             msgBox.setText("Digite o intervalo de amostragem");
             msgBox.exec();
             ui->editDeltaT->setFocus();
             return false;
-        }else{
+        } else {
             if(ui->editTmax->text()==NULL){
                 msgBox.setText("Digite o tempo máximo da amostra");
                 msgBox.exec();
                 ui->editTmax->setFocus();
                 return false;
-            }else{
+            } else {
                 return true;
             }
         }
     }
 } // end validarEntradas
 
-void maroloDAQ::on_btnAppCalibrar1_clicked() {
+void maroloDAQ::on_btnCalibrar1_clicked() {
     
     double myangle = ui->editAngulo1->text().toDouble();
     angleCalibrate(myangle, 0);
     
 }
 
-void maroloDAQ::on_btnAppCalibrar2_clicked() {
+void maroloDAQ::on_btnCalibrar2_clicked() {
 
     double myangle = ui->editAngulo2->text().toDouble();
     angleCalibrate(myangle, 1);

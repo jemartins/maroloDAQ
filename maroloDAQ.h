@@ -30,8 +30,8 @@ private slots:
     void on_btnDevOpen_clicked();
     void on_btnDevClose_clicked();
     void on_btnBWTerminal_clicked();
-    void on_btnAppCalibrar1_clicked();
-    void on_btnAppCalibrar2_clicked();
+    void on_btnCalibrar1_clicked();
+    void on_btnCalibrar2_clicked();
     void on_btnIniciar_clicked();
     void on_btnParar_clicked();
     void on_btnAppClose_clicked();
