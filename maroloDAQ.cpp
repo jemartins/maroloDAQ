@@ -321,8 +321,8 @@ void maroloDAQ::maroloDevClose()
     }
 }
 
-void maroloDAQ::on_btnBWTerminal_clicked()
-{
+void maroloDAQ::on_btnBWTerminal_clicked() {
+    
     QPalette paleta;
     /*
      * Verifica se PaletaBW é True ou False
@@ -344,9 +344,8 @@ void maroloDAQ::on_btnBWTerminal_clicked()
     }
 }
 
-
-void maroloDAQ::on_btnDevOpen_clicked()
-{
+void maroloDAQ::on_btnDevOpen_clicked() {
+    
     QString GetInfoHw;
     QStringList InfoHW;
     QString devport;
@@ -415,8 +414,8 @@ void maroloDAQ::on_btnDevOpen_clicked()
     
 } // end on_btnDevOpen_clicked
 
-void maroloDAQ::on_btnDevClose_clicked()
-{
+void maroloDAQ::on_btnDevClose_clicked() {
+    
     bool statusCloseSerial;
     
     statusCloseSerial = procSerial->Desconectar();
@@ -439,10 +438,10 @@ void maroloDAQ::on_btnDevClose_clicked()
     } else {
         exit(-1);
     }
-}
+} // end on_btnDevClose_clicked
 
-void maroloDAQ::on_btnParar_clicked()
-{
+void maroloDAQ::on_btnParar_clicked() {
+    
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
     ui->editTmax->setEnabled(true);
@@ -451,9 +450,10 @@ void maroloDAQ::on_btnParar_clicked()
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
 
-}
+} // end on_btnParar_clicked
 
 void maroloDAQ::on_btnIniciar_clicked() {
+    
     if(validarEntradas()) {
         //hablita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
@@ -483,25 +483,23 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 
     // inicia medicoes
     doReadings();
-}
+    
+} // end on_btnIniciar_clicked
 
-void maroloDAQ::on_actionSalvar_como_triggered()
-{
+void maroloDAQ::on_actionSalvar_como_triggered() {
     
 }
 
-void maroloDAQ::on_actionSalvar_triggered()
-{
+void maroloDAQ::on_actionSalvar_triggered() {
     
 }
 
-void maroloDAQ::on_actionSair_triggered()
-{
+void maroloDAQ::on_actionSair_triggered() {
     exit(0);
 }
 
-void maroloDAQ::on_actionConectar_triggered()
-{
+void maroloDAQ::on_actionConectar_triggered() {
+    
     QString GetInfoHw;
     QStringList InfoHW;
     QString devport;
@@ -570,8 +568,8 @@ void maroloDAQ::on_actionConectar_triggered()
     
 } // end on_actionConectar_triggered
 
-void maroloDAQ::on_actionDesconectar_triggered()
-{
+void maroloDAQ::on_actionDesconectar_triggered() {
+    
     bool statusCloseSerial;
     
     
@@ -587,8 +585,8 @@ void maroloDAQ::on_actionDesconectar_triggered()
     }
 }
 
-void maroloDAQ::on_actionRecarregar_triggered()
-{
+void maroloDAQ::on_actionRecarregar_triggered() {
+    
     /*
     // Serials Port Group
     PortasGroup = new QActionGroup(this);
@@ -625,21 +623,10 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             //if ( QString::compare(myAction_temp, myAction_spare, Qt::CaseInsensitive) ) {
             if ( myAction == action->text() ) {
                 ihavename = ihavename + 1;
-                //qDebug() << "# AQUI myAction = " << myAction;
-                //qDebug() << "# AQUI action->text() = " << action->text();
-                //qDebug("# action->text() isn't menu: %s", qUtf8Printable(action->text()));
-                //qDebug() << "#####################################################";
             }
         }
     }
     if ( ihavename == 0 ) {
-        //myAction="/dev/"+myAction;
-        //qDebug() << "##################################################################"
-        //qDebug() << "###### CRIANDO SUBMENU -- myAction = " << myAction;
-        //qDebug() << "##################################################################";
-        
-        //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
-        
         if ( myAction_temp == "ttyACM0" ) {
             //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
             actionACM0 = new QAction(myAction, this);
@@ -710,17 +697,18 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         }
     }
     /*
-    // ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
-    PortasGroup = new QActionGroup(this);
-    foreach (QAction* action, ui->menuPortas->actions())
-    {
-        PortasGroup->addAction(action);
-        actions->setCheckable(true);
-    }
-    */
+     / / ref.: *https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
+     PortasGroup = new QActionGroup(this);
+     foreach (QAction* action, ui->menuPortas->actions())
+     {
+     PortasGroup->addAction(action);
+     actions->setCheckable(true);
+}
+*/
 } // end setPortasSeriais
 
 void maroloDAQ::enumerateMenu(QMenu *menu) {
+    
     //////////////////////////////////////////////////////
     //ref.: https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
 
@@ -740,6 +728,7 @@ void maroloDAQ::enumerateMenu(QMenu *menu) {
 }
 
 void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
+    
     //qDebug() << "----> AQUI cbSensorList e &arg1 = " << arg1;
     if ( arg1 == "Pêndulo" ) {
         ui->editAngulo1->setEnabled(true);
@@ -752,6 +741,7 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
 }
 
 bool maroloDAQ::validarEntradas() {
+    
     //Se ERRO for vazio apresenta mensagem de erro e para operação, senão...
     //Se DeltaT for vazio apresenta mensagem de erro e para operação, senão...
     //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
@@ -780,7 +770,20 @@ bool maroloDAQ::validarEntradas() {
     }
 } // end validarEntradas
 
-//
+void maroloDAQ::on_btnAppCalibrar1_clicked() {
+    
+    double myangle = ui->editAngulo1->text().toDouble();
+    angleCalibrate(myangle, 0);
+    
+}
+
+void maroloDAQ::on_btnAppCalibrar2_clicked() {
+
+    double myangle = ui->editAngulo2->text().toDouble();
+    angleCalibrate(myangle, 1);
+    
+}
+
 void maroloDAQ::doReadings() {
     
     // Configura myCALL com o valor do pino do Arduino
