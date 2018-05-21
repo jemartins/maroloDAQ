@@ -414,6 +414,7 @@ void maroloDAQ::on_btnDevClose_clicked() {
 
 void maroloDAQ::on_btnParar_clicked() {
     
+    stopFlag = true;
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
     ui->editTmax->setEnabled(true);
@@ -454,6 +455,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
     }
     
     // inicia medicoes
+    stopFlag = false;
     doReadings();
     
 } // end on_btnIniciar_clicked
@@ -772,9 +774,9 @@ void maroloDAQ::doReadings() {
     // define timeout
     double timeout = Tmax + tolerance;
     
-    while (!timer.hasExpired(timeout)) {
+    while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
-        if (timer.hasExpired(cont * deltaT)) {
+        if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
             
             //Qual Sensor foi Selecionado
             switch(ui->cbSensorList->currentIndex()) {

@@ -82,6 +82,7 @@ private:
     QString AdcReadString;
     // definindo o relogio
     QElapsedTimer timer;
+    bool stopFlag;
     
 };
 #endif // PROJMAROLO_H
