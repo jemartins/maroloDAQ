@@ -94,8 +94,6 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_qml.pri \
@@ -106,8 +104,6 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_qmltest_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_quick_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_serialport.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_serialport_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
@@ -118,18 +114,17 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_theme_support_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webkit.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_widgets_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xml.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xml_private.pri \
+		/usr/lib64/qt5/mkspecs/modules/qt_phonon4qt5.pri \
 		/usr/lib64/qt5/mkspecs/features/qt_functions.prf \
 		/usr/lib64/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib64/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib64/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib64/qt5/mkspecs/features/default_pre.prf \
@@ -200,8 +195,6 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_qml.pri \
@@ -212,8 +205,6 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_qmltest_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_quick.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_quick_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_serialport.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_serialport_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_service_support_private.pri \
@@ -224,18 +215,17 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_testlib.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_testlib_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_theme_support_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel_private.pri \
-		/usr/lib64/qt5/mkspecs/modules/qt_lib_webkit.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_widgets.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_widgets_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xml.pri \
 		/usr/lib64/qt5/mkspecs/modules/qt_lib_xml_private.pri \
+		/usr/lib64/qt5/mkspecs/modules/qt_phonon4qt5.pri \
 		/usr/lib64/qt5/mkspecs/features/qt_functions.prf \
 		/usr/lib64/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib64/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib64/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib64/qt5/mkspecs/features/default_pre.prf \
@@ -297,8 +287,6 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 /usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_openglextensions_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_platformcompositor_support_private.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_positioning_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_printsupport_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_qml.pri:
@@ -309,8 +297,6 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 /usr/lib64/qt5/mkspecs/modules/qt_lib_qmltest_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_quick.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_quick_private.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_sensors_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_serialport.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_serialport_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_service_support_private.pri:
@@ -321,18 +307,17 @@ Makefile: maroloDAQ.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/q
 /usr/lib64/qt5/mkspecs/modules/qt_lib_testlib.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_testlib_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_theme_support_private.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_webchannel_private.pri:
-/usr/lib64/qt5/mkspecs/modules/qt_lib_webkit.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_widgets.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_widgets_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_xcb_qpa_lib_private.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_xml.pri:
 /usr/lib64/qt5/mkspecs/modules/qt_lib_xml_private.pri:
+/usr/lib64/qt5/mkspecs/modules/qt_phonon4qt5.pri:
 /usr/lib64/qt5/mkspecs/features/qt_functions.prf:
 /usr/lib64/qt5/mkspecs/features/qt_config.prf:
 /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib64/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib64/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib64/qt5/mkspecs/features/toolchain.prf:
 /usr/lib64/qt5/mkspecs/features/default_pre.prf:

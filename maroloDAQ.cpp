@@ -792,7 +792,7 @@ void maroloDAQ::doReadings() {
                     
                     if (ui->checkBoxGrace->isEnabled()) {
                         //plotaGrace(tempo_atual/1000, mysound, 0.01, erroY);
-                        GracePrintf((const char*)"g0.s0 point tempo_atual/1000, mysound, 0.01, erroY");
+                        GracePrintf((const char*)"g0.s0 point tempo_atual/1000 mysound 0.01 erroY");
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             //GracePrintf ("autoscale");
@@ -1168,15 +1168,14 @@ double maroloDAQ::readResistence(QByteArray myCALL) {
  * Coisas para o GRACE
  * inicio
  */
-int maroloDAQ::setupGrace () {
+void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-        GracePrintf ("type xydxdy");
-        GracePrintf ("title \"Insira Aqui o Título\"");
-        GracePrintf ("subtitle \"insira aqui o subtítulo\"");
-        GracePrintf ("xaxis  label \"insira aqui no eixoX (unid)\"");
-        GracePrintf ("yaxis  label \"insira aqui no eixoY (unid)\"");
         GracePrintf ("g0.s%d on", 0);
+        GracePrintf ("title \"Insira Aqui o Titulo\"");
+        GracePrintf ("subtitle \"insira aqui o subtitulo\"");
+        GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
+        GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
         GracePrintf ("g0.s%d symbol 1", 0);
         GracePrintf ("g0.s%d symbol size 0.3", 0);
         GracePrintf ("g0.s%d symbol color %d", 0, 1);
@@ -1184,20 +1183,15 @@ int maroloDAQ::setupGrace () {
         GracePrintf ("g0.s%d line color %d", 0, 1);
         GracePrintf ("g0.s%d legend  \"AQUI legenda\"", 0);
         GracePrintf ("g0.s%d line type %d", 0, 0);
-        return 0;
-    } else {
-        return -1;
+        GracePrintf ("type xydxdy");
     } // end if
     
 } // end setupGrace
 
-int maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
+void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
         GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
-        return 0;
-    } else {        
-        return -1;
     }
     
 } //end plotaGrace
