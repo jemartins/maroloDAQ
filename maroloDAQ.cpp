@@ -694,10 +694,14 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
     if ( arg1 == "Pêndulo" ) {
         ui->editAngulo1->setEnabled(true);
         ui->editAngulo2->setEnabled(true);
+    	ui->btnCalibrar1->setEnabled(true);
+    	ui->btnCalibrar2->setEnabled(true);
     }
     else {
         ui->editAngulo1->setEnabled(false);
         ui->editAngulo2->setEnabled(false);
+    	ui->btnCalibrar1->setEnabled(false);
+    	ui->btnCalibrar2->setEnabled(false);
     }
 }
 
@@ -1009,12 +1013,18 @@ void maroloDAQ::angleCalibrate(double myangle, int index) {
     
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
+    //qDebug() << "AQUI myCALL = " << myCALL << endl;
+    //qDebug() << "AQUI index  = " << index << endl;
     
     double myvoltage = readVoltage(myCALL);
     
     calibrationArray[index].angle = myangle;
+    //qDebug() << "AQUI calibrationArray[index].angle = " << 
+    //	    calibrationArray[index].angle << endl;
     calibrationArray[index].voltage = myvoltage;
-    
+    //qDebug() << "AQUI calibrationArray[index].voltage = " <<
+    //      calibrationArray[index].voltage << endl;
+
 } // end angleCalibrate
 
 double maroloDAQ::readAngle(QByteArray myCALL) {
@@ -1030,10 +1040,22 @@ double maroloDAQ::readAngle(QByteArray myCALL) {
 	float teta0;
 	float teta1;
 
+	// v0
 	v0 = (float)calibrationArray[0].voltage;	
+    	qDebug() << "AQUI calibrationArray[0].voltage = " << \
+    		calibrationArray[0].voltage << endl;
+	// v1
 	v1 = (float)calibrationArray[1].voltage;
+    	qDebug() << "AQUI calibrationArray[1].voltage = " << \
+    		calibrationArray[1].voltage << endl;
+	// teta0
 	teta0 = (float)(calibrationArray[0].angle);
+    	qDebug() << "AQUI calibrationArray[0].angle = " << \
+    		calibrationArray[0].angle << endl;
+	// teta1
 	teta1 = (float)(calibrationArray[1].angle);
+    	qDebug() << "AQUI calibrationArray[1].angle = " << \
+    		calibrationArray[1].angle << endl;
 	
 	teta0 = (teta0)*(pi/180); // conversion to rad
 	teta1 = (teta1)*(pi/180); // conversion to rad
@@ -1045,6 +1067,7 @@ double maroloDAQ::readAngle(QByteArray myCALL) {
 
 	// Here, conversion voltage into degree
 	angle = (180/pi)*asin((voltage-b)/a);
+	qDebug() << "AQUI angle = " << angle << endl;
 	
     return angle;
     
@@ -1200,8 +1223,8 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
-        qDebug() << "AQUI x = " << x << endl;
-        qDebug() << "AQUI y = " << y << endl;
+        //qDebug() << "AQUI x = " << x << endl;
+        //qDebug() << "AQUI y = " << y << endl;
         //qDebug() << "AQUI dx = " << dx << endl;
         //qDebug() << "AQUI dy = " << dy << endl;
         GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
