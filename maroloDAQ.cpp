@@ -977,7 +977,7 @@ double maroloDAQ::readTemperature(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double temperature = scale_temp(AdcReadDouble * (4096/1024));
+    double temperature = scale_temp(AdcReadDouble * (4096/1023));
     return temperature;
 
 }
@@ -1062,7 +1062,7 @@ double maroloDAQ::readVoltage(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    //int voltage = (int(AdcReadDouble * (5/1024)));
+    //int voltage = (int(AdcReadDouble * (5/1023)));
     double voltage = AdcReadDouble;
     
     return voltage;
@@ -1081,7 +1081,7 @@ double maroloDAQ::readLight(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double light = scale_light(AdcReadDouble * (4096/1024));
+    double light = scale_light(AdcReadDouble * (4096/102333));
     
     return light;
     
@@ -1117,7 +1117,7 @@ double maroloDAQ::readSound(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double sound = scale_sound(AdcReadDouble * (4096/1024));
+    double sound = scale_sound(AdcReadDouble * (4096/1023));
     
     return sound;
     
@@ -1202,9 +1202,10 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     if (GraceIsOpen()) {
         qDebug() << "AQUI x = " << x << endl;
         qDebug() << "AQUI y = " << y << endl;
-        qDebug() << "AQUI dx = " << dx << endl;
-        qDebug() << "AQUI dy = " << dy << endl;
+        //qDebug() << "AQUI dx = " << dx << endl;
+        //qDebug() << "AQUI dy = " << dy << endl;
         GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+        //GracePrintf ((const char*)"g0.s0 point %5.2f, %5.1f", x, y);
         //GracePrintf ("g0.s0 point %d, %d", 1, 2);
         //GracePrintf ("g0.s0 point %d, %d", 2, 4);
         
