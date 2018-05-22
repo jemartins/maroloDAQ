@@ -435,7 +435,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->btnParar->setEnabled(true);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
-	ui->checkBoxGrace->isEnabled(false);
+	ui->checkBoxGrace->setEnabled(false);
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
@@ -445,7 +445,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
                 } else {
-			ui->checkBoxGrace->isEnabled(false);
+			//ui->checkBoxGrace->setEnabled(false);
     			// ajuste no visual do Grace
 			setupGrace();
  		} 
@@ -798,7 +798,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
@@ -819,7 +819,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, myvoltage, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
@@ -841,7 +841,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, myresistence, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
@@ -857,13 +857,13 @@ void maroloDAQ::doReadings() {
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
@@ -885,7 +885,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mylight, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
@@ -907,7 +907,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    if (ui->checkBoxGrace->isEnabled()) {
+                    if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
@@ -936,6 +936,7 @@ void maroloDAQ::doReadings() {
     ui->btnParar->setEnabled(false);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
+    ui->checkBoxGrace->setEnabled(true);
     
 }
 
@@ -1211,7 +1212,8 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("subtitle \"insira aqui o subtitulo\"");
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
-        
+       
+       	GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1234,26 +1236,14 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
         //GracePrintf ("g0.s0 type xydxdy");
-        //qDebug() << "AQUI x = " << x << endl;
+        qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
+	//qDebug() << "AQUI x = " << x << endl;
         //qDebug() << "AQUI y = " << y << endl;
         //qDebug() << "AQUI dx = " << dx << endl;
         //qDebug() << "AQUI dy = " << dy << endl;
-        //GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
-        GracePrintf ("S0 POINT %5.2f, %5.2f", float(x*1000), float(y*1000));
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", round_to_decimal(dx));
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", round_to_decimal(dy));
-        //GracePrintf ("S0 POINT %d, %d", int(x*1000), int(y*1000));
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", int(dx*1000));
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", int(dy*1000));
-        //GracePrintf ("S0 POINT %d, %d", 10, 20);
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
-        //GracePrintf ("S0 POINT %d, %d", 15, 30);
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
-        //GracePrintf ("S0 POINT %d, %d", 20, 40);
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
+        GracePrintf("s0 point %g, %g", x, y);
+        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %g", dx);
+        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %g", dy);
         
     }
     
