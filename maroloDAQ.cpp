@@ -435,6 +435,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->btnParar->setEnabled(true);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
+	ui->checkBoxGrace->isEnabled(false);
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
@@ -444,13 +445,16 @@ void maroloDAQ::on_btnIniciar_clicked() {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
                 } else {
-                    // ajuste no visual do Grace
-                    setupGrace();
-                } 
-            }
-        }
+			ui->checkBoxGrace->isEnabled(false);
+    			// ajuste no visual do Grace
+			setupGrace();
+ 		} 
+	    }        
+	} else if (GraceIsOpen()) {
+		GraceClose();
+	}
     }
-    
+
     // inicia medicoes
     stopFlag = false;
     doReadings();
@@ -1235,12 +1239,12 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
         //qDebug() << "AQUI dx = " << dx << endl;
         //qDebug() << "AQUI dy = " << dy << endl;
         //GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
-        //GracePrintf ("S0 POINT %5.2f, %5.2f", round_to_decimal(x), round_to_decimal(y));
+        GracePrintf ("S0 POINT %5.2f, %5.2f", float(x*1000), float(y*1000));
         //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", round_to_decimal(dx));
         //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", round_to_decimal(dy));
-        GracePrintf ("S0 POINT %d, %d", int(x*1000), int(y*1000));
-        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", int(dx*1000));
-        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", int(dy*1000));
+        //GracePrintf ("S0 POINT %d, %d", int(x*1000), int(y*1000));
+        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", int(dx*1000));
+        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", int(dy*1000));
         //GracePrintf ("S0 POINT %d, %d", 10, 20);
         //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
         //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
