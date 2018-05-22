@@ -793,7 +793,7 @@ void maroloDAQ::doReadings() {
                     if (ui->checkBoxGrace->isEnabled()) {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -815,7 +815,7 @@ void maroloDAQ::doReadings() {
                         plotaGrace(tempo_atual/1000, myvoltage, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -837,7 +837,7 @@ void maroloDAQ::doReadings() {
                         plotaGrace(tempo_atual/1000, myresistence, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -859,7 +859,7 @@ void maroloDAQ::doReadings() {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -881,7 +881,7 @@ void maroloDAQ::doReadings() {
                         plotaGrace(tempo_atual/1000, mylight, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -903,7 +903,7 @@ void maroloDAQ::doReadings() {
                         plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
-                            //GracePrintf ("autoscale");
+                            GracePrintf ("autoscale");
                             GracePrintf ("redraw");
                         }
                     }
@@ -1169,25 +1169,30 @@ double maroloDAQ::readResistence(QByteArray myCALL) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-                GracePrintf ("g0 on");
-		GracePrintf ("g0 type XY");
-		GracePrintf ("with g0");
+        GracePrintf ("g0 on");
+        GracePrintf ("g0 type XY");
+        GracePrintf ("with g0");
+        GracePrintf ("legend on");
+        GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
         GracePrintf ("subtitle \"insira aqui o subtitulo\"");
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
-
-                GracePrintf ("s%d on", 0);
-                GracePrintf ("s%d symbol 1", 0);
-                GracePrintf ("s%d symbol size 0.3", 0);
-                GracePrintf ("s%d symbol color %d", 0, 1);
-                GracePrintf ("s%d symbol fill pattern %d", 0, 1);
-                GracePrintf ("s%d line color %d", 0, 1);
-
-        GracePrintf ("g0.s%d legend  \"AQUI legenda\"", 0);
-        GracePrintf ("g0.s%d line type %d", 0, 0);
-	GracePrintf ("target g0.s0");
-        GracePrintf ("g0.s%d type xydxdy", 0);
+        
+        GracePrintf ("s0 on");
+        GracePrintf ("s0 symbol 1");
+        GracePrintf ("s0 symbol size 0.4");
+        GracePrintf ("s0 symbol color 1");
+        GracePrintf ("s0 symbol fill color 2");
+        GracePrintf ("s0 symbol fill pattern 1");
+        GracePrintf ("s0 symbol linewidth 1.0");
+        GracePrintf ("s0 symbol char 65");
+        GracePrintf ("s0 line color 2");
+        
+        GracePrintf ("s0 legend  \"Dados Experimentais\"");
+        GracePrintf ("s0 line type 0");
+        GracePrintf ("target g0.s0");
+        GracePrintf ("g0.s0 type xydxdy");
     } // end if
     
 } // end setupGrace
@@ -1195,14 +1200,14 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
-	    qDebug() << "AQUI x = " << x << endl;
-	    qDebug() << "AQUI y = " << y << endl;
-	    qDebug() << "AQUI dx = " << dx << endl;
-	    qDebug() << "AQUI dy = " << dy << endl;
-    	    //GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
-    	    GracePrintf ("g0.s0 point %d, %d", 1, 2);
-    	    GracePrintf ("g0.s0 point %d, %d", 2, 4);
-
+        qDebug() << "AQUI x = " << x << endl;
+        qDebug() << "AQUI y = " << y << endl;
+        qDebug() << "AQUI dx = " << dx << endl;
+        qDebug() << "AQUI dy = " << dy << endl;
+        GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+        //GracePrintf ("g0.s0 point %d, %d", 1, 2);
+        //GracePrintf ("g0.s0 point %d, %d", 2, 4);
+        
     }
     
 } //end plotaGrace
