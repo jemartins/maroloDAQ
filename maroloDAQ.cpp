@@ -798,7 +798,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -820,7 +820,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -842,7 +842,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -864,7 +864,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -886,7 +886,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -908,7 +908,7 @@ void maroloDAQ::doReadings() {
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             GracePrintf ("autoscale");
-                            GracePrintf ("redraw");
+                            //GracePrintf ("redraw");
                         }
                     }
                     break;
@@ -1215,7 +1215,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("s0 legend  \"Dados Experimentais\"");
         GracePrintf ("s0 line type 0");
         GracePrintf ("target g0.s0");
-        //GracePrintf ("g0.s0 type xydxdy");
+        GracePrintf ("g0.s0 type xydxdy");
     } // end if
     
 } // end setupGrace
@@ -1223,7 +1223,7 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
-        GracePrintf ("g0.s0 type xydxdy");
+        //GracePrintf ("g0.s0 type xydxdy");
         //qDebug() << "AQUI x = " << x << endl;
         //qDebug() << "AQUI y = " << y << endl;
         //qDebug() << "AQUI dx = " << dx << endl;
@@ -1233,6 +1233,12 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
         //GracePrintf ((char*)"S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
         //GracePrintf ((char*)"S0.Y2[S0.LENGTH - 1] = %5.1f", dy);
         GracePrintf ("S0 POINT %d, %d", 10, 20);
+        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
+        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
+        GracePrintf ("S0 POINT %d, %d", 15, 30);
+        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
+        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
+        GracePrintf ("S0 POINT %d, %d", 20, 40);
         GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", 1);
         GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", 2);
         
