@@ -1171,11 +1171,11 @@ double maroloDAQ::readResistence(QByteArray myCALL) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-        GracePrintf ("g0.s%d on", 0);
         GracePrintf ("title \"Insira Aqui o Titulo\"");
         GracePrintf ("subtitle \"insira aqui o subtitulo\"");
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
+        GracePrintf ("g0.s%d on", 0);
         GracePrintf ("g0.s%d symbol 1", 0);
         GracePrintf ("g0.s%d symbol size 0.3", 0);
         GracePrintf ("g0.s%d symbol color %d", 0, 1);
@@ -1183,7 +1183,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("g0.s%d line color %d", 0, 1);
         GracePrintf ("g0.s%d legend  \"AQUI legenda\"", 0);
         GracePrintf ("g0.s%d line type %d", 0, 0);
-        GracePrintf ("type xydxdy");
+        GracePrintf ("g0.s%d type xydxdy", 0);
     } // end if
     
 } // end setupGrace
@@ -1191,7 +1191,11 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
-        GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+	    QString px 	= QString::number(x);
+	    QString py 	= QString::number(y);
+	    QString dpx = QString::number(dx);
+	    QString dpy = QString::number(dy);
+    	    GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", px, py, dpx, dpy);
     }
     
 } //end plotaGrace
