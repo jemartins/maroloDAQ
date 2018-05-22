@@ -791,8 +791,6 @@ void maroloDAQ::doReadings() {
                     (QString::number(erroY, 'f', 1)));
                     
                     if (ui->checkBoxGrace->isEnabled()) {
-                        //plotaGrace(tempo_atual/1000, mysound, 0.01, erroY);
-                        GracePrintf((const char*)"g0.s0 point tempo_atual/1000 mysound 0.01 erroY");
                         /* Update the Grace display after every five steps */
                         if (cont % 5 == 0) {
                             //GracePrintf ("autoscale");
@@ -1171,6 +1169,9 @@ double maroloDAQ::readResistence(QByteArray myCALL) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
+                GracePrintf ("g0 on");
+		GracePrintf ("g0 type XY");
+		GracePrintf ("with g0");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
         GracePrintf ("subtitle \"insira aqui o subtitulo\"");
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
@@ -1179,12 +1180,13 @@ void maroloDAQ::setupGrace () {
                 GracePrintf ("s%d on", 0);
                 GracePrintf ("s%d symbol 1", 0);
                 GracePrintf ("s%d symbol size 0.3", 0);
-                GracePrintf ("s%d symbol color %d", 0, 2);
-                GracePrintf ("s%d symbol fill pattern %d", 0, 2);
-                GracePrintf ("s%d line color %d", 0, 2);
+                GracePrintf ("s%d symbol color %d", 0, 1);
+                GracePrintf ("s%d symbol fill pattern %d", 0, 1);
+                GracePrintf ("s%d line color %d", 0, 1);
 
         GracePrintf ("g0.s%d legend  \"AQUI legenda\"", 0);
         GracePrintf ("g0.s%d line type %d", 0, 0);
+	GracePrintf ("target g0.s0");
         GracePrintf ("g0.s%d type xydxdy", 0);
     } // end if
     
@@ -1197,7 +1199,9 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
 	    qDebug() << "AQUI y = " << y << endl;
 	    qDebug() << "AQUI dx = " << dx << endl;
 	    qDebug() << "AQUI dy = " << dy << endl;
-    	    GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+    	    //GracePrintf ("g0.s0 point %5.2f, %5.2f, %5.2f, %5.2f", x, y, dx, dy);
+    	    GracePrintf ("g0.s0 point %d, %d", 1, 2);
+    	    GracePrintf ("g0.s0 point %d, %d", 2, 4);
 
     }
     
