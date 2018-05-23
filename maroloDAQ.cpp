@@ -845,7 +845,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
 		    
-		    out << QString::number(tempo_atual/1000, 'f', 2) << " " << QString::number(mytemperature/10, 'f', 1);
+		    out << "\"s0 point " << QString::number(tempo_atual/1000, 'f', 2) << " " << QString::number(mytemperature/10, 'f', 1) << "\"";
                     qDebug() << "AQUI ABOBORA = " << abobora;
 		    abobora.clear();
 
