@@ -442,7 +442,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
                 /* Start Grace with a buffer size of 2048 and open the pipe */
-                if (GraceOpenVA((char*)"xmgrace", 2048, "-nosafe", "-noask", NULL) == -1) {
+                if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
                 } else {
@@ -450,7 +450,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
                     // ajuste no visual do Grace
                     setupGrace();
                 } 
-            }
+            } 
         } // end if checkBoxGrace->isChecked
         
         // inicia medicoes
@@ -837,9 +837,12 @@ void maroloDAQ::doReadings() {
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
+                    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
+			//GracePrintf ("autoscale");
+			GracePrintf ("redraw");
                     }
                     break;
                 case 4:
@@ -1155,9 +1158,9 @@ double maroloDAQ::round_to_decimal(float f) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-        GracePrintf ("g0 on");
-        GracePrintf ("g0 type XY");
-        GracePrintf ("with g0");
+        //GracePrintf ("g0 on");
+        //GracePrintf ("g0 type XY");
+        //GracePrintf ("with g0");
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
@@ -1165,7 +1168,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
-       	GracePrintf ("kill s0");	
+       	//GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1179,7 +1182,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("s0 legend  \"Dados Experimentais\"");
         GracePrintf ("s0 line type 0");
         GracePrintf ("target g0.s0");
-        GracePrintf ("g0.s0 type xydxdy");
+        GracePrintf ("s0 type xydxdy");
     } // end if GraceIsOpen
     
 } // end setupGrace
@@ -1188,12 +1191,25 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
         //GracePrintf ("g0.s0 type xydxdy");
-        qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
-        GracePrintf("s0 point %5.2f, %5.1f", x, y);
-        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
-        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", dy);
+        //qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
+        //qDebug() << x << "    " << y << "    " << dx << "    " << dy;
+        //GracePrintf("s0 point %5.2f, %5.1f", x, y);
+        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
+        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", dy);
+	int px = int (x*1000);
+	int rpx = px % 100;
+	px = px /1000;
+	int py = int (y*100);
+	int rpy = py % 10;
+	py = py /100;
+	//int dpx = 10;
+	//int dpy = dy * 100;
+        qDebug() << px << "    " << rpx << "    " << py << "    " << rpy;
+	GracePrintf("s0 point %d.%d, %d.%d", px, rpx, py, rpy);
+        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", dpx);
+        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", dpy);
 
-	GracePrintf ("autoscale");
+	//GracePrintf ("autoscale");
     } // end if GraceIsOpen
     
 } //end plotaGrace
