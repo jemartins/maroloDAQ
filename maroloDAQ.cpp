@@ -778,11 +778,10 @@ void maroloDAQ::doReadings() {
     double tempo_atual = 0 ;
     // define timeout
     double timeout = Tmax + tolerance;
-
+    
     // Teste com QTextStream
-    QString abobora;
-    QTextStream out(&abobora);
-    //out << "Qt" << "rocks!";
+    //QString abobora;
+    //QTextStream out(&abobora);
     
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
@@ -802,7 +801,7 @@ void maroloDAQ::doReadings() {
                     (QString::number(mysound, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-
+                    
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
@@ -825,7 +824,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-		    // Envia ao Console
+                    // Envia ao Console
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myresistence, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
@@ -840,21 +839,17 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
                     // Envia ao Console
-		    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-		    
-		    out << "\"s0 point " << QString::number(tempo_atual/1000, 'f', 2) << " " << QString::number(mytemperature/10, 'f', 1) << "\"";
-                    qDebug() << "AQUI ABOBORA = " << abobora;
-		    abobora.clear();
-
-		    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
+                    
+                    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
-			//GracePrintf ("autoscale");
-			GracePrintf ("redraw");
+                        //GracePrintf ("autoscale");
+                        //GracePrintf ("redraw");
                     }
                     break;
                 case 4:
@@ -905,7 +900,7 @@ void maroloDAQ::doReadings() {
     ui->cbSensorList->setEnabled(true);
     ui->checkBoxGrace->setEnabled(true);
     
-}
+} // end doReadings
 
 QByteArray maroloDAQ::infoCALL() {
     
@@ -1202,26 +1197,44 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
+        
+        // Teste com QTextStream
+        QString abobora;
+        QTextStream out(&abobora);
+        //out << "\"s0 point " << QString::number(x, 'f', 2) << " " << QString::number(y, 'f', 1) << " " << QString::number(dx, 'f', 2) << " " << QString::number(dy, 'f', 1) << "\"";
+        out << "s0 point " << QString::number(x, 'f', 2) << ", " << QString::number(y, 'f', 1);
+        qDebug() << "AQUI ABOBORA = " << abobora;
+
+	QByteArray abobora_tmp = abobora.toUtf8();
+	//const char *marolo = abobora_tmp.data();
+	const char *marolo = abobora_tmp.simplified();
+	qDebug() << "AQUI marolo = " << marolo;
+
+	//GracePrintf("%s", marolo);
+	GracePrintf(marolo);
+
         //GracePrintf ("g0.s0 type xydxdy");
         //qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
         //qDebug() << x << "    " << y << "    " << dx << "    " << dy;
         //GracePrintf("s0 point %5.2f, %5.1f", x, y);
         //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
         //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", dy);
-	int px = int (x*1000);
-	int rpx = px % 100;
-	px = px /1000;
-	int py = int (y*100);
-	int rpy = py % 10;
-	py = py /100;
-	//int dpx = 10;
-	//int dpy = dy * 100;
-        qDebug() << px << "    " << rpx << "    " << py << "    " << rpy;
-	GracePrintf("s0 point %d.%d, %d.%d", px, rpx, py, rpy);
+        //int px = int (x*1000);
+        //int rpx = px % 100;
+        //px = px /1000;
+        //int py = int (y*100);
+        //int rpy = py % 10;
+        //py = py /100;
+        //int dpx = 10;
+        //int dpy = dy * 100;
+        //qDebug() << px << "    " << rpx << "    " << py << "    " << rpy;
+        //GracePrintf("s0 point %d.%d, %d.%d", px, rpx, py, rpy);
         //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", dpx);
         //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", dpy);
-
-	//GracePrintf ("autoscale");
+        
+        abobora.clear();
+        
+        //GracePrintf ("autoscale");
     } // end if GraceIsOpen
     
 } //end plotaGrace
