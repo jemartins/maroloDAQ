@@ -449,7 +449,10 @@ void maroloDAQ::on_btnIniciar_clicked() {
     			// ajuste no visual do Grace
 			setupGrace();
  		} 
-	    }        
+	    } else {
+		    // destroe conjundo de pontos anterior
+		    GracePrintf ("kill s0");	
+	    }	    
 	} else if (GraceIsOpen()) {
 		GraceClose();
 	}
@@ -1213,7 +1216,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
-       	GracePrintf ("kill s0");	
+       	//GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
