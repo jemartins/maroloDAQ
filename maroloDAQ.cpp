@@ -778,6 +778,11 @@ void maroloDAQ::doReadings() {
     double tempo_atual = 0 ;
     // define timeout
     double timeout = Tmax + tolerance;
+
+    // Teste com QTextStream
+    QString abobora;
+    QTextStream out(&abobora);
+    //out << "Qt" << "rocks!";
     
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
@@ -820,6 +825,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+		    // Envia ao Console
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myresistence, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
@@ -833,11 +839,17 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    // Envia ao Console
+		    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
+		    
+		    out << QString::number(tempo_atual/1000, 'f', 2) << " " << QString::number(mytemperature/10, 'f', 1);
+                    qDebug() << "AQUI ABOBORA = " << abobora;
+		    abobora.clear();
+
+		    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
