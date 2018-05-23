@@ -1,3 +1,4 @@
+
 #include "maroloDAQ.h"
 #include "ui_maroloDAQ.h"
 #include "calibration.h"
@@ -435,32 +436,28 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->btnParar->setEnabled(true);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
-	ui->checkBoxGrace->setEnabled(false);
+        ui->checkBoxGrace->setEnabled(false);
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
-                /* Start Grace with a buffer size of 4096 and open the pipe */
-                if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
+                /* Start Grace with a buffer size of 2048 and open the pipe */
+                if (GraceOpenVA((char*)"xmgrace", 2048, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
                 } else {
-			//ui->checkBoxGrace->setEnabled(false);
-    			// ajuste no visual do Grace
-			setupGrace();
- 		} 
-	    } else {
-		    // destroe conjundo de pontos anterior
-		    GracePrintf ("kill s0");	
-	    }	    
-	} else if (GraceIsOpen()) {
-		GraceClose();
-	}
-    }
-
-    // inicia medicoes
-    stopFlag = false;
-    doReadings();
+                    //ui->checkBoxGrace->setEnabled(false);
+                    // ajuste no visual do Grace
+                    setupGrace();
+                } 
+            }
+        } // end if checkBoxGrace->isChecked
+        
+        // inicia medicoes
+        stopFlag = false;
+        doReadings();
+        
+    } // end if validarEntradas
     
 } // end on_btnIniciar_clicked
 
@@ -790,7 +787,7 @@ void maroloDAQ::doReadings() {
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
@@ -800,18 +797,11 @@ void maroloDAQ::doReadings() {
                     (QString::number(mysound, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
-                    if (ui->checkBoxGrace->isChecked()) {
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
-                    }
+
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
@@ -821,19 +811,10 @@ void maroloDAQ::doReadings() {
                     (QString::number(myvoltage, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
-                    if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, myvoltage, 0.01, erroY);
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
-                    }
                     break;
                 case 2:
                     myresistence = readResistence(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
@@ -843,19 +824,10 @@ void maroloDAQ::doReadings() {
                     (QString::number(myresistence, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
-                    if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, myresistence, 0.01, erroY);
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
-                    }
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
@@ -865,19 +837,14 @@ void maroloDAQ::doReadings() {
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
+                    // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
                     }
                     break;
                 case 4:
                     mylight = readLight(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
@@ -887,19 +854,10 @@ void maroloDAQ::doReadings() {
                     (QString::number(mylight, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
-                    if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, mylight, 0.01, erroY);
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
-                    }
                     break;
                 case 5:
                     myangle = readAngle(myCALL);
-                    // desongelando o GUI
+                    // descongelando o GUI
                     QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
@@ -909,15 +867,6 @@ void maroloDAQ::doReadings() {
                     (QString::number(myangle, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
-                    
-                    if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
-                        /* Update the Grace display after every five steps */
-                        if (cont % 5 == 0) {
-                            GracePrintf ("autoscale");
-                            //GracePrintf ("redraw");
-                        }
-                    }
                     break;
             } // end switch sensor
             
@@ -1216,7 +1165,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
-       	//GracePrintf ("kill s0");	
+       	GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1231,7 +1180,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("s0 line type 0");
         GracePrintf ("target g0.s0");
         GracePrintf ("g0.s0 type xydxdy");
-    } // end if
+    } // end if GraceIsOpen
     
 } // end setupGrace
 
@@ -1240,15 +1189,12 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     if (GraceIsOpen()) {
         //GracePrintf ("g0.s0 type xydxdy");
         qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
-	//qDebug() << "AQUI x = " << x << endl;
-        //qDebug() << "AQUI y = " << y << endl;
-        //qDebug() << "AQUI dx = " << dx << endl;
-        //qDebug() << "AQUI dy = " << dy << endl;
-        GracePrintf("s0 point %g, %g", x, y);
-        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %g", dx);
-        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %g", dy);
-        
-    }
+        GracePrintf("s0 point %5.2f, %5.1f", x, y);
+        GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
+        GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", dy);
+
+	GracePrintf ("autoscale");
+    } // end if GraceIsOpen
     
 } //end plotaGrace
 
