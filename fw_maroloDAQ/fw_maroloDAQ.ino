@@ -56,7 +56,8 @@ void ProcInfo()
   
   /* Retorna o Modelo do Arduino */
   #if defined(__AVR_ATmega168__)
-    Serial.write("DIECIMILA");
+    //Serial.write("DIECIMILA");
+    Serial.write("maroloDAQ");
   #endif 
   #if defined(__AVR_ATmega328P__)
     //Serial.write("UNO");
@@ -64,12 +65,15 @@ void ProcInfo()
   #endif
   #if defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__)
     Serial.write("MEGA");
+    Serial.write("maroloDAQ");
   #endif
   #if defined(__AVR_ATmega32U4__)
-    Serial.write("LEONARDO");
+   // Serial.write("LEONARDO");
+    Serial.write("maroloDAQ");
   #endif
   #if defined(__SAM3X8E__)
-    Serial.write("DUE");
+    //Serial.write("DUE");
+    Serial.write("maroloDAQ");
   #endif
   
   Serial.flush();
@@ -212,7 +216,7 @@ void ProcGetA3()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(1);
 }
 
 void ProcGetA4()
