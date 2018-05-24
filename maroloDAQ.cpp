@@ -441,7 +441,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
-                /* Start Grace with a buffer size of 2048 and open the pipe */
+                /* Start Grace with a buffer size of 8192 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
@@ -779,10 +779,6 @@ void maroloDAQ::doReadings() {
     // define timeout
     double timeout = Tmax + tolerance;
     
-    // Teste com QTextStream
-    //QString abobora;
-    //QTextStream out(&abobora);
-    
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
         if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
@@ -877,6 +873,12 @@ void maroloDAQ::doReadings() {
                     (QString::number(myangle, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
+                    // send to Grace?
+                    if (ui->checkBoxGrace->isChecked()) {
+                        plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
+                        //GracePrintf ("autoscale");
+                        //GracePrintf ("redraw");
+                    }
                     break;
             } // end switch sensor
             
@@ -948,7 +950,7 @@ double maroloDAQ::readTemperature(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double temperature = scale_temp(AdcReadDouble * (4096/1023));
+    double temperature = scale_temp(AdcReadDouble * (4095/1023));
     return temperature;
 
 }
@@ -1071,7 +1073,7 @@ double maroloDAQ::readLight(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double light = scale_light(AdcReadDouble * (4096/102333));
+    double light = scale_light(AdcReadDouble * (4096/1023));
     
     return light;
     
@@ -1107,7 +1109,7 @@ double maroloDAQ::readSound(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    double sound = scale_sound(AdcReadDouble * (4096/1023));
+    double sound = scale_sound(AdcReadDouble * (4095/1023));
     
     return sound;
     
@@ -1165,9 +1167,9 @@ double maroloDAQ::round_to_decimal(float f) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-        //GracePrintf ("g0 on");
-        //GracePrintf ("g0 type XY");
-        //GracePrintf ("with g0");
+        GracePrintf ("g0 on");
+        GracePrintf ("g0 type XY");
+        GracePrintf ("with g0");
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
@@ -1175,7 +1177,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
-       	//GracePrintf ("kill s0");	
+       	GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1198,43 +1200,43 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
         
-        // Teste com QTextStream
-        QString abobora;
-        QTextStream out(&abobora);
-        //out << "\"s0 point " << QString::number(x, 'f', 2) << " " << QString::number(y, 'f', 1) << " " << QString::number(dx, 'f', 2) << " " << QString::number(dy, 'f', 1) << "\"";
-        out << "s0 point " << QString::number(x, 'f', 2) << ", " << QString::number(y, 'f', 1);
-        qDebug() << "AQUI ABOBORA = " << abobora;
+        // formating xy_point
+        QString xy_point;
+        QTextStream xyout(&xy_point);
+        xyout << "s0 point " << QString::number(x, 'f', 2) << \
+	       	", " << QString::number(y, 'f', 1);
+	QByteArray xy_point_tmp = xy_point.toUtf8();
+	const char *xy_expr = xy_point_tmp.simplified();
+	//qDebug() << "AQUI xy_expr = " << xy_expr;
 
-	QByteArray abobora_tmp = abobora.toUtf8();
-	//const char *marolo = abobora_tmp.data();
-	const char *marolo = abobora_tmp.simplified();
-	qDebug() << "AQUI marolo = " << marolo;
-
-	//GracePrintf("%s", marolo);
-	GracePrintf(marolo);
-
-        //GracePrintf ("g0.s0 type xydxdy");
-        //qDebug() << "AQUI x y dx dy = " << x << " " << y << " " << dx << " " << dy << endl;
-        //qDebug() << x << "    " << y << "    " << dx << "    " << dy;
-        //GracePrintf("s0 point %5.2f, %5.1f", x, y);
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %5.2f", dx);
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %5.2f", dy);
-        //int px = int (x*1000);
-        //int rpx = px % 100;
-        //px = px /1000;
-        //int py = int (y*100);
-        //int rpy = py % 10;
-        //py = py /100;
-        //int dpx = 10;
-        //int dpy = dy * 100;
-        //qDebug() << px << "    " << rpx << "    " << py << "    " << rpy;
-        //GracePrintf("s0 point %d.%d, %d.%d", px, rpx, py, rpy);
-        //GracePrintf ("S0.Y1[S0.LENGTH - 1] = %d", dpx);
-        //GracePrintf ("S0.Y2[S0.LENGTH - 1] = %d", dpy);
+	GracePrintf(xy_expr);
+        xy_point.clear();
         
-        abobora.clear();
+        // formating dx_point
+        QString dx_point;
+        QTextStream dxout(&dx_point);
+        dxout << "s0.y1[s0.length -1] = " << QString::number(dx, 'f', 2);
+	QByteArray dx_point_tmp = dx_point.toUtf8();
+	const char *dx_expr = dx_point_tmp.simplified();
+	//qDebug() << "AQUI dx_expr = " << dx_expr;
         
-        //GracePrintf ("autoscale");
+	GracePrintf(dx_expr);
+        dx_point.clear();
+        
+	// formating dy_point
+        QString dy_point;
+        QTextStream dyout(&dy_point);
+        dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', 1);
+	QByteArray dy_point_tmp = dy_point.toUtf8();
+	const char *dy_expr = dy_point_tmp.simplified();
+	//qDebug() << "AQUI dy_expr = " << dy_expr;
+
+	GracePrintf(dy_expr);
+        dy_point.clear();
+        
+        GracePrintf ("autoscale");
+        GracePrintf ("redraw");
+	
     } // end if GraceIsOpen
     
 } //end plotaGrace
