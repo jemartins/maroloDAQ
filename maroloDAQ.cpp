@@ -636,6 +636,50 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
                 }
             }
         }
+        if ( myAction_temp == "ttyUSB0" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM0);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyUSB1" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM1);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyUSB2" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM2);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
+        if ( myAction_temp == "ttyUSB3" ) {
+            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
+            actionACM0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionACM3);
+            if (myAction_split.length() > 1 ) {
+                if ( myAction_split[1] == "maroloDAQ]") {
+                    actionACM0->setCheckable(true);
+                    actionACM0->setChecked(true);
+                }
+            }
+        }
         if (  myAction_temp == "ttyS0") {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionS0 = new QAction(myAction, this);
