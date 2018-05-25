@@ -56,7 +56,7 @@ ui(new Ui::maroloDAQ)
     BaudRateGroup = new QActionGroup(this);
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
 	    BaudRateGroup->addAction(bdaction);
-	    if (bdaction->text() == "9600") {
+	    if (bdaction->text() == "19200") {
                     bdaction->setCheckable(true);
                     bdaction->setChecked(true);
 		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
@@ -135,8 +135,8 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
-            //statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
 	    //QAction *baudrate = BaudRateGroup->checkedAction();
 	    //statusOpenSerial = procSerial->Conectar(minhaSerial, baudrate->text().toInt());
 
@@ -361,8 +361,8 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    statusOpenSerial = procSerial->Conectar(devport,9600);
-    //statusOpenSerial = procSerial->Conectar(devport,19200);
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
@@ -471,13 +471,9 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     ui->teLog->append("Can't run Grace. \n");
-                } else {
-                    //ui->checkBoxGrace->setEnabled(false);
-                    // ajuste no visual do Grace
-                    setupGrace();
                 } 
-            } 
-        } // end if checkBoxGrace->isChecked
+            }
+	} // end if checkBoxGrace->isChecked
         
         // inicia medicoes
         stopFlag = false;
@@ -516,8 +512,8 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    statusOpenSerial = procSerial->Conectar(devport,9600);
-    //statusOpenSerial = procSerial->Conectar(devport,19200);
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
@@ -850,7 +846,8 @@ void maroloDAQ::doReadings() {
     double tempo_atual = 0 ;
     // define timeout
     double timeout = Tmax + tolerance;
-    
+   
+    setupGrace();
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
         if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
@@ -947,13 +944,17 @@ void maroloDAQ::doReadings() {
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
-                        //GracePrintf ("autoscale");
-                        //GracePrintf ("redraw");
+                        GracePrintf ("autoscale");
+                        GracePrintf ("redraw");
                     }
                     break;
             } // end switch sensor
             
             cont++;
+	    if (cont % 10 == 0) {
+		    GracePrintf("autoscale");
+		    GracePrintf("redraw");
+	    }
             
         } // end if deltaT
         
@@ -1305,8 +1306,8 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
 	GracePrintf(dy_expr);
         dy_point.clear();
         
-        GracePrintf ("autoscale");
-        GracePrintf ("redraw");
+        //GracePrintf ("autoscale");
+        //GracePrintf ("redraw");
 	
     } // end if GraceIsOpen
     
