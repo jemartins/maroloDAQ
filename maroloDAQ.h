@@ -78,6 +78,7 @@ private:
     QAction *actionS3;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
+    QActionGroup *BaudRateGroup;
     //variáveis adicionas por Rafael
     QMessageBox msgBox;
     QString AdcReadString;

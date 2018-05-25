@@ -129,7 +129,7 @@ void ProcGetA0()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcGetA1()
@@ -158,7 +158,7 @@ void ProcGetA1()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcGetA2()
@@ -187,7 +187,7 @@ void ProcGetA2()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcGetA3()
@@ -216,7 +216,7 @@ void ProcGetA3()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcGetA4()
@@ -245,7 +245,7 @@ void ProcGetA4()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcGetA5()
@@ -274,7 +274,7 @@ void ProcGetA5()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(10);
+  //delay(10);
 }
 
 void ProcStatesUARTRx(char *buffRx)
@@ -371,7 +371,9 @@ void CheckUARTRx(char *buffRx)
 void setup() {
   
   /* Inicialização Serial 9600 bps */
-  Serial.begin(9600,SERIAL_8N1);
+  //Serial.begin(9600,SERIAL_8N1);
+  /* Inicialização Serial 19200 bps */
+  Serial.begin(19200,SERIAL_8N1);
   
   /* Inicialização do Led OUTPUT */
   pinMode(LED_ONBOARD, OUTPUT);

@@ -29,34 +29,39 @@ ui(new Ui::maroloDAQ)
     ui->editAngulo2->setMaxLength(3);
     //ui->editAngulo2->setInputMask("#99");
     
-    QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
+    QDoubleValidator *dvVal1 = new QDoubleValidator(0.1,1e99,1,ui->editErroSensor);
     dvVal1->setNotation(QDoubleValidator::ScientificNotation);
     ui->editErroSensor->setValidator(dvVal1);
     ui->editErroSensor->setMaxLength(7);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0,99999,1,ui->editDeltaT));
+    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,99999,2,ui->editDeltaT));
     //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editDeltaT->setValidator(dvVal2);
     ui->editDeltaT->setMaxLength(5);
-    //ui->editDeltaT->setInputMask("99999");
+    //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0,999999,1,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0.03,999999,2,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
     ui->editTmax->setMaxLength(6);
-    //ui->editTmax->setInputMask("999999");
+    //ui->editTmax->setInputMask("999.99");
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
 
+    BaudRateGroup = new QActionGroup(this);
+    foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
+     	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
+	    BaudRateGroup->addAction(bdaction);
+    }
+    
     // Procurando por portar seriais abertas
     scanPortas();
     
+    // Configurado stado inicial dos objetos
     setDesconectado();
 
-    //Conectando SIGNAL de Timer a função update
-    //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 maroloDAQ::~maroloDAQ()
@@ -117,7 +122,10 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
+	    //QAction *baudrate = BaudRateGroup->checkedAction();
+	    //statusOpenSerial = procSerial->Conectar(minhaSerial, baudrate->text().toInt());
             
             // aguardando a porta "aquecer" ;_(((
             sleep(2);
@@ -337,8 +345,10 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
-    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,19200);
+    //QAction *baudrate = BaudRateGroup->checkedAction();
+    //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -490,8 +500,10 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
-    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,19200);
+    //QAction *baudrate = BaudRateGroup->checkedAction();
+    //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -877,14 +889,13 @@ void maroloDAQ::doReadings() {
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
                     ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
@@ -1217,7 +1228,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
-        GracePrintf ("subtitle \"insira aqui o subtitulo\"");
+        GracePrintf ("subtitle \"insira aqui o subttiulo\"");
         GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
