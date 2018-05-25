@@ -1505,7 +1505,7 @@
     <addaction name="actionSalvar_como"/>
     <addaction name="actionSair"/>
    </widget>
-   <widget class="QMenu" name="menuSobre">
+   <widget class="QMenu" name="menuFerramentas">
     <property name="title">
      <string>Ferramentas</string>
     </property>
@@ -1546,7 +1546,7 @@
     <addaction name="actionSobre"/>
    </widget>
    <addaction name="menuArquivo"/>
-   <addaction name="menuSobre"/>
+   <addaction name="menuFerramentas"/>
    <addaction name="menuAjuda"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
