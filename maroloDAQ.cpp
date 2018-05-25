@@ -29,19 +29,19 @@ ui(new Ui::maroloDAQ)
     ui->editAngulo2->setMaxLength(3);
     //ui->editAngulo2->setInputMask("#99");
     
-    QDoubleValidator *dvVal1 = new QDoubleValidator(0.1,1e99,1,ui->editErroSensor);
+    QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
     dvVal1->setNotation(QDoubleValidator::ScientificNotation);
     ui->editErroSensor->setValidator(dvVal1);
     ui->editErroSensor->setMaxLength(7);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,99999,2,ui->editDeltaT));
+    ui->editDeltaT->setValidator(new QDoubleValidator(0,99999,2,ui->editDeltaT));
     //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editDeltaT->setValidator(dvVal2);
     ui->editDeltaT->setMaxLength(5);
     //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0.03,999999,2,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0,999999,2,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
     ui->editTmax->setMaxLength(6);
