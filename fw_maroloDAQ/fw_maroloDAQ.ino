@@ -64,11 +64,11 @@ void ProcInfo()
     Serial.write("maroloDAQ");
   #endif
   #if defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__)
-    Serial.write("MEGA");
+    //Serial.write("MEGA");
     Serial.write("maroloDAQ");
   #endif
   #if defined(__AVR_ATmega32U4__)
-   // Serial.write("LEONARDO");
+    //Serial.write("LEONARDO");
     Serial.write("maroloDAQ");
   #endif
   #if defined(__SAM3X8E__)
