@@ -473,6 +473,10 @@ void maroloDAQ::on_btnIniciar_clicked() {
                     ui->teLog->append("Can't run Grace. \n");
                 } 
             }
+	} else {
+	    if (GraceIsOpen()) {
+		    GraceClose();
+	    }
 	} // end if checkBoxGrace->isChecked
         
         // inicia medicoes
