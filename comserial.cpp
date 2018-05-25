@@ -124,7 +124,7 @@ bool comserial::Desconectar()
 
 
     if(devSerial->error() == 0 || !devSerial->isOpen()) {
-        //qDebug() << "Porta serial fechada com sucesso!";
+        qDebug() << "Porta serial fechada com sucesso!";
         return true;
     }
     else {

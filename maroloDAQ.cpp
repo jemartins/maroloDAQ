@@ -35,30 +35,43 @@ ui(new Ui::maroloDAQ)
     ui->editErroSensor->setMaxLength(7);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0,99999,2,ui->editDeltaT));
-    //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
+    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,999.99,2,ui->editDeltaT));
+    //QDoubleValidator *dvVal2 = new QDoubleValidator(0.03,999.99,2,ui->editDeltaT);
+    //dvVal2->setNotation(QDoubleValidator::StandardNotation);
+    //dvVal2->setBottom(0.03);
     //ui->editDeltaT->setValidator(dvVal2);
-    ui->editDeltaT->setMaxLength(5);
+    ui->editDeltaT->setMaxLength(6);
     //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0,999999,2,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999.99,2,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
-    ui->editTmax->setMaxLength(6);
+    ui->editTmax->setMaxLength(7);
     //ui->editTmax->setInputMask("999.99");
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
 
+    
     BaudRateGroup = new QActionGroup(this);
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
-     	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
 	    BaudRateGroup->addAction(bdaction);
+	    if (bdaction->text() == "9600") {
+                    bdaction->setCheckable(true);
+                    bdaction->setChecked(true);
+		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
+            } else {
+    		    bdaction->setCheckable(true);
+    		    bdaction->setChecked(false);
+	    }
+     	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
+	    
     }
     
+
     // Procurando por portar seriais abertas
     scanPortas();
-    
+
     // Configurado stado inicial dos objetos
     setDesconectado();
 
@@ -122,20 +135,21 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
-            statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
 	    //QAction *baudrate = BaudRateGroup->checkedAction();
 	    //statusOpenSerial = procSerial->Conectar(minhaSerial, baudrate->text().toInt());
-            
+
             // aguardando a porta "aquecer" ;_(((
             sleep(2);
             
             if (statusOpenSerial) {
-                
+
                 // Se conectou com sucesso no disposito serial
                 
                 // Enviando comando para obter informações do Device
                 WriteData("12\n");
+
                 // * Recebendo as informações *
                 GetInfoHw = ReadData();
                 GetInfoHw = GetInfoHw.simplified();
@@ -147,6 +161,8 @@ void maroloDAQ::scanPortas() {
                     minhaSerial = minhaSerial+" [maroloDAQ]";
                 }
                 
+		//qDebug() << "AQUI minhaSerial = " << minhaSerial;
+
                 setPortasSeriais(minhaSerial);
                 
                 statusCloseSerial = procSerial->Desconectar();
@@ -345,8 +361,8 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
-    statusOpenSerial = procSerial->Conectar(devport,19200);
+    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
@@ -500,8 +516,8 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
-    statusOpenSerial = procSerial->Conectar(devport,19200);
+    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
@@ -592,7 +608,7 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     myAction_split = myAction.split(" [");
     myAction_temp = myAction_split[0];
     myAction = "/dev/"+myAction;
-    //qDebug() << ">>>>> AQUI myAction = " << myAction;
+    //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
     
     int ihavename = 0;
     foreach (QAction *action, ui->menuPortas->actions()) {
@@ -617,78 +633,78 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         }
         if ( myAction_temp == "ttyACM1" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM1 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM1);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM1->setCheckable(true);
+                    actionACM1->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyACM2" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM2 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM2);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM2->setCheckable(true);
+                    actionACM2->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyACM3" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM3 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM3);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM3->setCheckable(true);
+                    actionACM3->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB0" ) {
             //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM0);
+            actionUSB0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB0);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB0->setCheckable(true);
+                    actionUSB0->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB1" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM1);
+            actionUSB1 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB1);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB1->setCheckable(true);
+                    actionUSB1->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB2" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM2);
+            actionUSB2 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB2);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB2->setCheckable(true);
+                    actionUSB2->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB3" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM3);
+            actionUSB3 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB3);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB3->setCheckable(true);
+                    actionUSB3->setChecked(true);
                 }
             }
         }

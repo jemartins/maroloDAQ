@@ -72,6 +72,10 @@ private:
     QAction *actionACM1;
     QAction *actionACM2;
     QAction *actionACM3;
+    QAction *actionUSB0;
+    QAction *actionUSB1;
+    QAction *actionUSB2;
+    QAction *actionUSB3;
     QAction *actionS0;
     QAction *actionS1;
     QAction *actionS2;
