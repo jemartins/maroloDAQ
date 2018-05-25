@@ -847,7 +847,9 @@ void maroloDAQ::doReadings() {
     // define timeout
     double timeout = Tmax + tolerance;
    
-    setupGrace();
+    if (GraceIsOpen()) {
+        setupGrace();
+    }
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
         if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
@@ -951,7 +953,7 @@ void maroloDAQ::doReadings() {
             } // end switch sensor
             
             cont++;
-	    if (cont % 10 == 0) {
+	    if ( (cont % 10 == 0) && (GraceIsOpen()) ) {
 		    GracePrintf("autoscale");
 		    GracePrintf("redraw");
 	    }
