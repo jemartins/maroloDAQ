@@ -446,6 +446,7 @@ void maroloDAQ::on_btnParar_clicked() {
     ui->editTmax->setEnabled(true);
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
+    ui->btnDevClose->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
 
@@ -460,6 +461,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->editTmax->setEnabled(false);
         ui->btnIniciar->setEnabled(false);
         ui->btnParar->setEnabled(true);
+    	ui->btnDevClose->setEnabled(false);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         ui->checkBoxGrace->setEnabled(false);
