@@ -829,6 +829,10 @@ void maroloDAQ::doReadings() {
     
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
+
+    // dois timers para medicoes
+    QElapsedTimer timer;
+    QElapsedTimer timer_deltaT;
     
     double mysound,myvoltage,myresistence,mytemperature, mylight,myangle;
     // contador
@@ -855,8 +859,9 @@ void maroloDAQ::doReadings() {
         setupGrace();
     }
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
-        
-        if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+
+	timer_deltaT.start();
+        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
             
             //Qual Sensor foi Selecionado
             switch(ui->cbSensorList->currentIndex()) {

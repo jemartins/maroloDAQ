@@ -87,7 +87,7 @@ private:
     QMessageBox msgBox;
     QString AdcReadString;
     // definindo o relogio
-    QElapsedTimer timer;
+    //QElapsedTimer timer;
     bool stopFlag;
     
 };
