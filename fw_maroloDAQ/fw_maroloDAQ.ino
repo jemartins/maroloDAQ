@@ -129,7 +129,7 @@ void ProcGetA0()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA1()
@@ -158,7 +158,7 @@ void ProcGetA1()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA2()
@@ -187,7 +187,7 @@ void ProcGetA2()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA3()
@@ -216,7 +216,7 @@ void ProcGetA3()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA4()
@@ -245,7 +245,7 @@ void ProcGetA4()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA5()
@@ -274,7 +274,7 @@ void ProcGetA5()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcStatesUARTRx(char *buffRx)

@@ -839,6 +839,9 @@ void maroloDAQ::doReadings() {
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
+
+    //qDebug() << "AQUI deltaT = " << deltaT;
+
     //tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
     //erro indicado no gui para o sensor
@@ -858,12 +861,11 @@ void maroloDAQ::doReadings() {
     if (GraceIsOpen()) {
         setupGrace();
     }
+
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
 
-	timer_deltaT.start();
-        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+        if ( (timer_deltaT.hasExpired(deltaT)) && (!stopFlag) ) {
             
-            //Qual Sensor foi Selecionado
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
@@ -962,14 +964,13 @@ void maroloDAQ::doReadings() {
             } // end switch sensor
             
             cont++;
-	    if ( (cont % 10 == 0) && (GraceIsOpen()) ) {
-		    GracePrintf("autoscale");
-		    GracePrintf("redraw");
-	    }
+            if ( (cont % 10 == 0) && (GraceIsOpen()) ) {
+                GracePrintf("autoscale");
+                GracePrintf("redraw");
+            }
             
         } // end if deltaT
         
-        // Atualiza o tempo decorrido na medicao
         tempo_atual = (timer.elapsed() - tempo_inicial);
         
     } // end while timeout
