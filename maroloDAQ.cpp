@@ -57,7 +57,7 @@ ui(new Ui::maroloDAQ)
     BaudRateGroup = new QActionGroup(this);
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
 	    BaudRateGroup->addAction(bdaction);
-	    if (bdaction->text() == "9600") {
+	    if (bdaction->text() == "19200") {
                     bdaction->setCheckable(true);
                     bdaction->setChecked(true);
 		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
@@ -119,11 +119,12 @@ void maroloDAQ::scanPortas() {
     bool statusCloseSerial;
     bool statusOpenSerial;
     
-    // algumas variaveis temporarias    
+    // algumas variaveis temporarias
     int count = DispSeriais.count();
     //const char * meuAction;
     //const char * meuAction_tmp;
     QString minhaSerial;
+    //int baudrate;
     
     if(count > 0) {
         
@@ -132,25 +133,29 @@ void maroloDAQ::scanPortas() {
             ui->menuPortas->removeAction(action);
         }
         
+        foreach (QAction* action, ui->menuBaudRate->actions()) {
+            if (action->isChecked()) {
+                baudrate = action->text().toInt();
+            }    
+        }
+
         for(int i=0;i<count;i++) {
             
             minhaSerial = DispSeriais[i];
             
-            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
-            //statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
-	    //QAction *baudrate = BaudRateGroup->checkedAction();
-	    //statusOpenSerial = procSerial->Conectar(minhaSerial, baudrate->text().toInt());
-
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,baudrate);
+            
             // aguardando a porta "aquecer" ;_(((
             sleep(2);
             
             if (statusOpenSerial) {
-
+                
                 // Se conectou com sucesso no disposito serial
                 
                 // Enviando comando para obter informações do Device
                 WriteData("12\n");
-
+                
                 // * Recebendo as informações *
                 GetInfoHw = ReadData();
                 GetInfoHw = GetInfoHw.simplified();
@@ -162,8 +167,8 @@ void maroloDAQ::scanPortas() {
                     minhaSerial = minhaSerial+" [maroloDAQ]";
                 }
                 
-		//qDebug() << "AQUI minhaSerial = " << minhaSerial;
-
+                //qDebug() << "AQUI minhaSerial = " << minhaSerial;
+                
                 setPortasSeriais(minhaSerial);
                 
                 statusCloseSerial = procSerial->Desconectar();
@@ -352,7 +357,8 @@ void maroloDAQ::on_btnDevOpen_clicked() {
     QString devport;
     QStringList devport_list;
     bool statusOpenSerial;
-    
+    //int baudrate;
+
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
             devport = action->text();
@@ -362,10 +368,14 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    statusOpenSerial = procSerial->Conectar(devport,9600);
-    //statusOpenSerial = procSerial->Conectar(devport,19200);
-    //QAction *baudrate = BaudRateGroup->checkedAction();
-    //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
+    foreach (QAction* action, ui->menuBaudRate->actions()) {
+        if (action->isChecked()) {
+            baudrate = action->text().toInt();
+        }    
+    }
+
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,baudrate);
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -509,6 +519,7 @@ void maroloDAQ::on_actionConectar_triggered() {
     QString devport;
     QStringList devport_list;
     bool statusOpenSerial;
+    //int baudrate;
     
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
@@ -519,10 +530,14 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    statusOpenSerial = procSerial->Conectar(devport,9600);
-    //statusOpenSerial = procSerial->Conectar(devport,19200);
-    //QAction *baudrate = BaudRateGroup->checkedAction();
-    //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
+    foreach (QAction* action, ui->menuBaudRate->actions()) {
+        if (action->isChecked()) {
+            baudrate = action->text().toInt();
+        }    
+    }
+    
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,baudrate);
     
     /*
      * aguardando a porta "aquecer" ;_(((

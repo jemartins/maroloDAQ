@@ -524,8 +524,6 @@ moc_maroloDAQ.cpp: /usr/lib64/qt5/include/QtWidgets/QMainWindow \
 		/usr/lib64/qt5/include/QtWidgets/QMessageBox \
 		/usr/lib64/qt5/include/QtWidgets/qmessagebox.h \
 		/usr/lib64/qt5/include/QtWidgets/qdialog.h \
-		/usr/lib64/qt5/include/QtCore/QElapsedTimer \
-		/usr/lib64/qt5/include/QtCore/qelapsedtimer.h \
 		comserial.h \
 		/usr/lib64/qt5/include/QtCore/QDebug \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPort \
@@ -674,8 +672,6 @@ main.o: main.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtWidgets/QMessageBox \
 		/usr/lib64/qt5/include/QtWidgets/qmessagebox.h \
 		/usr/lib64/qt5/include/QtWidgets/qdialog.h \
-		/usr/lib64/qt5/include/QtCore/QElapsedTimer \
-		/usr/lib64/qt5/include/QtCore/qelapsedtimer.h \
 		comserial.h \
 		/usr/lib64/qt5/include/QtCore/QDebug \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPort \
@@ -802,8 +798,6 @@ maroloDAQ.o: maroloDAQ.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtWidgets/QMessageBox \
 		/usr/lib64/qt5/include/QtWidgets/qmessagebox.h \
 		/usr/lib64/qt5/include/QtWidgets/qdialog.h \
-		/usr/lib64/qt5/include/QtCore/QElapsedTimer \
-		/usr/lib64/qt5/include/QtCore/qelapsedtimer.h \
 		comserial.h \
 		/usr/lib64/qt5/include/QtCore/QDebug \
 		/usr/lib64/qt5/include/QtSerialPort/QSerialPort \
@@ -818,7 +812,9 @@ maroloDAQ.o: maroloDAQ.cpp maroloDAQ.h \
 		/usr/lib64/qt5/include/QtWidgets/QMenuBar \
 		/usr/lib64/qt5/include/QtWidgets/qmenubar.h \
 		/usr/lib64/qt5/include/QtWidgets/QStatusBar \
-		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h
+		/usr/lib64/qt5/include/QtWidgets/qstatusbar.h \
+		/usr/lib64/qt5/include/QtCore/QElapsedTimer \
+		/usr/lib64/qt5/include/QtCore/qelapsedtimer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o maroloDAQ.o maroloDAQ.cpp
 
 comserial.o: comserial.cpp comserial.h \

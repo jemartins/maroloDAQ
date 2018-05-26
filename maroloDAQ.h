@@ -90,6 +90,6 @@ private:
     //QElapsedTimer timer;
     //QElapsedTimer timer_deltaT;
     bool stopFlag;
-    
+    int baudrate; 
 };
 #endif // PROJMAROLO_H
