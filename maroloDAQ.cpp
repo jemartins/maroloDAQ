@@ -56,7 +56,7 @@ ui(new Ui::maroloDAQ)
     BaudRateGroup = new QActionGroup(this);
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
 	    BaudRateGroup->addAction(bdaction);
-	    if (bdaction->text() == "19200") {
+	    if (bdaction->text() == "9600") {
                     bdaction->setCheckable(true);
                     bdaction->setChecked(true);
 		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
@@ -135,8 +135,8 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
-            statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,19200);
 	    //QAction *baudrate = BaudRateGroup->checkedAction();
 	    //statusOpenSerial = procSerial->Conectar(minhaSerial, baudrate->text().toInt());
 
@@ -361,8 +361,8 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
-    statusOpenSerial = procSerial->Conectar(devport,19200);
+    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
@@ -516,8 +516,8 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
-    statusOpenSerial = procSerial->Conectar(devport,19200);
+    statusOpenSerial = procSerial->Conectar(devport,9600);
+    //statusOpenSerial = procSerial->Conectar(devport,19200);
     //QAction *baudrate = BaudRateGroup->checkedAction();
     //statusOpenSerial = procSerial->Conectar(devport, baudrate->text().toInt());
     
