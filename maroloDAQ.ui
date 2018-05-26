@@ -1589,11 +1589,14 @@
    </property>
   </action>
   <action name="action_No_Flow_Control">
-   <property name="checked">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string> NoFlowControl</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No Flow Control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
