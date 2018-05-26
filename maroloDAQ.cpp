@@ -842,10 +842,6 @@ void maroloDAQ::doReadings() {
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
-    double deltaT_timeout = ui->editDeltaT->text().toInt() * 1000;
-
-    //qDebug() << "AQUI deltaT = " << deltaT;
-
     //tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
     //erro indicado no gui para o sensor
@@ -869,7 +865,7 @@ void maroloDAQ::doReadings() {
 
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
 
-        if ( (timer_deltaT.hasExpired(deltaT_timeout)) && (!stopFlag) ) {
+        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
             
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
