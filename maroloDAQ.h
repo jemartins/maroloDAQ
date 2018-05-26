@@ -5,7 +5,7 @@
 #include <QApplication>
 #include <QActionGroup>
 #include <QMessageBox>
-#include <QElapsedTimer>
+//#include <QElapsedTimer>
 #include "comserial.h"
 #include <grace_np.h>
 
@@ -87,8 +87,8 @@ private:
     QMessageBox msgBox;
     QString AdcReadString;
     // definindo o relogio
-    QElapsedTimer timer;
-    QElapsedTimer timer_deltaT;
+    //QElapsedTimer timer;
+    //QElapsedTimer timer_deltaT;
     bool stopFlag;
     
 };

@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QElapsedTimer>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -841,6 +842,7 @@ void maroloDAQ::doReadings() {
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
+    double deltaT_timeout = ui->editDeltaT->text().toInt() * 1000;
 
     //qDebug() << "AQUI deltaT = " << deltaT;
 
@@ -853,6 +855,7 @@ void maroloDAQ::doReadings() {
     
     // inicializando o relogio
     timer.start();
+    timer_deltaT.start();
     // instante inicial das medicoes
     double tempo_inicial = timer.elapsed();
     // momento da medicao
@@ -866,7 +869,7 @@ void maroloDAQ::doReadings() {
 
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
 
-        if ( (timer_deltaT.hasExpired(deltaT)) && (!stopFlag) ) {
+        if ( (timer_deltaT.hasExpired(deltaT_timeout)) && (!stopFlag) ) {
             
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
@@ -984,6 +987,7 @@ void maroloDAQ::doReadings() {
     ui->editTmax->setEnabled(true);
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
+    ui->btnDevClose->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
     ui->checkBoxGrace->setEnabled(true);
