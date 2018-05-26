@@ -1523,7 +1523,7 @@
      <property name="title">
       <string>Flow Control</string>
      </property>
-     <addaction name="action_No_Flow_Control"/>
+     <addaction name="actionNoFlowControl"/>
     </widget>
     <widget class="QMenu" name="menuPortas">
      <property name="title">
@@ -1588,7 +1588,7 @@
     <string>Sobre</string>
    </property>
   </action>
-  <action name="action_No_Flow_Control">
+  <action name="actionNoFlowControl">
    <property name="text">
     <string> NoFlowControl</string>
    </property>
@@ -1596,7 +1596,7 @@
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No Flow Control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

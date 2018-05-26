@@ -68,8 +68,7 @@ ui(new Ui::maroloDAQ)
      	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
 	    
     }
-    
-
+   
     // Procurando por portar seriais abertas
     scanPortas();
 
