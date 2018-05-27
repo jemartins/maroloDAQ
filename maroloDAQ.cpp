@@ -985,12 +985,14 @@ void maroloDAQ::doReadings() {
             }
             
         } // end if deltaT
+	timer_deltaT.invalidate();
         
         tempo_atual = (timer.elapsed() - tempo_inicial);
         
     } // end while timeout
-    
-    
+    timer.invalidate();
+   
+
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
