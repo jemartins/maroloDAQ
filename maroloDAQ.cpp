@@ -867,9 +867,7 @@ void maroloDAQ::doReadings() {
     timer.start();
     timer_deltaT.start();
     // instante inicial das medicoes
-    double tempo_inicial = timer.elapsed();
-    // momento da medicao
-    double tempo_atual = 0 ;
+    double tempo_atual = timer.elapsed();
     // define timeout
     double timeout = Tmax + tolerance;
    
@@ -977,10 +975,14 @@ void maroloDAQ::doReadings() {
             
         } // end if deltaT
 
-        
-        tempo_atual = (timer.elapsed() - tempo_inicial);
+	tempo_atual = timer.elapsed();
         
     } // end while timeout
+
+    if (GraceIsOpen()) {
+	 GracePrintf("autoscale");
+	 GracePrintf("redraw");
+    }
 
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
