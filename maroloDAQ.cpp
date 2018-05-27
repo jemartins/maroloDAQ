@@ -879,13 +879,14 @@ void maroloDAQ::doReadings() {
 
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
 
-        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+        // descongelando o GUI
+        QCoreApplication::processEvents();
             
+        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -898,8 +899,6 @@ void maroloDAQ::doReadings() {
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -911,8 +910,6 @@ void maroloDAQ::doReadings() {
                     break;
                 case 2:
                     myresistence = readResistence(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -925,8 +922,6 @@ void maroloDAQ::doReadings() {
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -946,8 +941,6 @@ void maroloDAQ::doReadings() {
                     break;
                 case 4:
                     mylight = readLight(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -959,8 +952,6 @@ void maroloDAQ::doReadings() {
                     break;
                 case 5:
                     myangle = readAngle(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -985,13 +976,11 @@ void maroloDAQ::doReadings() {
             }
             
         } // end if deltaT
-	timer_deltaT.invalidate();
+
         
         tempo_atual = (timer.elapsed() - tempo_inicial);
         
     } // end while timeout
-    timer.invalidate();
-   
 
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
