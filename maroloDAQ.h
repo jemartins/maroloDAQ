@@ -5,6 +5,8 @@
 #include <QApplication>
 #include <QActionGroup>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QPlainTextEdit>
 #include "comserial.h"
 #include <grace_np.h>
 
@@ -19,6 +21,8 @@ class maroloDAQ : public QMainWindow
 public:
     explicit maroloDAQ(QWidget *parent = 0);
     ~maroloDAQ();
+
+    void loadFile(const QString &fileName);
 
 private slots:
     void WriteData(const QByteArray data);
@@ -59,7 +63,9 @@ private slots:
     double round_to_decimal(float f);
     void setupGrace ();
     void plotaGrace (double x, double y, double dx, double dy);
-
+    bool save();
+    bool saveAs();
+    void about();
 private:
     Ui::maroloDAQ *ui;
     bool PaletaLogBW;
@@ -86,6 +92,13 @@ private:
     QMessageBox msgBox;
     QString AdcReadString;
     bool stopFlag;
-    int baudrate; 
+    int baudrate;
+
+    void createStatusBar();
+    bool saveFile(const QString &fileName);
+    void setCurrentFile(const QString &fileName);
+
+    QPlainTextEdit *textEdit;
+    QString curFile;
 };
 #endif // PROJMAROLO_H

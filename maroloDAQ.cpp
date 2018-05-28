@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QPlainTextEdit>
 #include <QElapsedTimer>
 #include <unistd.h>
 #include <stdlib.h>
@@ -69,7 +70,13 @@ ui(new Ui::maroloDAQ)
      	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
 	    
     }
-   
+
+    QToolBar *fileToolBar = addToolBar(tr("File"));
+    const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/save.png"));
+    QAction *newAct = new QAction(newIcon, tr("&New"), this);
+    connect(newAct, &QAction::triggered, this, &maroloDAQ::saveAs);
+    fileToolBar->addAction(newAct);
+	    
     // Procurando por portar seriais abertas
     scanPortas();
 
@@ -1340,3 +1347,68 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
+void maroloDAQ::createStatusBar()
+{
+    statusBar()->showMessage(tr("Ready"));
+}
+
+void maroloDAQ::setCurrentFile(const QString &fileName)
+{
+    curFile = fileName;
+    textEdit->document()->setModified(false);
+    setWindowModified(false);
+
+    QString shownName = curFile;
+    if (curFile.isEmpty())
+        shownName = "untitled.txt";
+    setWindowFilePath(shownName);
+}
+
+bool maroloDAQ::saveAs() {
+    QFileDialog dialog(this);
+    dialog.setWindowModality(Qt::WindowModal);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (dialog.exec() != QDialog::Accepted)
+        return false;
+    return saveFile(dialog.selectedFiles().first());
+}
+
+bool maroloDAQ::save() {
+    if (curFile.isEmpty()) {
+        return saveAs();
+    } else {
+        return saveFile(curFile);
+    }
+}
+
+void maroloDAQ::about() {
+   QMessageBox::about(this, tr("About Application"),
+            tr("The <b>Application</b> example demonstrates how to "
+               "write modern GUI applications using Qt, with a menu bar, "
+               "toolbars, and a status bar."));
+}
+
+bool maroloDAQ::saveFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("Application"),
+                             tr("Cannot write file %1:\n%2.")
+                             .arg(QDir::toNativeSeparators(fileName),
+                                  file.errorString()));
+        return false;
+    }
+
+    QTextStream out(&file);
+#ifndef QT_NO_CURSOR
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
+    out << textEdit->toPlainText();
+#ifndef QT_NO_CURSOR
+    QApplication::restoreOverrideCursor();
+#endif
+
+    setCurrentFile(fileName);
+    statusBar()->showMessage(tr("File saved"), 2000);
+    return true;
+}
