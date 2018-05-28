@@ -1,4 +1,3 @@
-
 #include "maroloDAQ.h"
 #include "ui_maroloDAQ.h"
 #include "calibration.h"
@@ -7,8 +6,11 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
-#include <QPlainTextEdit>
 #include <QElapsedTimer>
+#include <QPlainTextEdit>
+//#include <QTextDocument>
+//#include <QGuiApplication>
+//#include <QCloseEvent>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -77,7 +79,8 @@ ui(new Ui::maroloDAQ)
     QAction *saveAct = new QAction(saveIcon, tr("&Salvar"), this);
     //newAct->setShortcuts(QKeySequence::Salvar);
     saveAct->setStatusTip(tr("Salvar"));
-    connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
+    //connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
+    connect(saveAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     //fileMenu->addAction(newAct);
     fileToolBar->addAction(saveAct);
 
@@ -87,9 +90,16 @@ ui(new Ui::maroloDAQ)
     QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar como"), this);
     //newAct->setShortcuts(QKeySequence::Salvar);
     saveasAct->setStatusTip(tr("Salvar como"));
-    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
+    //connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
+    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
     //fileMenu->addAction(newAct);
     fileToolBar->addAction(saveasAct);
+    
+    
+    //connect(textEdit->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+    
+    //setCurrentFile(QString());
+    setUnifiedTitleAndToolBarOnMac(true);
 	    
     // Procurando por portar seriais abertas
     scanPortas();
@@ -520,14 +530,6 @@ void maroloDAQ::on_btnIniciar_clicked() {
     } // end if validarEntradas
     
 } // end on_btnIniciar_clicked
-
-void maroloDAQ::on_actionSalvar_como_triggered() {
-    
-}
-
-void maroloDAQ::on_actionSalvar_triggered() {
-    
-}
 
 void maroloDAQ::on_actionSair_triggered() {
     exit(0);
@@ -1361,9 +1363,45 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
+/*
+void maroloDAQ::closeEvent(QCloseEvent *event)
+{
+    if (maybeSave()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+*/
+
+bool maroloDAQ::maybeSave()
+{
+    if (!textEdit->document()->isModified())
+        return true;
+    const QMessageBox::StandardButton ret
+    = QMessageBox::warning(this, tr("Application"),
+                           tr("The document has been modified.\n"
+                           "Do you want to save your changes?"),
+                           QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    switch (ret) {
+        case QMessageBox::Save:
+            return on_actionSalvar_triggered();
+        case QMessageBox::Cancel:
+            return false;
+        default:
+            break;
+    }
+    return true;
+}
+
 void maroloDAQ::createStatusBar()
 {
     statusBar()->showMessage(tr("Ready"));
+}
+
+void maroloDAQ::documentWasModified()
+{
+    setWindowModified(textEdit->document()->isModified());
 }
 
 void maroloDAQ::setCurrentFile(const QString &fileName)
@@ -1378,7 +1416,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName)
     setWindowFilePath(shownName);
 }
 
-bool maroloDAQ::saveAs() {
+bool maroloDAQ::on_actionSalvar_como_triggered() {
     QFileDialog dialog(this);
     dialog.setWindowModality(Qt::WindowModal);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -1387,9 +1425,9 @@ bool maroloDAQ::saveAs() {
     return saveFile(dialog.selectedFiles().first());
 }
 
-bool maroloDAQ::save() {
+bool maroloDAQ::on_actionSalvar_triggered() {
     if (curFile.isEmpty()) {
-        return saveAs();
+        return on_actionSalvar_como_triggered();
     } else {
         return saveFile(curFile);
     }
@@ -1417,7 +1455,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
     #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
     #endif
-    out << textEdit->toPlainText();
+    //out << textEdit->toPlainText();
     #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
     #endif

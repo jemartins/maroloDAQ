@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPlainTextEdit>
+//#include <QCloseEvent>
 #include "comserial.h"
 #include <grace_np.h>
 
@@ -24,6 +25,9 @@ public:
 
     void loadFile(const QString &fileName);
 
+protected:
+    //void closeEvent(QCloseEvent *event) override;
+
 private slots:
     void WriteData(const QByteArray data);
     void scanPortas();
@@ -38,8 +42,8 @@ private slots:
     void on_btnIniciar_clicked();
     void on_btnParar_clicked();
     void on_btnAppClose_clicked();
-    void on_actionSalvar_como_triggered();
-    void on_actionSalvar_triggered();
+    bool on_actionSalvar_como_triggered();
+    bool on_actionSalvar_triggered();
     void on_actionSair_triggered();
     void on_actionConectar_triggered();
     void on_actionDesconectar_triggered();
@@ -63,9 +67,10 @@ private slots:
     double round_to_decimal(float f);
     void setupGrace ();
     void plotaGrace (double x, double y, double dx, double dy);
-    bool save();
-    bool saveAs();
+    bool maybeSave();
     void about();
+    void documentWasModified();
+
 private:
     Ui::maroloDAQ *ui;
     bool PaletaLogBW;
