@@ -56,11 +56,11 @@ bool comserial::Conectar(QString Port, u_int32_t bd)
 {
     /* Device Serial Port */
     devSerial->setPortName(Port);
-    qDebug() << "Dispositivo Porta Serial: " << Port;
+    //qDebug() << "Dispositivo Porta Serial: " << Port;
 
 
     /* Conectar SerialPort */
-    qDebug() << "Baudrate: " << bd;
+    //qDebug() << "Baudrate: " << bd;
 
         /* BaudRate */
         switch (bd) {

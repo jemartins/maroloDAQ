@@ -71,11 +71,25 @@ ui(new Ui::maroloDAQ)
 	    
     }
 
+    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
-    const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/save.png"));
-    QAction *newAct = new QAction(newIcon, tr("&New"), this);
-    connect(newAct, &QAction::triggered, this, &maroloDAQ::saveAs);
-    fileToolBar->addAction(newAct);
+    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+    QAction *saveAct = new QAction(saveIcon, tr("&Salvar"), this);
+    //newAct->setShortcuts(QKeySequence::Salvar);
+    saveAct->setStatusTip(tr("Salvar"));
+    connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
+    //fileMenu->addAction(newAct);
+    fileToolBar->addAction(saveAct);
+
+    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    //QToolBar *fileToolBar = addToolBar(tr("File"));
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
+    QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar como"), this);
+    //newAct->setShortcuts(QKeySequence::Salvar);
+    saveasAct->setStatusTip(tr("Salvar como"));
+    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
+    //fileMenu->addAction(newAct);
+    fileToolBar->addAction(saveasAct);
 	    
     // Procurando por portar seriais abertas
     scanPortas();
@@ -1357,7 +1371,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName)
     curFile = fileName;
     textEdit->document()->setModified(false);
     setWindowModified(false);
-
+    
     QString shownName = curFile;
     if (curFile.isEmpty())
         shownName = "untitled.txt";
@@ -1382,10 +1396,10 @@ bool maroloDAQ::save() {
 }
 
 void maroloDAQ::about() {
-   QMessageBox::about(this, tr("About Application"),
-            tr("The <b>Application</b> example demonstrates how to "
-               "write modern GUI applications using Qt, with a menu bar, "
-               "toolbars, and a status bar."));
+    QMessageBox::about(this, tr("About Application"),
+                       tr("The <b>Application</b> example demonstrates how to "
+                       "write modern GUI applications using Qt, with a menu bar, "
+                       "toolbars, and a status bar."));
 }
 
 bool maroloDAQ::saveFile(const QString &fileName)
@@ -1398,16 +1412,16 @@ bool maroloDAQ::saveFile(const QString &fileName)
                                   file.errorString()));
         return false;
     }
-
+    
     QTextStream out(&file);
-#ifndef QT_NO_CURSOR
+    #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
+    #endif
     out << textEdit->toPlainText();
-#ifndef QT_NO_CURSOR
+    #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
-#endif
-
+    #endif
+    
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
