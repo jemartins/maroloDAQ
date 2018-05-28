@@ -387,10 +387,10 @@ void setup() {
     
     // valores possiveis de prescaler só deixar a linha com prescaler desejado
     // PS_16, PS_32, PS_64 or PS_128
-    //ADCSRA |= PS_128; // 64 prescaler
-    ADCSRA |= PS_64; // 64 prescaler
-    //  ADCSRA |= PS_32; // 32 prescaler
-    // ADCSRA |= PS_16; // 16 prescaler
+    //ADCSRA |= PS_128; // 128 prescaler: 8.6Khz
+    ADCSRA |= PS_64; // 64 prescaler: 250Khz
+    //ADCSRA |= PS_32; // 32 prescaler: 500Khz
+    //DCSRA |= PS_16; // 16 prescaler: 1Mhz
     
     /* Inicialização do Led OUTPUT */
     pinMode(LED_ONBOARD, OUTPUT);
