@@ -95,11 +95,17 @@ ui(new Ui::maroloDAQ)
     //fileMenu->addAction(newAct);
     fileToolBar->addAction(saveasAct);
     
+    /* 
+    connect(textEdit->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+        
+    #ifndef QT_NO_SESSIONMANAGER
+        QGuiApplication::setFallbackSessionManagementEnabled(false);
+        connect(qApp, &QGuiApplication::commitDataRequest, this, &maroloDAQ::commitData);
+    #endif
     
-    //connect(textEdit->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
-    
-    //setCurrentFile(QString());
+    setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+    */
 	    
     // Procurando por portar seriais abertas
     scanPortas();
@@ -1394,25 +1400,23 @@ bool maroloDAQ::maybeSave()
     return true;
 }
 
-void maroloDAQ::createStatusBar()
-{
+void maroloDAQ::createStatusBar() {
     statusBar()->showMessage(tr("Ready"));
 }
 
-void maroloDAQ::documentWasModified()
-{
+void maroloDAQ::documentWasModified() {
     setWindowModified(textEdit->document()->isModified());
 }
 
-void maroloDAQ::setCurrentFile(const QString &fileName)
-{
+void maroloDAQ::setCurrentFile(const QString &fileName) {
     curFile = fileName;
     textEdit->document()->setModified(false);
     setWindowModified(false);
     
     QString shownName = curFile;
-    if (curFile.isEmpty())
+    if (curFile.isEmpty()) {
         shownName = "untitled.txt";
+    }
     setWindowFilePath(shownName);
 }
 

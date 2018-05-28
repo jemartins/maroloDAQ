@@ -8,6 +8,9 @@
 #include <QFileDialog>
 #include <QPlainTextEdit>
 //#include <QCloseEvent>
+//#include <QTextDocument>
+//#include <QGuiApplication>
+#include <QSessionManager>
 #include "comserial.h"
 #include <grace_np.h>
 
@@ -70,6 +73,11 @@ private slots:
     bool maybeSave();
     void about();
     void documentWasModified();
+    /*
+#ifndef QT_NO_SESSIONMANAGER
+    void commitData(QSessionManager &);
+#endif
+    */
 
 private:
     Ui::maroloDAQ *ui;
