@@ -10,7 +10,13 @@
 unsigned char FLAG_CONTROL_RX_UART_DATA = 0; 
 const unsigned int SIZE_BUF_RX = 10;
 
-//int sensorValue = 0; // analog sensor
+/* 
+ * constante para configuração do prescaler
+ */
+const unsigned char PS_16 = (1 << ADPS2);
+const unsigned char PS_32 = (1 << ADPS2) | (1 << ADPS0);
+const unsigned char PS_64 = (1 << ADPS2) | (1 << ADPS1);
+const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
 /* 
  * Estruturas
@@ -369,14 +375,25 @@ void CheckUARTRx(char *buffRx)
 
 /* Inicializando e configurando os perifericos usados */
 void setup() {
-  
-  /* Inicialização Serial 9600 bps */
-  //Serial.begin(9600,SERIAL_8N1);
-  /* Inicialização Serial 19200 bps */
-  Serial.begin(19200,SERIAL_8N1);
-  
-  /* Inicialização do Led OUTPUT */
-  pinMode(LED_ONBOARD, OUTPUT);
+    
+    /* Inicialização Serial 9600 bps */
+    //Serial.begin(9600,SERIAL_8N1);
+    /* Inicialização Serial 19200 bps */
+    //Serial.begin(19200,SERIAL_8N1);
+    Serial.begin(9600);
+    
+    // configura o preescaler do ADC
+    ADCSRA &= ~PS_128;  //limpa configuração da biblioteca do arduino
+    
+    // valores possiveis de prescaler só deixar a linha com prescaler desejado
+    // PS_16, PS_32, PS_64 or PS_128
+    //ADCSRA |= PS_128; // 64 prescaler
+    ADCSRA |= PS_64; // 64 prescaler
+    //  ADCSRA |= PS_32; // 32 prescaler
+    // ADCSRA |= PS_16; // 16 prescaler
+    
+    /* Inicialização do Led OUTPUT */
+    pinMode(LED_ONBOARD, OUTPUT);
 }
 
 

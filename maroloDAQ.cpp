@@ -57,7 +57,8 @@ ui(new Ui::maroloDAQ)
     BaudRateGroup = new QActionGroup(this);
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
 	    BaudRateGroup->addAction(bdaction);
-	    if (bdaction->text() == "19200") {
+	    if (bdaction->text() == "9600") {
+	    //if (bdaction->text() == "19200") {
                     bdaction->setCheckable(true);
                     bdaction->setChecked(true);
 		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
@@ -925,7 +926,7 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 3))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
