@@ -897,19 +897,19 @@ bool maroloDAQ::validarEntradas() {
                 ui->editTmax->setFocus();
                 return false;
             } else {
-                if (ui->editDeltaT->text().toDouble() >= ui->editTmax->text().toDouble()) {
+                if (ui->editDeltaT->text().toDouble() > ui->editTmax->text().toDouble()) {
                     QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o delta T menor que Tmax."));
                     ui->editDeltaT->setFocus();
                     return false;
                 } else {
                     if (ui->cbSensorList->currentText() == "Pêndulo") {
                         if (ui->editAngulo1->text() == NULL) {
-                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo."));
+                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK."));
                             ui->editAngulo1->setFocus();
                             return false;
                         } else {
                             if (ui->editAngulo2->text() == NULL) {
-                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo."));
+                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK."));
                                 ui->editAngulo2->setFocus();
                                 return false;
                             } else {
