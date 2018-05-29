@@ -152,7 +152,7 @@ void maroloDAQ::createActions() {
     ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
     ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/quickopen-class.png")));        
     ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/irc-channel-active.png")));        
-    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":irc-channel-inactive.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/irc-channel-inactive.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
