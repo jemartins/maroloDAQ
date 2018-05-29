@@ -151,8 +151,8 @@ void maroloDAQ::createActions() {
     ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
     ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
     ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/quickopen-class.png")));        
-    ui->actionConectar->setIcon(QIcon::fromTheme("dialog-cancel", QIcon(":/dialog-cancel.png")));        
-    ui->actionDesconectar->setIcon(QIcon::fromTheme("dialog-cancel", QIcon(":/dialog-cancel.png")));        
+    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/irc-channel-active.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":irc-channel-inactive.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
@@ -540,14 +540,14 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->editTmax->setEnabled(false);
         ui->btnIniciar->setEnabled(false);
         ui->btnParar->setEnabled(true);
-    	ui->btnDevClose->setEnabled(false);
+        ui->btnDevClose->setEnabled(false);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         ui->checkBoxGrace->setEnabled(false);
-
-	// limpar o QPlainText teLog
-	ui->teLog->clear();
-
+        
+        // limpar o QPlainText teLog
+        ui->teLog->clear();
+        
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
@@ -555,14 +555,14 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     //ui->teLog->appendPlainText("Can't run Grace. \n");
-		    statusBar()->showMessage(tr("Can't run Grace."));
+                    statusBar()->showMessage(tr("Can't run Grace."));
                 } 
             }
-	} else {
-	    if (GraceIsOpen()) {
-		    GraceClose();
-	    }
-	} // end if checkBoxGrace->isChecked
+        } else {
+            if (GraceIsOpen()) {
+                GraceClose();
+            }
+        } // end if checkBoxGrace->isChecked
         
         // inicia medicoes
         stopFlag = false;
@@ -876,27 +876,48 @@ bool maroloDAQ::validarEntradas() {
     if(ui->editErroSensor->text()==NULL) {
         //msgBox.setText("Digite o Erro");
         //msgBox.exec();
-        QMessageBox::warning(this, tr("maroloDAQ"), \
-            tr("Por favor, digite o valor do Erro no Sensor."));
+        QMessageBox::warning(this, tr("maroloDAQ"),
+                             tr("Por favor, digite o valor do Erro no Sensor."));
         ui->editErroSensor->setFocus();
         return false;
     } else {
-        if(ui->editDeltaT->text()==NULL){
-            msgBox.setText("Digite o intervalo de amostragem");
-            msgBox.exec();
+        if(ui->editDeltaT->text()==NULL) {
+            //msgBox.setText("Digite o intervalo de amostragem");
+            //msgBox.exec();
+            QMessageBox::warning(this, tr("maroloDAQ"),
+                                 tr("Por favor, digite o Intervalo de Tempo da medição."));
             ui->editDeltaT->setFocus();
             return false;
         } else {
-            if(ui->editTmax->text()==NULL){
-                msgBox.setText("Digite o tempo máximo da amostra");
-                msgBox.exec();
+            if(ui->editTmax->text()==NULL) {
+                //msgBox.setText("Digite o tempo máximo da amostra");
+                //msgBox.exec();
+                QMessageBox::warning(this, tr("maroloDAQ"),
+                                     tr("Por favor, digite o Tempo Máximo da medição."));
                 ui->editTmax->setFocus();
                 return false;
             } else {
-                return true;
+                if ( (ui->cbSensorList->currentText() == "Pêndulo") && \
+                    ((ui->editAngulo1->text() == NULL) || \
+                    (ui->editAngulo2->text() == NULL)) ) {
+                    
+                    QMessageBox::warning(this, tr("maroloDAQ"),
+                                         tr("Por favor, digite o Valor do ângulo."));
+                    if (ui->editAngulo1->text() == NULL) {
+                        ui->editAngulo1->setFocus();
+                    } else {
+                        if (ui->editAngulo2->text() == NULL) {
+                            ui->editAngulo2->setFocus();
+                        }
+                    }
+                    return false;
+                    } else {
+                        return true;
+                    }
             }
         }
     }
+    
 } // end validarEntradas
 
 void maroloDAQ::on_btnCalibrar1_clicked() {
