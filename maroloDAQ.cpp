@@ -117,10 +117,13 @@ void maroloDAQ::createActions() {
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/save.png"));
     QAction *saveAct = new QAction(saveIcon, tr("&Salvar o documento"), this);
     //newAct->setShortcuts(QKeySequence::Salvar);
+    //saveAct->setShortcuts(QKeySequence::Save);
+    //ui->actionSalvar->setShortcuts(QKeySequence::Save);
     saveAct->setStatusTip(tr("Salvar o documento"));
     //connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
     connect(saveAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
-    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);    
+    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    ui->actionSalvar->setIcon(saveIcon);
     //fileMenu->addAction(newAct);
     ui->mainToolBar->addAction(saveAct);
     
@@ -130,15 +133,26 @@ void maroloDAQ::createActions() {
     const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
     QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar o documento com seu nome"), this);
     //newAct->setShortcuts(QKeySequence::Salvar);
+    //saveasAct->setShortcuts(QKeySequence::SaveAs);
+    //ui->actionSalvar_como->setShortcuts(QKeySequence::SaveAs);
     saveasAct->setStatusTip(tr("Salvar o documento com seu nome"));
     //connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
     connect(saveasAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
     connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
+    ui->actionSalvar_como->setIcon(saveasIcon);
     //fileMenu->addAction(newAct);
     ui->mainToolBar->addAction(saveasAct);
+
+    connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);
     
-    connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);    
-        
+    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/close.png")));        
+    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/help-about.png")));        
+    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
+    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
+    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
+    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/quickopen-class.png")));        
+    ui->actionConectar->setIcon(QIcon::fromTheme("dialog-cancel", QIcon(":/dialog-cancel.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("dialog-cancel", QIcon(":/dialog-cancel.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
@@ -367,12 +381,12 @@ void maroloDAQ::maroloDevClose()
         
         setDesconectado();
         
-        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
-        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
-        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
 
@@ -487,12 +501,12 @@ void maroloDAQ::on_btnDevClose_clicked() {
     
     if (statusCloseSerial) {
         setDesconectado();        
-        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
-        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
-        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
     
     if (GraceIsOpen()) {
@@ -651,12 +665,12 @@ void maroloDAQ::on_actionDesconectar_triggered() {
     
     if (statusCloseSerial) {
         setDesconectado();
-        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
-        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
-        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
 
@@ -1428,7 +1442,7 @@ bool maroloDAQ::maybeSave()
 }
 
 void maroloDAQ::createStatusBar() {
-    statusBar()->showMessage(tr("Ready"));
+    statusBar()->showMessage(tr("Pronto"));
 }
 
 void maroloDAQ::documentWasModified() {
