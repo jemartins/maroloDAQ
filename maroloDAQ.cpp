@@ -897,31 +897,38 @@ bool maroloDAQ::validarEntradas() {
                 ui->editTmax->setFocus();
                 return false;
             } else {
-                if (ui->cbSensorList->currentText() == "Pêndulo") {
-                    if (ui->editAngulo1->text() == NULL) {
-                        QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o Valor do ângulo."));
-                        ui->editAngulo1->setFocus();
-                        return false;
-                    } else {
-                        if (ui->editAngulo2->text() == NULL) {
-                            QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo."));
-                            ui->editAngulo2->setFocus();
+                if (ui->editDeltaT->text().toDouble() >= ui->editTmax->text().toDouble()) {
+                    QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o delta T menor que Tmax."));
+                    ui->editDeltaT->setFocus();
+                    return false;
+                } else {
+                    if (ui->cbSensorList->currentText() == "Pêndulo") {
+                        if (ui->editAngulo1->text() == NULL) {
+                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo."));
+                            ui->editAngulo1->setFocus();
                             return false;
                         } else {
-                            if (calibrationArray[1].voltage == calibrationArray[1].voltage) {
-                                QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem."));
-                                ui->editAngulo1->setFocus();
+                            if (ui->editAngulo2->text() == NULL) {
+                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo."));
+                                ui->editAngulo2->setFocus();
                                 return false;
+                            } else {
+                                if (calibrationArray[1].voltage == calibrationArray[1].voltage) {
+                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem."));
+                                    ui->editAngulo1->setFocus();
+                                    return false;
+                                } else {
+                                    return true;
+                                }
                             }
                         }
+                    } else {
+                        return true;
                     }
-                } else {
-                    return true;
                 }
             }
         }
     }
-
 } // end validarEntradas
 
 void maroloDAQ::on_btnCalibrar1_clicked() {
