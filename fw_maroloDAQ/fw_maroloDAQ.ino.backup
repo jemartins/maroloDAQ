@@ -1,3 +1,32 @@
+/****************************************************************************
+ *
+ * Project:      maroloDAQ data logger
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ *
+ *
+ *   autor: José Eduardo martins
+ *   email: jemartins@fis.unb.br
+ *          Instituto de Física
+ *          Universidade de Brasília
+ *   
+ * programers: José Eduardo Martins
+ *             Rafael Ramos [rafaelframos@gmail.com]
+ *             
+ ****************************************************************************/
+ 
 /*
  * Defines
  */
@@ -10,7 +39,13 @@
 unsigned char FLAG_CONTROL_RX_UART_DATA = 0; 
 const unsigned int SIZE_BUF_RX = 10;
 
-//int sensorValue = 0; // analog sensor
+/* 
+ * constante para configuração do prescaler
+ */
+const unsigned char PS_16 = (1 << ADPS2);
+const unsigned char PS_32 = (1 << ADPS2) | (1 << ADPS0);
+const unsigned char PS_64 = (1 << ADPS2) | (1 << ADPS1);
+const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
 /* 
  * Estruturas
@@ -129,7 +164,7 @@ void ProcGetA0()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA1()
@@ -158,7 +193,7 @@ void ProcGetA1()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA2()
@@ -187,7 +222,7 @@ void ProcGetA2()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA3()
@@ -216,7 +251,7 @@ void ProcGetA3()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA4()
@@ -245,7 +280,7 @@ void ProcGetA4()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcGetA5()
@@ -274,7 +309,7 @@ void ProcGetA5()
   //Serial.flush();
 
   // delay 10ms to let the ADC recover
-  delay(1);
+  //delay(10);
 }
 
 void ProcStatesUARTRx(char *buffRx)
@@ -369,14 +404,25 @@ void CheckUARTRx(char *buffRx)
 
 /* Inicializando e configurando os perifericos usados */
 void setup() {
-  
-  /* Inicialização Serial 9600 bps */
-  Serial.begin(9600,SERIAL_8N1);
-  /* Inicialização Serial 19200 bps */
-  //Serial.begin(19200,SERIAL_8N1);
-  
-  /* Inicialização do Led OUTPUT */
-  pinMode(LED_ONBOARD, OUTPUT);
+    
+    /* Inicialização Serial 9600 bps */
+    //Serial.begin(9600,SERIAL_8N1);
+    /* Inicialização Serial 19200 bps */
+    //Serial.begin(19200,SERIAL_8N1);
+    Serial.begin(9600);
+    
+    // configura o preescaler do ADC
+    ADCSRA &= ~PS_128;  //limpa configuração da biblioteca do arduino
+    
+    // valores possiveis de prescaler só deixar a linha com prescaler desejado
+    // PS_16, PS_32, PS_64 or PS_128
+    //ADCSRA |= PS_128; // 128 prescaler: 8.6Khz
+    ADCSRA |= PS_64; // 64 prescaler: 250Khz
+    //ADCSRA |= PS_32; // 32 prescaler: 500Khz
+    //DCSRA |= PS_16; // 16 prescaler: 1Mhz
+    
+    /* Inicialização do Led OUTPUT */
+    pinMode(LED_ONBOARD, OUTPUT);
 }
 
 
