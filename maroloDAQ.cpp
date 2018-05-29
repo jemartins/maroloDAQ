@@ -51,57 +51,15 @@ ui(new Ui::maroloDAQ)
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
-
-    
-    BaudRateGroup = new QActionGroup(this);
-    foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
-	    BaudRateGroup->addAction(bdaction);
-	    if (bdaction->text() == "9600") {
-	    //if (bdaction->text() == "19200") {
-                    bdaction->setCheckable(true);
-                    bdaction->setChecked(true);
-		    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
-            } else {
-    		    bdaction->setCheckable(true);
-    		    bdaction->setChecked(false);
-	    }
-     	    //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
-	    
-    }
-
-    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    QToolBar *fileToolBar = addToolBar(tr("File"));
-    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
-    QAction *saveAct = new QAction(saveIcon, tr("&Salvar"), this);
-    //newAct->setShortcuts(QKeySequence::Salvar);
-    saveAct->setStatusTip(tr("Salvar"));
-    //connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
-    connect(saveAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
-    //fileMenu->addAction(newAct);
-    fileToolBar->addAction(saveAct);
-
-    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    //QToolBar *fileToolBar = addToolBar(tr("File"));
-    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
-    QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar como"), this);
-    //newAct->setShortcuts(QKeySequence::Salvar);
-    saveasAct->setStatusTip(tr("Salvar como"));
-    //connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
-    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
-    //fileMenu->addAction(newAct);
-    fileToolBar->addAction(saveasAct);
-    
      
-    connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
-    /*    
-    #ifndef QT_NO_SESSIONMANAGER
-        QGuiApplication::setFallbackSessionManagementEnabled(false);
-        connect(qApp, &QGuiApplication::commitDataRequest, this, &maroloDAQ::commitData);
-    #endif
-    */
+    //connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+    
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
     
+    // create new actions and toolbar
+    createActions();
+    createStatusBar();
 	    
     // Procurando por portar seriais abertas
     scanPortas();
@@ -118,6 +76,8 @@ maroloDAQ::~maroloDAQ()
 
 void maroloDAQ::on_btnAppClose_clicked()
 {
+    // verificar se os dados foram salvos	
+    maybeSave();
     exit(0);
 }
 
@@ -131,6 +91,57 @@ QString maroloDAQ::ReadData()
     QString data = procSerial->Read();
     //qDebug() << "ReadData - RX UART: " << data << endl;
     return data;
+}
+
+void maroloDAQ::createActions() {
+    
+    BaudRateGroup = new QActionGroup(this);
+    foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
+        BaudRateGroup->addAction(bdaction);
+        if (bdaction->text() == "9600") {
+            //if (bdaction->text() == "19200") {
+            bdaction->setCheckable(true);
+            bdaction->setChecked(true);
+            //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
+        } else {
+            bdaction->setCheckable(true);
+            bdaction->setChecked(false);
+        }
+        //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
+        
+    }
+    
+    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    //QToolBar *fileToolBar = addToolBar(tr("File"));
+    //const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/save.png"));
+    QAction *saveAct = new QAction(saveIcon, tr("&Salvar o documento"), this);
+    //newAct->setShortcuts(QKeySequence::Salvar);
+    saveAct->setStatusTip(tr("Salvar o documento"));
+    //connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
+    connect(saveAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);    
+    //fileMenu->addAction(newAct);
+    ui->mainToolBar->addAction(saveAct);
+    
+    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    //QToolBar *fileToolBar = addToolBar(tr("File"));
+    //const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
+    QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar o documento com seu nome"), this);
+    //newAct->setShortcuts(QKeySequence::Salvar);
+    saveasAct->setStatusTip(tr("Salvar o documento com seu nome"));
+    //connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
+    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
+    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
+    //fileMenu->addAction(newAct);
+    ui->mainToolBar->addAction(saveasAct);
+    
+    connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);    
+        
+    ui->mainToolBar->setFloatable(false);
+    ui->mainToolBar->setMovable(false);
+    
 }
 
 void maroloDAQ::scanPortas() {
@@ -209,12 +220,14 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
+                    //ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
+		    statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
                 }
                 
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             } else {
-                ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+                //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+		statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
             }
         }
         
@@ -240,7 +253,8 @@ void maroloDAQ::scanPortas() {
         }   
     }
     else {
-        ui->teLog->appendPlainText("### Nenhuma porta serial foi detectada!");
+        //ui->teLog->appendPlainText("### Nenhuma porta serial foi detectada!");
+	statusBar()->showMessage(tr("### Nenhuma porta serial foi detectada!"));
     }
 }
 
@@ -352,11 +366,13 @@ void maroloDAQ::maroloDevClose()
         ui->editDevModel->clear();
         
         setDesconectado();
-
-        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        
+        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
     }
     else {
-        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
     }
 }
 
@@ -448,30 +464,35 @@ void maroloDAQ::on_btnDevOpen_clicked() {
             
             setConectado();
             
-            ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
         }
         else {
-            ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
         }
     }
     else {
-        ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
     }
     
 } // end on_btnDevOpen_clicked
 
 void maroloDAQ::on_btnDevClose_clicked() {
-    
+
     bool statusCloseSerial;
     
     statusCloseSerial = procSerial->Desconectar();
     
     if (statusCloseSerial) {
         setDesconectado();        
-        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
     }
     else {
-        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
     }
     
     if (GraceIsOpen()) {
@@ -519,7 +540,8 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 /* Start Grace with a buffer size of 8192 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
-                    ui->teLog->appendPlainText("Can't run Grace. \n");
+                    //ui->teLog->appendPlainText("Can't run Grace. \n");
+		    statusBar()->showMessage(tr("Can't run Grace."));
                 } 
             }
 	} else {
@@ -605,14 +627,17 @@ void maroloDAQ::on_actionConectar_triggered() {
             
             setConectado();
             
-            ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+	statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
         }
         else {
-            ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+	statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
         }
     }
     else {
-        ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+	statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
     }
     
 } // end on_actionConectar_triggered
@@ -626,11 +651,12 @@ void maroloDAQ::on_actionDesconectar_triggered() {
     
     if (statusCloseSerial) {
         setDesconectado();
-        
-        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        //ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
+        statusBar()->showMessage(tr("### Porta serial fechada com sucesso!"));
     }
     else {
-        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
+        statusBar()->showMessage(tr("### Falha ao fechar conexão serial."));
     }
 }
 
@@ -834,8 +860,10 @@ bool maroloDAQ::validarEntradas() {
     //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
     //Tudo ok e continua a operação.
     if(ui->editErroSensor->text()==NULL) {
-        msgBox.setText("Digite o Erro");
-        msgBox.exec();
+        //msgBox.setText("Digite o Erro");
+        //msgBox.exec();
+        QMessageBox::warning(this, tr("maroloDAQ"), \
+            tr("Por favor, digite o valor do Erro no Sensor."));
         ui->editErroSensor->setFocus();
         return false;
     } else {
@@ -1368,23 +1396,23 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
+/*
+void maroloDAQ::closeEvent(QCloseEvent *event) {
 
-void maroloDAQ::closeEvent(QCloseEvent *event)
-{
     if (maybeSave()) {
         event->accept();
     } else {
         event->ignore();
     }
 }
-
+*/
 
 bool maroloDAQ::maybeSave()
 {
     if (!ui->teLog->document()->isModified())
         return true;
     const QMessageBox::StandardButton ret
-    = QMessageBox::warning(this, tr("Application"),
+    = QMessageBox::warning(this, tr("maroloDAQ"),
                            tr("The document has been modified.\n"
                            "Do you want to save your changes?"),
                            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -1436,9 +1464,9 @@ bool maroloDAQ::on_actionSalvar_triggered() {
     }
 }
 
-void maroloDAQ::about() {
+void maroloDAQ::on_actionSobre_triggered() {
     QMessageBox::about(this, tr("About Application"),
-                       tr("The <b>Application</b> example demonstrates how to "
+                       tr("The <b>maroloDAQ</b> example demonstrates how to "
                        "write modern GUI applications using Qt, with a menu bar, "
                        "toolbars, and a status bar."));
 }
@@ -1447,7 +1475,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Application"),
+        QMessageBox::warning(this, tr("maroloDAQ"),
                              tr("Cannot write file %1:\n%2.")
                              .arg(QDir::toNativeSeparators(fileName),
                                   file.errorString()));

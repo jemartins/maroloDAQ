@@ -28,8 +28,8 @@ public:
 
     //void loadFile(const QString &fileName);
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
+//protected:
+    //void closeEvent(QCloseEvent *event) override;
 
 private slots:
     void WriteData(const QByteArray data);
@@ -51,6 +51,7 @@ private slots:
     void on_actionConectar_triggered();
     void on_actionDesconectar_triggered();
     void on_actionRecarregar_triggered();
+    void on_actionSobre_triggered();
     void setPortasSeriais(QString myAction);
     void on_cbSensorList_activated(const QString &arg1);
     bool validarEntradas();
@@ -70,8 +71,9 @@ private slots:
     double round_to_decimal(float f);
     void setupGrace ();
     void plotaGrace (double x, double y, double dx, double dy);
+
     bool maybeSave();
-    void about();
+    //void about();
     void documentWasModified();
     /*
 #ifndef QT_NO_SESSIONMANAGER
@@ -108,6 +110,7 @@ private:
     int baudrate;
 
     void createStatusBar();
+    void createActions();
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
 
