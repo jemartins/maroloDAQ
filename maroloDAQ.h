@@ -26,10 +26,10 @@ public:
     explicit maroloDAQ(QWidget *parent = 0);
     ~maroloDAQ();
 
-    void loadFile(const QString &fileName);
+    //void loadFile(const QString &fileName);
 
 protected:
-    //void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
 private slots:
     void WriteData(const QByteArray data);
@@ -111,7 +111,7 @@ private:
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
 
-    QPlainTextEdit *textEdit;
+    QPlainTextEdit *teLog;
     QString curFile;
 };
 #endif // PROJMAROLO_H

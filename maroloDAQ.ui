@@ -369,7 +369,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QTextEdit" name="teLog">
+   <widget class="QPlainTextEdit" name="teLog">
     <property name="geometry">
      <rect>
       <x>0</x>

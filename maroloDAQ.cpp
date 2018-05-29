@@ -7,10 +7,6 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QElapsedTimer>
-#include <QPlainTextEdit>
-//#include <QTextDocument>
-//#include <QGuiApplication>
-//#include <QCloseEvent>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -95,17 +91,17 @@ ui(new Ui::maroloDAQ)
     //fileMenu->addAction(newAct);
     fileToolBar->addAction(saveasAct);
     
-    /* 
-    connect(textEdit->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
-        
+     
+    connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+    /*    
     #ifndef QT_NO_SESSIONMANAGER
         QGuiApplication::setFallbackSessionManagementEnabled(false);
         connect(qApp, &QGuiApplication::commitDataRequest, this, &maroloDAQ::commitData);
     #endif
-    
+    */
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
-    */
+    
 	    
     // Procurando por portar seriais abertas
     scanPortas();
@@ -213,12 +209,12 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    ui->teLog->append("### FALHA ao FECHAR Porta Serial!");
+                    ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
                 }
                 
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             } else {
-                ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+                ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
             }
         }
         
@@ -244,7 +240,7 @@ void maroloDAQ::scanPortas() {
         }   
     }
     else {
-        ui->teLog->append("### Nenhuma porta serial foi detectada!");
+        ui->teLog->appendPlainText("### Nenhuma porta serial foi detectada!");
     }
 }
 
@@ -357,10 +353,10 @@ void maroloDAQ::maroloDevClose()
         
         setDesconectado();
 
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
     }
 }
 
@@ -452,14 +448,14 @@ void maroloDAQ::on_btnDevOpen_clicked() {
             
             setConectado();
             
-            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+            ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
         }
         else {
-            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
         }
     }
     else {
-        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
     
 } // end on_btnDevOpen_clicked
@@ -472,10 +468,10 @@ void maroloDAQ::on_btnDevClose_clicked() {
     
     if (statusCloseSerial) {
         setDesconectado();        
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
     }
     
     if (GraceIsOpen()) {
@@ -503,7 +499,7 @@ void maroloDAQ::on_btnParar_clicked() {
 void maroloDAQ::on_btnIniciar_clicked() {
     
     if(validarEntradas()) {
-        //hablita ou desabilita entradas
+        // habilita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
@@ -513,14 +509,17 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         ui->checkBoxGrace->setEnabled(false);
-        
+
+	// limpar o QPlainText teLog
+	ui->teLog->clear();
+
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
                 /* Start Grace with a buffer size of 8192 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
-                    ui->teLog->append("Can't run Grace. \n");
+                    ui->teLog->appendPlainText("Can't run Grace. \n");
                 } 
             }
 	} else {
@@ -606,14 +605,14 @@ void maroloDAQ::on_actionConectar_triggered() {
             
             setConectado();
             
-            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+            ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
         }
         else {
-            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
         }
     }
     else {
-        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
     }
     
 } // end on_actionConectar_triggered
@@ -628,10 +627,10 @@ void maroloDAQ::on_actionDesconectar_triggered() {
     if (statusCloseSerial) {
         setDesconectado();
         
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        ui->teLog->appendPlainText("### Porta serial fechada com sucesso!");
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        ui->teLog->appendPlainText("### Falha ao fechar conexão serial.");
     }
 }
 
@@ -919,7 +918,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mysound, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -931,7 +930,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myvoltage, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -943,7 +942,7 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myresistence, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -955,7 +954,7 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 3))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 3))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -973,7 +972,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mylight, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -984,7 +983,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myangle, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -1369,7 +1368,7 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
-/*
+
 void maroloDAQ::closeEvent(QCloseEvent *event)
 {
     if (maybeSave()) {
@@ -1378,11 +1377,11 @@ void maroloDAQ::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
-*/
+
 
 bool maroloDAQ::maybeSave()
 {
-    if (!textEdit->document()->isModified())
+    if (!ui->teLog->document()->isModified())
         return true;
     const QMessageBox::StandardButton ret
     = QMessageBox::warning(this, tr("Application"),
@@ -1405,12 +1404,12 @@ void maroloDAQ::createStatusBar() {
 }
 
 void maroloDAQ::documentWasModified() {
-    setWindowModified(textEdit->document()->isModified());
+    setWindowModified(ui->teLog->document()->isModified());
 }
 
 void maroloDAQ::setCurrentFile(const QString &fileName) {
     curFile = fileName;
-    textEdit->document()->setModified(false);
+    ui->teLog->document()->setModified(false);
     setWindowModified(false);
     
     QString shownName = curFile;
@@ -1456,15 +1455,17 @@ bool maroloDAQ::saveFile(const QString &fileName)
     }
     
     QTextStream out(&file);
+    
     #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
     #endif
-    //out << textEdit->toPlainText();
+    out << ui->teLog->toPlainText();
     #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
     #endif
-    
+    //qDebug() << "AQUI saveFile";
     setCurrentFile(fileName);
+    qDebug() << "AQUI saveFile";
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
 }
