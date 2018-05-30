@@ -172,7 +172,7 @@ void maroloDAQ::createActions() {
     //fileMenu->addAction(newAct);
     ui->mainToolBar->addAction(saveasAct);
 
-    connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);
+    //connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);
     
     ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/close.png")));        
     ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/help-about.png")));        
@@ -1540,10 +1540,18 @@ bool maroloDAQ::on_actionSalvar_triggered() {
 }
 
 void maroloDAQ::on_actionSobre_triggered() {
-    QMessageBox::about(this, tr("About Application"),
-                       tr("The <b>maroloDAQ</b> example demonstrates how to "
-                       "write modern GUI applications using Qt, with a menu bar, "
-                       "toolbars, and a status bar."));
+    QMessageBox msgBox;
+    msgBox.setText("<b>maroloDAQ</b> datalogger");
+    msgBox.setInformativeText(  "author: "
+                                "\t José Eduardo Martins \n"
+                                "\t jemartins@fis.unb.br \n"
+                                "programers: \n"
+                                "\t José Eduardo Martins \n"
+                                "\t Rafael Ramos \n"
+                                "\t rafaelframos@gmail.com \n \n"
+                                "freeSoftware and openProject"
+                             );
+    msgBox.exec();
 }
 
 bool maroloDAQ::saveFile(const QString &fileName)
