@@ -3,15 +3,15 @@ O objetivo deste projeto é criar um sistema de medição assistida por computad
 
 A comunicação entre eles ocorre por meio de portas seriais e de cabo USB. Ela é bidirecional, permitindo que ambos recebam e transmitam comandos ou dados entre si.
 
-[Comunicação](https://github.com/jemartins/maroloDAQ/blob/rafael/fluxogramas/com_soft-firm.jpg)
+[Comunicação](fluxogramas/com_soft-firm.jpg)
 
 O Arduino é um micro-controlador com uma plataforma de execução embutida. Ele é utilizado, para medir a tensão elétrica em um sensor, que é fixado ao objeto da medida, e transmiti-la ao Software.
 
-[Firmware](https://github.com/jemartins/maroloDAQ/blob/rafael/fluxogramas/fw_maroloDAQ-principal.jpg)
+[Firmware](fluxogramas/fw_maroloDAQ-principal.jpg)
 
 O Software, desenvolvido com o framework Qt, configura os parâmetros de sensoriamento (erro, intervalo de amostragem e tempo de captura), transforma a tensão em valores úteis e armazena os dados.
 
-[Software](https://github.com/jemartins/maroloDAQ/blob/rafael/fluxogramas/maroloDAQ_soft_iniciar.jpg)
+[Software](fluxogramas/maroloDAQ_soft_iniciar.jpg)
 
 A sistemática de instalação é a seguinte:
 1- Descarregue e instale o ambiente de desenvolvimento do [Arduino](http://www.arduino.cc);
