@@ -1399,7 +1399,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o Titulo\"");
         GracePrintf ("subtitle \"insira aqui o subttiulo\"");
-        GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
+        GracePrintf ("xaxis  label \"Tempo (s)\"");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
        
        	GracePrintf ("kill s0");	
