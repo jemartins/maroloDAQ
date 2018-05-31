@@ -136,7 +136,7 @@ void maroloDAQ::createActions() {
         }
     }
      
-    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/save.png"));
+    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
     ui->actionSalvar->setIcon(saveIcon);
     ui->mainToolBar->addAction(ui->actionSalvar);
 
@@ -147,20 +147,23 @@ void maroloDAQ::createActions() {
     connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
     
-    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/close.png")));        
-    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/help-about.png")));        
-    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
-    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
-    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/code-class.png")));        
-    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/quickopen-class.png")));        
-    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/irc-channel-active.png")));        
-    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/irc-channel-inactive.png")));        
+    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
+    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
+    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/images/quickopen-class.png")));        
+    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/images/irc-channel-active.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/images/irc-channel-inactive.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
+
     // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
     ui->actionSalvar->setEnabled(false);
     ui->actionSalvar_como->setEnabled(false);
+    connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
+    connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
     
 } // end createActions
 
@@ -1101,12 +1104,13 @@ void maroloDAQ::doReadings() {
     ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
 
     // action "Salvar" habilitadas
+    /*
     if (cont == 0) {
 	    ui->actionSalvar->setEnabled(true);
     } else if (cont == 1) {
 	    ui->actionSalvar_como->setEnabled(true);
     }
-    
+    */
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
