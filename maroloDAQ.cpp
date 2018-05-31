@@ -1421,7 +1421,6 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o T\\#{ed}tulo\"");
-<<<<<<< HEAD
         GracePrintf ("title font 0");
         GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
         GracePrintf ("subtitle font 0");
@@ -1431,21 +1430,19 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("yaxis tick minor ticks 2");
         
         GracePrintf ("kill s0");	
-=======
-	GracePrintf ("title font 0");
+        GracePrintf ("title font 0");
         GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
-	GracePrintf ("subtitle font 0");
+        GracePrintf ("subtitle font 0");
         GracePrintf ("xaxis label \"Tempo (s)\"");
-	//GracePrintf ("xaxis ticklabel on");
-	//GracePrintf ("xaxis ticklabel format general");
-	//GracePrintf ("xaxis ticklabel prec 2");
+        //GracePrintf ("xaxis ticklabel on");
+        //GracePrintf ("xaxis ticklabel format general");
+        //GracePrintf ("xaxis ticklabel prec 2");
         GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
-	//GracePrintf ("yaxis ticklabel on");
-	//GracePrintf ("yaxis ticklabel format general");
-	//GracePrintf ("yaxis ticklabel prec 1");
-       
-       	GracePrintf ("kill s0");	
->>>>>>> 7b6c1e9b49c9002e080d4045fced2867abdab656
+        //GracePrintf ("yaxis ticklabel on");
+        //GracePrintf ("yaxis ticklabel format general");
+        //GracePrintf ("yaxis ticklabel prec 1");
+        
+        GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
