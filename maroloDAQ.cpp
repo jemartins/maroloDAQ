@@ -1089,10 +1089,9 @@ void maroloDAQ::doReadings() {
                 GracePrintf("autoscale");
                 GracePrintf("redraw");
             }
-            
         } // end if deltaT
-
-	tempo_atual = timer.elapsed();
+        
+        tempo_atual = timer.elapsed();
         
     } // end while timeout
 
@@ -1102,15 +1101,11 @@ void maroloDAQ::doReadings() {
     }
    
     ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
-
-    // action "Salvar" habilitadas
-    if (cont == 0) {
-	    ui->actionSalvar->setEnabled(true);
-    } else if (cont == 1) {
-	    ui->actionSalvar_como->setEnabled(true);
-    }
     
-    //GUI é reabilitado
+    // habilitar actionSalvar
+    ui->actionSalvar->setEnabled(true);
+    
+    // GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
     ui->editTmax->setEnabled(true);
@@ -1484,7 +1479,7 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
-/*
+
 void maroloDAQ::closeEvent(QCloseEvent *event) {
 
     if (maybeSave()) {
@@ -1493,26 +1488,24 @@ void maroloDAQ::closeEvent(QCloseEvent *event) {
         event->ignore();
     }
 }
-*/
 
-bool maroloDAQ::maybeSave()
-{
-    if (!ui->teLog->document()->isModified())
+bool maroloDAQ::maybeSave() {
+    if (!ui->teLog->document()->isModified()) 
         return true;
-    const QMessageBox::StandardButton ret
-    = QMessageBox::warning(this, tr("maroloDAQ"),
-                           tr("The document has been modified.\n"
-                           "Do you want to save your changes?"),
-                           QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    switch (ret) {
-        case QMessageBox::Save:
-            return on_actionSalvar_triggered();
-        case QMessageBox::Cancel:
-            return false;
-        default:
-            break;
-    }
-    return true;
+        const QMessageBox::StandardButton ret = \
+        QMessageBox::warning(this, tr("maroloDAQ"), \
+        tr("The document has been modified.\n" \
+        "Do you want to save your changes?"), \
+        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        switch (ret) {
+            case QMessageBox::Save:
+                return on_actionSalvar_triggered();
+            case QMessageBox::Cancel:
+                return false;
+            default:
+                break;
+	}
+    	return true;
 }
 
 void maroloDAQ::createStatusBar() {
@@ -1521,12 +1514,14 @@ void maroloDAQ::createStatusBar() {
 
 void maroloDAQ::documentWasModified() {
     setWindowModified(ui->teLog->document()->isModified());
+    //ui->actionSalvar->setEnabled(true);
 }
 
 void maroloDAQ::setCurrentFile(const QString &fileName) {
     curFile = fileName;
     ui->teLog->document()->setModified(false);
     setWindowModified(false);
+    ui->actionSalvar_como->setEnabled(true);
     
     QString shownName = curFile;
     if (curFile.isEmpty()) {
