@@ -1,12 +1,42 @@
+/****************************************************************************
+ *
+ * Project:      maroloDAQ data logger
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ *
+ *
+ *   autor: José Eduardo martins
+ *   email: jemartins@fis.unb.br
+ *          Instituto de Física
+ *          Universidade de Brasília
+ *   
+ * programers: José Eduardo Martins
+ *             Rafael Ramos [rafaelframos@gmail.com]
+ *             
+ ****************************************************************************/
 
 #include "maroloDAQ.h"
 #include "ui_maroloDAQ.h"
 #include "calibration.h"
 
-#include <QMessageBox>
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QElapsedTimer>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -35,28 +65,38 @@ ui(new Ui::maroloDAQ)
     ui->editErroSensor->setMaxLength(7);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0,99999,1,ui->editDeltaT));
-    //dvVal2->setNotation(QDoubleValidator::ScientificNotation);
+    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,999.99,2,ui->editDeltaT));
+    //QDoubleValidator *dvVal2 = new QDoubleValidator(0.03,999.99,2,ui->editDeltaT);
+    //dvVal2->setNotation(QDoubleValidator::StandardNotation);
+    //dvVal2->setBottom(0.03);
     //ui->editDeltaT->setValidator(dvVal2);
-    ui->editDeltaT->setMaxLength(5);
-    //ui->editDeltaT->setInputMask("99999");
+    ui->editDeltaT->setMaxLength(6);
+    //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0,999999,1,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999.99,2,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
-    ui->editTmax->setMaxLength(6);
-    //ui->editTmax->setInputMask("999999");
+    ui->editTmax->setMaxLength(7);
+    //ui->editTmax->setInputMask("999.99");
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
-
+     
+    //connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+    
+    setCurrentFile(QString());
+    setUnifiedTitleAndToolBarOnMac(true);
+    
+    // create new actions and toolbar
+    createActions();
+    createStatusBar();
+	    
     // Procurando por portar seriais abertas
     scanPortas();
-    
+
+    // Configurado stado inicial dos objetos
     setDesconectado();
 
-    //Conectando SIGNAL de Timer a função update
-    //connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 maroloDAQ::~maroloDAQ()
@@ -66,6 +106,8 @@ maroloDAQ::~maroloDAQ()
 
 void maroloDAQ::on_btnAppClose_clicked()
 {
+    // verificar se os dados foram salvos	
+    maybeSave();
     exit(0);
 }
 
@@ -77,9 +119,53 @@ void maroloDAQ::WriteData(const QByteArray data)
 QString maroloDAQ::ReadData()
 {
     QString data = procSerial->Read();
-    //qDebug() << "ReadData - RX UART: " << data << endl;
     return data;
 }
+
+void maroloDAQ::createActions() {
+    
+    BaudRateGroup = new QActionGroup(this);
+    foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
+        BaudRateGroup->addAction(bdaction);
+        if (bdaction->text() == "9600") {
+            bdaction->setCheckable(true);
+            bdaction->setChecked(true);
+        } else {
+            bdaction->setCheckable(true);
+            bdaction->setChecked(false);
+        }
+    }
+     
+    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+    ui->actionSalvar->setIcon(saveIcon);
+    ui->mainToolBar->addAction(ui->actionSalvar);
+
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
+    ui->actionSalvar_como->setIcon(saveasIcon);
+    ui->mainToolBar->addAction(ui->actionSalvar_como);
+
+    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
+    
+    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
+    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
+    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
+    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/images/quickopen-class.png")));        
+    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/images/irc-channel-active.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/images/irc-channel-inactive.png")));        
+    ui->mainToolBar->setFloatable(false);
+    ui->mainToolBar->setMovable(false);
+    
+
+    // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
+    ui->actionSalvar->setEnabled(false);
+    ui->actionSalvar_como->setEnabled(false);
+    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
+    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
+    
+} // end createActions
 
 void maroloDAQ::scanPortas() {
     
@@ -100,11 +186,12 @@ void maroloDAQ::scanPortas() {
     bool statusCloseSerial;
     bool statusOpenSerial;
     
-    // algumas variaveis temporarias    
+    // algumas variaveis temporarias
     int count = DispSeriais.count();
     //const char * meuAction;
     //const char * meuAction_tmp;
     QString minhaSerial;
+    //int baudrate;
     
     if(count > 0) {
         
@@ -113,11 +200,18 @@ void maroloDAQ::scanPortas() {
             ui->menuPortas->removeAction(action);
         }
         
+        foreach (QAction* action, ui->menuBaudRate->actions()) {
+            if (action->isChecked()) {
+                baudrate = action->text().toInt();
+            }    
+        }
+
         for(int i=0;i<count;i++) {
             
             minhaSerial = DispSeriais[i];
             
-            statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
+            statusOpenSerial = procSerial->Conectar(minhaSerial,baudrate);
             
             // aguardando a porta "aquecer" ;_(((
             sleep(2);
@@ -128,6 +222,7 @@ void maroloDAQ::scanPortas() {
                 
                 // Enviando comando para obter informações do Device
                 WriteData("12\n");
+                
                 // * Recebendo as informações *
                 GetInfoHw = ReadData();
                 GetInfoHw = GetInfoHw.simplified();
@@ -139,6 +234,8 @@ void maroloDAQ::scanPortas() {
                     minhaSerial = minhaSerial+" [maroloDAQ]";
                 }
                 
+                //qDebug() << "AQUI minhaSerial = " << minhaSerial;
+                
                 setPortasSeriais(minhaSerial);
                 
                 statusCloseSerial = procSerial->Desconectar();
@@ -146,12 +243,14 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    ui->teLog->append("### FALHA ao FECHAR Porta Serial!");
+                    //ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
+		    statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
                 }
                 
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             } else {
-                ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+                //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+		statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
             }
         }
         
@@ -177,7 +276,8 @@ void maroloDAQ::scanPortas() {
         }   
     }
     else {
-        ui->teLog->append("### Nenhuma porta serial foi detectada!");
+        //ui->teLog->appendPlainText("### Nenhuma porta serial foi detectada!");
+	statusBar()->showMessage(tr("### Nenhuma porta serial foi detectada!"));
     }
 }
 
@@ -289,11 +389,13 @@ void maroloDAQ::maroloDevClose()
         ui->editDevModel->clear();
         
         setDesconectado();
-
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
 
@@ -327,7 +429,8 @@ void maroloDAQ::on_btnDevOpen_clicked() {
     QString devport;
     QStringList devport_list;
     bool statusOpenSerial;
-    
+    //int baudrate;
+
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
             devport = action->text();
@@ -337,8 +440,14 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
     
-    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
-    statusOpenSerial = procSerial->Conectar(devport,9600);
+    foreach (QAction* action, ui->menuBaudRate->actions()) {
+        if (action->isChecked()) {
+            baudrate = action->text().toInt();
+        }    
+    }
+
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,baudrate);
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -378,30 +487,39 @@ void maroloDAQ::on_btnDevOpen_clicked() {
             
             setConectado();
             
-            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
         }
         else {
-            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
+            QMessageBox::warning(this, tr("maroloDAQ"),
+                                 tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
         }
     }
     else {
-        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
+        QMessageBox::warning(this, tr("maroloDAQ"),
+                             tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
     }
     
 } // end on_btnDevOpen_clicked
 
 void maroloDAQ::on_btnDevClose_clicked() {
-    
+
     bool statusCloseSerial;
     
     statusCloseSerial = procSerial->Desconectar();
     
     if (statusCloseSerial) {
         setDesconectado();        
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao Fechar maroloDAQ."));
     }
     
     if (GraceIsOpen()) {
@@ -420,6 +538,7 @@ void maroloDAQ::on_btnParar_clicked() {
     ui->editTmax->setEnabled(true);
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
+    ui->btnDevClose->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
 
@@ -428,15 +547,19 @@ void maroloDAQ::on_btnParar_clicked() {
 void maroloDAQ::on_btnIniciar_clicked() {
     
     if(validarEntradas()) {
-        //hablita ou desabilita entradas
+        // habilita ou desabilita entradas
         ui->editErroSensor->setEnabled(false);
         ui->editDeltaT->setEnabled(false);
         ui->editTmax->setEnabled(false);
         ui->btnIniciar->setEnabled(false);
         ui->btnParar->setEnabled(true);
+        ui->btnDevClose->setEnabled(false);
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         ui->checkBoxGrace->setEnabled(false);
+                
+        // limpar o QPlainText teLog
+        //ui->teLog->clear();
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
@@ -444,13 +567,14 @@ void maroloDAQ::on_btnIniciar_clicked() {
                 /* Start Grace with a buffer size of 8192 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
-                    ui->teLog->append("Can't run Grace. \n");
-                } else {
-                    //ui->checkBoxGrace->setEnabled(false);
-                    // ajuste no visual do Grace
-                    setupGrace();
+                    //ui->teLog->appendPlainText("Can't run Grace. \n");
+                    statusBar()->showMessage(tr("Can't run Grace."));
                 } 
-            } 
+            }
+        } else {
+            if (GraceIsOpen()) {
+                GraceClose();
+            }
         } // end if checkBoxGrace->isChecked
         
         // inicia medicoes
@@ -460,14 +584,6 @@ void maroloDAQ::on_btnIniciar_clicked() {
     } // end if validarEntradas
     
 } // end on_btnIniciar_clicked
-
-void maroloDAQ::on_actionSalvar_como_triggered() {
-    
-}
-
-void maroloDAQ::on_actionSalvar_triggered() {
-    
-}
 
 void maroloDAQ::on_actionSair_triggered() {
     exit(0);
@@ -480,6 +596,7 @@ void maroloDAQ::on_actionConectar_triggered() {
     QString devport;
     QStringList devport_list;
     bool statusOpenSerial;
+    //int baudrate;
     
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
@@ -490,8 +607,14 @@ void maroloDAQ::on_actionConectar_triggered() {
         }    
     }
     
-    //qDebug() << "AQUI btnDevOpen: devport = " << devport;
-    statusOpenSerial = procSerial->Conectar(devport,9600);
+    foreach (QAction* action, ui->menuBaudRate->actions()) {
+        if (action->isChecked()) {
+            baudrate = action->text().toInt();
+        }    
+    }
+    
+    //statusOpenSerial = procSerial->Conectar(devport,9600);
+    statusOpenSerial = procSerial->Conectar(devport,baudrate);
     
     /*
      * aguardando a porta "aquecer" ;_(((
@@ -531,14 +654,17 @@ void maroloDAQ::on_actionConectar_triggered() {
             
             setConectado();
             
-            ui->teLog->append("### maroloDAQ Aberto com Sucesso!");
+            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
+	statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
         }
         else {
-            ui->teLog->append("### Erro ao obter informações do maroloDAQ, tente novamente.");
+            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+	statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
         }
     }
     else {
-        ui->teLog->append("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+        //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
+	statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
     }
     
 } // end on_actionConectar_triggered
@@ -552,11 +678,12 @@ void maroloDAQ::on_actionDesconectar_triggered() {
     
     if (statusCloseSerial) {
         setDesconectado();
-        
-        ui->teLog->append("### Porta serial fechada com sucesso!");
+        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
+        statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        ui->teLog->append("### Falha ao fechar conexão serial.");
+        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
+        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
 
@@ -580,7 +707,7 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     myAction_split = myAction.split(" [");
     myAction_temp = myAction_split[0];
     myAction = "/dev/"+myAction;
-    //qDebug() << ">>>>> AQUI myAction = " << myAction;
+    //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
     
     int ihavename = 0;
     foreach (QAction *action, ui->menuPortas->actions()) {
@@ -605,78 +732,78 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
         }
         if ( myAction_temp == "ttyACM1" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM1 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM1);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM1->setCheckable(true);
+                    actionACM1->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyACM2" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM2 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM2);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM2->setCheckable(true);
+                    actionACM2->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyACM3" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
+            actionACM3 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM3);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionACM3->setCheckable(true);
+                    actionACM3->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB0" ) {
             //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM0);
+            actionUSB0 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB0);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB0->setCheckable(true);
+                    actionUSB0->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB1" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM1);
+            actionUSB1 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB1);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB1->setCheckable(true);
+                    actionUSB1->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB2" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM2);
+            actionUSB2 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB2);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB2->setCheckable(true);
+                    actionUSB2->setChecked(true);
                 }
             }
         }
         if ( myAction_temp == "ttyUSB3" ) {
             //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionACM0 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionACM3);
+            actionUSB3 = new QAction(myAction, this);
+            ui->menuPortas->addAction(actionUSB3);
             if (myAction_split.length() > 1 ) {
                 if ( myAction_split[1] == "maroloDAQ]") {
-                    actionACM0->setCheckable(true);
-                    actionACM0->setChecked(true);
+                    actionUSB3->setCheckable(true);
+                    actionUSB3->setChecked(true);
                 }
             }
         }
@@ -760,24 +887,58 @@ bool maroloDAQ::validarEntradas() {
     //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
     //Tudo ok e continua a operação.
     if(ui->editErroSensor->text()==NULL) {
-        msgBox.setText("Digite o Erro");
-        msgBox.exec();
+        //msgBox.setText("Digite o Erro");
+        //msgBox.exec();
+        QMessageBox::warning(this, tr("maroloDAQ"),
+                             tr("Por favor, digite o valor do Erro no Sensor."));
         ui->editErroSensor->setFocus();
         return false;
     } else {
-        if(ui->editDeltaT->text()==NULL){
-            msgBox.setText("Digite o intervalo de amostragem");
-            msgBox.exec();
+        if(ui->editDeltaT->text()==NULL) {
+            //msgBox.setText("Digite o intervalo de amostragem");
+            //msgBox.exec();
+            QMessageBox::warning(this, tr("maroloDAQ"),
+                                 tr("Por favor, digite o Intervalo de Tempo da medição."));
             ui->editDeltaT->setFocus();
             return false;
         } else {
-            if(ui->editTmax->text()==NULL){
-                msgBox.setText("Digite o tempo máximo da amostra");
-                msgBox.exec();
+            if(ui->editTmax->text()==NULL) {
+                //msgBox.setText("Digite o tempo máximo da amostra");
+                //msgBox.exec();
+                QMessageBox::warning(this, tr("maroloDAQ"),
+                                     tr("Por favor, digite o Tempo Máximo da medição."));
                 ui->editTmax->setFocus();
                 return false;
             } else {
-                return true;
+                if (ui->editDeltaT->text().toDouble() > ui->editTmax->text().toDouble()) {
+                    QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o delta T menor que Tmax."));
+                    ui->editDeltaT->setFocus();
+                    return false;
+                } else {
+                    if (ui->cbSensorList->currentText() == "Pêndulo") {
+                        if (ui->editAngulo1->text() == NULL) {
+                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK."));
+                            ui->editAngulo1->setFocus();
+                            return false;
+                        } else {
+                            if (ui->editAngulo2->text() == NULL) {
+                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK."));
+                                ui->editAngulo2->setFocus();
+                                return false;
+                            } else {
+                                if (calibrationArray[1].voltage == calibrationArray[1].voltage) {
+                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem."));
+                                    ui->editAngulo1->setFocus();
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                        }
+                    } else {
+                        return true;
+                    }
+                }
             }
         }
     }
@@ -801,6 +962,10 @@ void maroloDAQ::doReadings() {
     
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
+
+    // dois timers para medicoes
+    QElapsedTimer timer;
+    QElapsedTimer timer_deltaT;
     
     double mysound,myvoltage,myresistence,mytemperature, mylight,myangle;
     // contador
@@ -816,28 +981,32 @@ void maroloDAQ::doReadings() {
     
     // inicializando o relogio
     timer.start();
+    timer_deltaT.start();
     // instante inicial das medicoes
-    double tempo_inicial = timer.elapsed();
-    // momento da medicao
-    double tempo_atual = 0 ;
+    double tempo_atual = timer.elapsed();
     // define timeout
     double timeout = Tmax + tolerance;
-    
+   
+    if (GraceIsOpen()) {
+        setupGrace();
+    }
+
+    ui->teLog->appendPlainText("########## início: Dados Adquiridos via marolodaAQ");
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
-        
-        if ( (timer.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+
+        // descongelando o GUI
+        QCoreApplication::processEvents();
             
-            //Qual Sensor foi Selecionado
+        if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
+
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mysound, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
@@ -845,46 +1014,39 @@ void maroloDAQ::doReadings() {
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myvoltage, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     break;
                 case 2:
                     myresistence = readResistence(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myresistence, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 3));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 3))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     
-                    //qDebug() << tempo_atual/1000 << "    " << mytemperature/10 << "    " << 0.01 << "    " << erroY;
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
@@ -894,54 +1056,62 @@ void maroloDAQ::doReadings() {
                     break;
                 case 4:
                     mylight = readLight(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mylight, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     break;
                 case 5:
                     myangle = readAngle(myCALL);
-                    // descongelando o GUI
-                    QCoreApplication::processEvents();
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->append((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myangle, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
-                        //GracePrintf ("autoscale");
-                        //GracePrintf ("redraw");
+                        GracePrintf ("autoscale");
+                        GracePrintf ("redraw");
                     }
                     break;
             } // end switch sensor
             
             cont++;
-            
+            if ( (cont % 10 == 0) && (GraceIsOpen()) ) {
+                GracePrintf("autoscale");
+                GracePrintf("redraw");
+            }
         } // end if deltaT
         
-        // Atualiza o tempo decorrido na medicao
-        tempo_atual = (timer.elapsed() - tempo_inicial);
+        tempo_atual = timer.elapsed();
         
     } // end while timeout
+
+    if (GraceIsOpen()) {
+	 GracePrintf("autoscale");
+	 GracePrintf("redraw");
+    }
+   
+    ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
     
+    // habilitar actionSalvar
+    ui->actionSalvar->setEnabled(true);
     
-    //GUI é reabilitado
+    // GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
     ui->editTmax->setEnabled(true);
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
+    ui->btnDevClose->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
     ui->cbSensorList->setEnabled(true);
     ui->checkBoxGrace->setEnabled(true);
@@ -1211,17 +1381,36 @@ double maroloDAQ::round_to_decimal(float f) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
+        GracePrintf ("map font 0 to \"Times-Roman\", \"Times-Roman\"");
+        GracePrintf ("default font 0");
         GracePrintf ("g0 on");
         GracePrintf ("g0 type XY");
         GracePrintf ("with g0");
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
-        GracePrintf ("title \"Insira Aqui o Titulo\"");
-        GracePrintf ("subtitle \"insira aqui o subtitulo\"");
-        GracePrintf ("xaxis  label \"insira aqui nome do eixoX (unid)\"");
-        GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
-       
-       	GracePrintf ("kill s0");	
+        GracePrintf ("title \"Insira Aqui o T\\#{ed}tulo\"");
+        GracePrintf ("title font 0");
+        GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
+        GracePrintf ("subtitle font 0");
+        GracePrintf ("xaxis label \"Tempo (s)\"");
+        GracePrintf ("xaxis tick minor ticks 2");
+        GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
+        GracePrintf ("yaxis tick minor ticks 2");
+        
+        GracePrintf ("kill s0");	
+        GracePrintf ("title font 0");
+        GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
+        GracePrintf ("subtitle font 0");
+        GracePrintf ("xaxis label \"Tempo (s)\"");
+        //GracePrintf ("xaxis ticklabel on");
+        //GracePrintf ("xaxis ticklabel format general");
+        //GracePrintf ("xaxis ticklabel prec 2");
+        GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
+        //GracePrintf ("yaxis ticklabel on");
+        //GracePrintf ("yaxis ticklabel format general");
+        //GracePrintf ("yaxis ticklabel prec 1");
+        
+        GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1232,7 +1421,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("s0 symbol char 65");
         GracePrintf ("s0 line color 2");
         
-        GracePrintf ("s0 legend  \"Dados Experimentais\"");
+        GracePrintf ("s0 legend \"Dados Experimentais\"");
         GracePrintf ("s0 line type 0");
         GracePrintf ("target g0.s0");
         GracePrintf ("s0 type xydxdy");
@@ -1248,39 +1437,39 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
         QString xy_point;
         QTextStream xyout(&xy_point);
         xyout << "s0 point " << QString::number(x, 'f', 2) << \
-	       	", " << QString::number(y, 'f', 1);
-	QByteArray xy_point_tmp = xy_point.toUtf8();
-	const char *xy_expr = xy_point_tmp.simplified();
-	//qDebug() << "AQUI xy_expr = " << xy_expr;
-
-	GracePrintf(xy_expr);
+        ", " << QString::number(y, 'f', 1);
+        QByteArray xy_point_tmp = xy_point.toUtf8();
+        const char *xy_expr = xy_point_tmp.simplified();
+        //qDebug() << "AQUI xy_expr = " << xy_expr;
+        
+        GracePrintf(xy_expr);
         xy_point.clear();
         
         // formating dx_point
         QString dx_point;
         QTextStream dxout(&dx_point);
         dxout << "s0.y1[s0.length -1] = " << QString::number(dx, 'f', 2);
-	QByteArray dx_point_tmp = dx_point.toUtf8();
-	const char *dx_expr = dx_point_tmp.simplified();
-	//qDebug() << "AQUI dx_expr = " << dx_expr;
+        QByteArray dx_point_tmp = dx_point.toUtf8();
+        const char *dx_expr = dx_point_tmp.simplified();
+        //qDebug() << "AQUI dx_expr = " << dx_expr;
         
-	GracePrintf(dx_expr);
+        GracePrintf(dx_expr);
         dx_point.clear();
         
-	// formating dy_point
+        // formating dy_point
         QString dy_point;
         QTextStream dyout(&dy_point);
         dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', 1);
-	QByteArray dy_point_tmp = dy_point.toUtf8();
-	const char *dy_expr = dy_point_tmp.simplified();
-	//qDebug() << "AQUI dy_expr = " << dy_expr;
-
-	GracePrintf(dy_expr);
+        QByteArray dy_point_tmp = dy_point.toUtf8();
+        const char *dy_expr = dy_point_tmp.simplified();
+        //qDebug() << "AQUI dy_expr = " << dy_expr;
+        
+        GracePrintf(dy_expr);
         dy_point.clear();
         
-        GracePrintf ("autoscale");
-        GracePrintf ("redraw");
-	
+        //GracePrintf ("autoscale");
+        //GracePrintf ("redraw");
+        
     } // end if GraceIsOpen
     
 } //end plotaGrace
@@ -1290,3 +1479,112 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
  * Fim
  */
 
+
+void maroloDAQ::closeEvent(QCloseEvent *event) {
+
+    if (maybeSave()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
+bool maroloDAQ::maybeSave() {
+    if (!ui->teLog->document()->isModified()) 
+        return true;
+        const QMessageBox::StandardButton ret = \
+        QMessageBox::warning(this, tr("maroloDAQ"), \
+        tr("The document has been modified.\n" \
+        "Do you want to save your changes?"), \
+        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        switch (ret) {
+            case QMessageBox::Save:
+                return on_actionSalvar_triggered();
+            case QMessageBox::Cancel:
+                return false;
+            default:
+                break;
+	}
+    	return true;
+}
+
+void maroloDAQ::createStatusBar() {
+    statusBar()->showMessage(tr("Pronto"));
+}
+
+void maroloDAQ::documentWasModified() {
+    setWindowModified(ui->teLog->document()->isModified());
+    //ui->actionSalvar->setEnabled(true);
+}
+
+void maroloDAQ::setCurrentFile(const QString &fileName) {
+    curFile = fileName;
+    ui->teLog->document()->setModified(false);
+    setWindowModified(false);
+    ui->actionSalvar_como->setEnabled(true);
+    
+    QString shownName = curFile;
+    if (curFile.isEmpty()) {
+        shownName = "untitled.txt";
+    }
+    setWindowFilePath(shownName);
+}
+
+bool maroloDAQ::on_actionSalvar_como_triggered() {
+    QFileDialog dialog(this);
+    dialog.setWindowModality(Qt::WindowModal);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (dialog.exec() != QDialog::Accepted)
+        return false;
+    return saveFile(dialog.selectedFiles().first());
+}
+
+bool maroloDAQ::on_actionSalvar_triggered() {
+    if (curFile.isEmpty()) {
+        return on_actionSalvar_como_triggered();
+    } else {
+        return saveFile(curFile);
+    }
+}
+
+void maroloDAQ::on_actionSobre_triggered() {
+    QMessageBox msgBox;
+    msgBox.setText("<b>maroloDAQ</b> datalogger");
+    msgBox.setInformativeText(  "author: "
+                                "\t José Eduardo Martins \n"
+                                "\t jemartins@fis.unb.br \n"
+                                "programers: \n"
+                                "\t José Eduardo Martins \n"
+                                "\t Rafael Ramos \n"
+                                "\t rafaelframos@gmail.com \n \n"
+                                "freeSoftware and openProject"
+                             );
+    msgBox.exec();
+}
+
+bool maroloDAQ::saveFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, tr("maroloDAQ"),
+                             tr("Cannot write file %1:\n%2.")
+                             .arg(QDir::toNativeSeparators(fileName),
+                                  file.errorString()));
+        return false;
+    }
+    
+    QTextStream out(&file);
+    
+    #ifndef QT_NO_CURSOR
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    #endif
+    out << ui->teLog->toPlainText();
+    #ifndef QT_NO_CURSOR
+    QApplication::restoreOverrideCursor();
+    #endif
+    //qDebug() << "AQUI saveFile";
+    setCurrentFile(fileName);
+    //qDebug() << "AQUI saveFile";
+    statusBar()->showMessage(tr("File saved"), 2000);
+    return true;
+}

@@ -369,7 +369,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QTextEdit" name="teLog">
+   <widget class="QPlainTextEdit" name="teLog">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -486,7 +486,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Intervalo de Tempo entre Cada Medição em segundos</string>
+		<string>Intervalo de Tempo [min 0.03] entre Cada Medição em segundos</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -758,27 +758,27 @@
         </property>
         <item>
          <property name="text">
-          <string>Nível Sonoro (dB)</string>
+          <string>Nível Sonoro</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Voltagem [(5/1023)V]</string>
+          <string>Voltagem</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Resistência (Ohm)</string>
+          <string>Resistência</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Temperatura (°C)</string>
+          <string>Temperatura</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Luz (lux)</string>
+          <string>Luz</string>
          </property>
         </item>
         <item>
@@ -1523,7 +1523,7 @@
      <property name="title">
       <string>Flow Control</string>
      </property>
-     <addaction name="action_No_Flow_Control"/>
+     <addaction name="actionNoFlowControl"/>
     </widget>
     <widget class="QMenu" name="menuPortas">
      <property name="title">
@@ -1588,12 +1588,15 @@
     <string>Sobre</string>
    </property>
   </action>
-  <action name="action_No_Flow_Control">
-   <property name="checked">
-    <bool>false</bool>
-   </property>
+  <action name="actionNoFlowControl">
    <property name="text">
     <string> NoFlowControl</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No Flow Control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
