@@ -119,7 +119,6 @@ void maroloDAQ::WriteData(const QByteArray data)
 QString maroloDAQ::ReadData()
 {
     QString data = procSerial->Read();
-    //qDebug() << "ReadData - RX UART: " << data << endl;
     return data;
 }
 
@@ -129,51 +128,24 @@ void maroloDAQ::createActions() {
     foreach (QAction* bdaction, ui->menuBaudRate->actions()) {
         BaudRateGroup->addAction(bdaction);
         if (bdaction->text() == "9600") {
-            //if (bdaction->text() == "19200") {
             bdaction->setCheckable(true);
             bdaction->setChecked(true);
-            //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
         } else {
             bdaction->setCheckable(true);
             bdaction->setChecked(false);
         }
-        //qDebug() << "ui->menuBaudRate->actions() = " << bdaction;
-        
     }
-    
-    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    //QToolBar *fileToolBar = addToolBar(tr("File"));
-    //const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+     
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/save.png"));
-    QAction *saveAct = new QAction(saveIcon, tr("&Salvar o documento"), this);
-    //newAct->setShortcuts(QKeySequence::Salvar);
-    //saveAct->setShortcuts(QKeySequence::Save);
-    //ui->actionSalvar->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Salvar o documento"));
-    //connect(saveAct, &QAction::triggered, this, &maroloDAQ::save);
-    connect(saveAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
-    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     ui->actionSalvar->setIcon(saveIcon);
-    //fileMenu->addAction(newAct);
-    ui->mainToolBar->addAction(saveAct);
-    
-    //QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    //QToolBar *fileToolBar = addToolBar(tr("File"));
-    //const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
-    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
-    QAction *saveasAct = new QAction(saveasIcon, tr("&Salvar o documento com seu nome"), this);
-    //newAct->setShortcuts(QKeySequence::Salvar);
-    //saveasAct->setShortcuts(QKeySequence::SaveAs);
-    //ui->actionSalvar_como->setShortcuts(QKeySequence::SaveAs);
-    saveasAct->setStatusTip(tr("Salvar o documento com seu nome"));
-    //connect(saveasAct, &QAction::triggered, this, &maroloDAQ::saveAs);
-    connect(saveasAct, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
-    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
-    ui->actionSalvar_como->setIcon(saveasIcon);
-    //fileMenu->addAction(newAct);
-    ui->mainToolBar->addAction(saveasAct);
+    ui->mainToolBar->addAction(ui->actionSalvar);
 
-    //connect(ui->actionSobre, &QAction::triggered, this, &maroloDAQ::on_actionSobre_triggered);
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
+    ui->actionSalvar_como->setIcon(saveasIcon);
+    ui->mainToolBar->addAction(ui->actionSalvar_como);
+
+    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
     
     ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/close.png")));        
     ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/help-about.png")));        
@@ -189,8 +161,6 @@ void maroloDAQ::createActions() {
     // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
     ui->actionSalvar->setEnabled(false);
     ui->actionSalvar_como->setEnabled(false);
-    saveAct->setEnabled(false);
-    saveasAct->setEnabled(false);
     
 } // end createActions
 
@@ -1129,15 +1099,14 @@ void maroloDAQ::doReadings() {
     }
    
     ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
-    // action "Salvar" habilitadas
-    ui->actionSalvar->setEnabled(true);
-    
-    // action "Salvar como" habilitadas
-    foreach (QAction* tbaction, ui->mainToolBar->actions()) {
-	    tbaction->setEnabled(true);
-    } 
-    ui->actionSalvar_como->setEnabled(true);
 
+    // action "Salvar" habilitadas
+    if (cont == 0) {
+	    ui->actionSalvar->setEnabled(true);
+    } else if (cont == 1) {
+	    ui->actionSalvar_como->setEnabled(true);
+    }
+    
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
