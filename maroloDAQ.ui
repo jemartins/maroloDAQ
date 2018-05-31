@@ -1676,7 +1676,7 @@
     <string>Alt+S</string>
    </property>
   </action>
-  <action name="actionSalvar_como_tbar">
+  <action name="actionSalvar_como_tbox">
    <property name="text">
     <string>Salvar como</string>
    </property>
