@@ -1392,15 +1392,21 @@ double maroloDAQ::round_to_decimal(float f) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
+	GracePrintf ("map font 0 to \"Times-Roman\", \"Times-Roman\"");
+	GracePrintf ("default font 0");
         GracePrintf ("g0 on");
         GracePrintf ("g0 type XY");
         GracePrintf ("with g0");
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
-        GracePrintf ("title \"Insira Aqui o Titulo\"");
-        GracePrintf ("subtitle \"insira aqui o subttiulo\"");
+        GracePrintf ("title \"Insira Aqui o T\\#{ed}tulo\"");
+	GracePrintf ("title font 0");
+        GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
+	GracePrintf ("subtitle font 0");
         GracePrintf ("xaxis  label \"Tempo (s)\"");
+	GracePrintf ("xaxis  tick minor ticks 2");
         GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
+	GracePrintf ("yaxis  tick minor ticks 2");
        
        	GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
