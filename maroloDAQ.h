@@ -31,15 +31,15 @@
 #define PROJMAROLO_H
 
 #include <QMainWindow>
-#include <QApplication>
+//#include <QApplication>
 #include <QActionGroup>
-#include <QMessageBox>
+//#include <QMessageBox>
 //#include <QFileDialog>
 #include <QPlainTextEdit>
 //#include <QCloseEvent>
 //#include <QTextDocument>
 //#include <QGuiApplication>
-#include <QSessionManager>
+//#include <QSessionManager>
 #include "comserial.h"
 #include <grace_np.h>
 
@@ -116,7 +116,7 @@ private:
     QSerialPort *devserial;
     comserial *procSerial;
     void CarregarInfoDispSerial(void);
-    QAction *viewst;
+    //QAction *viewst;
     QAction *actionACM0;
     QAction *actionACM1;
     QAction *actionACM2;
@@ -129,13 +129,11 @@ private:
     QAction *actionS1;
     QAction *actionS2;
     QAction *actionS3;
-    QAction *saveAct;
-    QAction *saveasAct;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
     QActionGroup *BaudRateGroup;
     //variáveis adicionas por Rafael
-    QMessageBox msgBox;
+    //QMessageBox msgBox;
     QString AdcReadString;
     bool stopFlag;
     int baudrate;

@@ -192,7 +192,7 @@ void maroloDAQ::createActions() {
     saveAct->setEnabled(false);
     saveasAct->setEnabled(false);
     
-}
+} // end createActions
 
 void maroloDAQ::scanPortas() {
     
@@ -586,7 +586,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->checkBoxGrace->setEnabled(false);
                 
         // limpar o QPlainText teLog
-        ui->teLog->clear();
+        //ui->teLog->clear();
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
@@ -1018,6 +1018,7 @@ void maroloDAQ::doReadings() {
         setupGrace();
     }
 
+    ui->teLog->appendPlainText("########## início: Dados Adquiridos via marolodaAQ");
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
 
         // descongelando o GUI
@@ -1126,16 +1127,16 @@ void maroloDAQ::doReadings() {
 	 GracePrintf("autoscale");
 	 GracePrintf("redraw");
     }
-    
-    if (cont == 0) {
+   
+    ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
     // action "Salvar" habilitadas
     ui->actionSalvar->setEnabled(true);
-    saveAct->setEnabled(true);
-    } else {
+    
     // action "Salvar como" habilitadas
+    foreach (QAction* tbaction, ui->mainToolBar->actions()) {
+	    tbaction->setEnabled(true);
+    } 
     ui->actionSalvar_como->setEnabled(true);
-    saveasAct->setEnabled(true);        
-    }
 
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
@@ -1616,7 +1617,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
     #endif
     //qDebug() << "AQUI saveFile";
     setCurrentFile(fileName);
-    qDebug() << "AQUI saveFile";
+    //qDebug() << "AQUI saveFile";
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
 }
