@@ -162,8 +162,8 @@ void maroloDAQ::createActions() {
     // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
     ui->actionSalvar->setEnabled(false);
     ui->actionSalvar_como->setEnabled(false);
-    connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
-    connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
+    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
+    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
     
 } // end createActions
 
@@ -1104,13 +1104,12 @@ void maroloDAQ::doReadings() {
     ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
 
     // action "Salvar" habilitadas
-    /*
     if (cont == 0) {
 	    ui->actionSalvar->setEnabled(true);
     } else if (cont == 1) {
 	    ui->actionSalvar_como->setEnabled(true);
     }
-    */
+    
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
     ui->editDeltaT->setEnabled(true);
