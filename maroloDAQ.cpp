@@ -521,14 +521,14 @@ void maroloDAQ::on_btnDevOpen_clicked() {
             //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
             //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
             QMessageBox::warning(this, tr("maroloDAQ"),
-                                tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
+                                 tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
         }
     }
     else {
-        //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
-        //statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
-            QMessageBox::warning(this, tr("maroloDAQ"),
-                                tr("Falha ao Abrir Portas Seriais."));
+        //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
+        //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
+        QMessageBox::warning(this, tr("maroloDAQ"),
+                             tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
     }
     
 } // end on_btnDevOpen_clicked
