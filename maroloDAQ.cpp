@@ -31,10 +31,11 @@
 #include "ui_maroloDAQ.h"
 #include "calibration.h"
 
-#include <QMessageBox>
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QElapsedTimer>
 #include <unistd.h>
 #include <stdlib.h>
@@ -184,6 +185,12 @@ void maroloDAQ::createActions() {
     ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/irc-channel-inactive.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
+    
+    // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
+    ui->actionSalvar->setEnabled(false);
+    ui->actionSalvar_como->setEnabled(false);
+    saveAct->setEnabled(false);
+    saveasAct->setEnabled(false);
     
 }
 
@@ -512,12 +519,16 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }
         else {
             //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
-        statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
+            //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
+            QMessageBox::warning(this, tr("maroloDAQ"),
+                                tr("Falha ao Abrir maroloDAQ. O maroloDAQ está Conectado? Recarregar e Tentar de Novo."));
         }
     }
     else {
         //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
-        statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
+        //statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
+            QMessageBox::warning(this, tr("maroloDAQ"),
+                                tr("Falha ao Abrir Portas Seriais."));
     }
     
 } // end on_btnDevOpen_clicked
@@ -535,7 +546,7 @@ void maroloDAQ::on_btnDevClose_clicked() {
     }
     else {
         //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
-        statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
+        statusBar()->showMessage(tr("### Falha ao Fechar maroloDAQ."));
     }
     
     if (GraceIsOpen()) {
@@ -573,7 +584,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->cbPinoList->setEnabled(false);
         ui->cbSensorList->setEnabled(false);
         ui->checkBoxGrace->setEnabled(false);
-        
+                
         // limpar o QPlainText teLog
         ui->teLog->clear();
         
@@ -1115,6 +1126,16 @@ void maroloDAQ::doReadings() {
 	 GracePrintf("autoscale");
 	 GracePrintf("redraw");
     }
+    
+    if (cont == 0) {
+    // action "Salvar" habilitadas
+    ui->actionSalvar->setEnabled(true);
+    saveAct->setEnabled(true);
+    } else {
+    // action "Salvar como" habilitadas
+    ui->actionSalvar_como->setEnabled(true);
+    saveasAct->setEnabled(true);        
+    }
 
     //GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
@@ -1392,23 +1413,23 @@ double maroloDAQ::round_to_decimal(float f) {
 void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
-	GracePrintf ("map font 0 to \"Times-Roman\", \"Times-Roman\"");
-	GracePrintf ("default font 0");
+        GracePrintf ("map font 0 to \"Times-Roman\", \"Times-Roman\"");
+        GracePrintf ("default font 0");
         GracePrintf ("g0 on");
         GracePrintf ("g0 type XY");
         GracePrintf ("with g0");
         GracePrintf ("legend on");
         GracePrintf ("legend 0.8, 0.8");
         GracePrintf ("title \"Insira Aqui o T\\#{ed}tulo\"");
-	GracePrintf ("title font 0");
+        GracePrintf ("title font 0");
         GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
-	GracePrintf ("subtitle font 0");
-        GracePrintf ("xaxis  label \"Tempo (s)\"");
-	GracePrintf ("xaxis  tick minor ticks 2");
-        GracePrintf ("yaxis  label \"insira aqui nome eixoY (unid)\"");
-	GracePrintf ("yaxis  tick minor ticks 2");
-       
-       	GracePrintf ("kill s0");	
+        GracePrintf ("subtitle font 0");
+        GracePrintf ("xaxis label \"Tempo (s)\"");
+        GracePrintf ("xaxis tick minor ticks 2");
+        GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
+        GracePrintf ("yaxis tick minor ticks 2");
+        
+        GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1419,7 +1440,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("s0 symbol char 65");
         GracePrintf ("s0 line color 2");
         
-        GracePrintf ("s0 legend  \"Dados Experimentais\"");
+        GracePrintf ("s0 legend \"Dados Experimentais\"");
         GracePrintf ("s0 line type 0");
         GracePrintf ("target g0.s0");
         GracePrintf ("s0 type xydxdy");
@@ -1435,39 +1456,39 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
         QString xy_point;
         QTextStream xyout(&xy_point);
         xyout << "s0 point " << QString::number(x, 'f', 2) << \
-	       	", " << QString::number(y, 'f', 1);
-	QByteArray xy_point_tmp = xy_point.toUtf8();
-	const char *xy_expr = xy_point_tmp.simplified();
-	//qDebug() << "AQUI xy_expr = " << xy_expr;
-
-	GracePrintf(xy_expr);
+        ", " << QString::number(y, 'f', 1);
+        QByteArray xy_point_tmp = xy_point.toUtf8();
+        const char *xy_expr = xy_point_tmp.simplified();
+        //qDebug() << "AQUI xy_expr = " << xy_expr;
+        
+        GracePrintf(xy_expr);
         xy_point.clear();
         
         // formating dx_point
         QString dx_point;
         QTextStream dxout(&dx_point);
         dxout << "s0.y1[s0.length -1] = " << QString::number(dx, 'f', 2);
-	QByteArray dx_point_tmp = dx_point.toUtf8();
-	const char *dx_expr = dx_point_tmp.simplified();
-	//qDebug() << "AQUI dx_expr = " << dx_expr;
+        QByteArray dx_point_tmp = dx_point.toUtf8();
+        const char *dx_expr = dx_point_tmp.simplified();
+        //qDebug() << "AQUI dx_expr = " << dx_expr;
         
-	GracePrintf(dx_expr);
+        GracePrintf(dx_expr);
         dx_point.clear();
         
-	// formating dy_point
+        // formating dy_point
         QString dy_point;
         QTextStream dyout(&dy_point);
         dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', 1);
-	QByteArray dy_point_tmp = dy_point.toUtf8();
-	const char *dy_expr = dy_point_tmp.simplified();
-	//qDebug() << "AQUI dy_expr = " << dy_expr;
-
-	GracePrintf(dy_expr);
+        QByteArray dy_point_tmp = dy_point.toUtf8();
+        const char *dy_expr = dy_point_tmp.simplified();
+        //qDebug() << "AQUI dy_expr = " << dy_expr;
+        
+        GracePrintf(dy_expr);
         dy_point.clear();
         
         //GracePrintf ("autoscale");
         //GracePrintf ("redraw");
-	
+        
     } // end if GraceIsOpen
     
 } //end plotaGrace

@@ -34,7 +34,7 @@
 #include <QApplication>
 #include <QActionGroup>
 #include <QMessageBox>
-#include <QFileDialog>
+//#include <QFileDialog>
 #include <QPlainTextEdit>
 //#include <QCloseEvent>
 //#include <QTextDocument>
@@ -74,8 +74,8 @@ private slots:
     void on_btnIniciar_clicked();
     void on_btnParar_clicked();
     void on_btnAppClose_clicked();
-    bool on_actionSalvar_como_triggered();
     bool on_actionSalvar_triggered();
+    bool on_actionSalvar_como_triggered();
     void on_actionSair_triggered();
     void on_actionConectar_triggered();
     void on_actionDesconectar_triggered();
@@ -129,6 +129,8 @@ private:
     QAction *actionS1;
     QAction *actionS2;
     QAction *actionS3;
+    QAction *saveAct;
+    QAction *saveasAct;
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
     QActionGroup *BaudRateGroup;
