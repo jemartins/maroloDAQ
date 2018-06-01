@@ -140,14 +140,18 @@ void maroloDAQ::createActions() {
      
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
     ui->actionSalvar->setIcon(saveIcon);
-    ui->mainToolBar->addAction(ui->actionSalvar);
+    ui->actionSalvar_tbox->setIcon(saveIcon);
+    ui->mainToolBar->addAction(ui->actionSalvar_tbox);
 
     const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
     ui->actionSalvar_como->setIcon(saveasIcon);
-    ui->mainToolBar->addAction(ui->actionSalvar_como);
+    ui->actionSalvar_como_tbox->setIcon(saveasIcon);
+    ui->mainToolBar->addAction(ui->actionSalvar_como_tbox);
 
     connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
+    connect(ui->actionSalvar_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar_como_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
     
     ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
     ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
@@ -164,6 +168,8 @@ void maroloDAQ::createActions() {
     // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
     ui->actionSalvar->setEnabled(false);
     ui->actionSalvar_como->setEnabled(false);
+    ui->actionSalvar_tbox->setEnabled(false);
+    ui->actionSalvar_como_tbox->setEnabled(false);
     //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
     //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
     
@@ -1107,6 +1113,7 @@ void maroloDAQ::doReadings() {
     
     // habilitar actionSalvar
     ui->actionSalvar->setEnabled(true);
+    ui->actionSalvar_tbox->setEnabled(true);
     
     // GUI é reabilitado
     ui->editErroSensor->setEnabled(true);
@@ -1515,7 +1522,6 @@ bool maroloDAQ::maybeSave() {
 
 void maroloDAQ::documentWasModified() {
     setWindowModified(ui->teLog->document()->isModified());
-    //ui->actionSalvar->setEnabled(true);
 }
 
 void maroloDAQ::setCurrentFile(const QString &fileName) {

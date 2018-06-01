@@ -1665,6 +1665,28 @@
     <string>9600 bps</string>
    </property>
   </action>
+  <action name="actionSalvar_tbox">
+   <property name="text">
+    <string>Salvar</string>
+   </property>
+   <property name="toolTip">
+    <string>Salvar o Arquivo</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionSalvar_como_tbox">
+   <property name="text">
+    <string>Salvar como</string>
+   </property>
+   <property name="toolTip">
+    <string>Salvar o Arquivo com Nome</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+C</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
