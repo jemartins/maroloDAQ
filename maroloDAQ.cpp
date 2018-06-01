@@ -567,7 +567,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         ui->checkBoxGrace->setEnabled(false);
                 
         // limpar o QPlainText teLog
-        //ui->teLog->clear();
+        ui->teLog->clear();
         
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
@@ -1051,7 +1051,7 @@ void maroloDAQ::doReadings() {
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 3))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10, 'f', 1))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
