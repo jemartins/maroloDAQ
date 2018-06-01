@@ -51,6 +51,26 @@ ui(new Ui::maroloDAQ)
     ui->setupUi(this);
     
     // Formatando entradas
+    formatarEntradas();
+    // create new actions and toolbar
+    createActions();
+    // Procurando por portar seriais abertas
+    scanPortas();
+    // Configurado stado inicial dos objetos
+    setDesconectado();
+    // Tudo OK
+    statusBar()->showMessage(tr("Pronto"));
+
+}
+
+maroloDAQ::~maroloDAQ()
+{
+    delete ui;
+}
+
+void maroloDAQ::formatarEntradas() {
+
+        // Formatando entradas
     ui->editAngulo1->setValidator(new QIntValidator(-90,90,ui->editAngulo1));
     ui->editAngulo1->setMaxLength(3);
     //ui->editAngulo1->setInputMask("#99");
@@ -84,24 +104,6 @@ ui(new Ui::maroloDAQ)
      
     //connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
     
-    setCurrentFile(QString());
-    setUnifiedTitleAndToolBarOnMac(true);
-    
-    // create new actions and toolbar
-    createActions();
-    createStatusBar();
-	    
-    // Procurando por portar seriais abertas
-    scanPortas();
-
-    // Configurado stado inicial dos objetos
-    setDesconectado();
-
-}
-
-maroloDAQ::~maroloDAQ()
-{
-    delete ui;
 }
 
 void maroloDAQ::on_btnAppClose_clicked()
@@ -586,6 +588,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
 } // end on_btnIniciar_clicked
 
 void maroloDAQ::on_actionSair_triggered() {
+    on_btnDevClose_clicked();
     exit(0);
 }
 
@@ -1501,15 +1504,13 @@ bool maroloDAQ::maybeSave() {
             case QMessageBox::Save:
                 return on_actionSalvar_triggered();
             case QMessageBox::Cancel:
+                on_btnDevClose_clicked();
                 return false;
             default:
+                on_btnDevClose_clicked();
                 break;
 	}
     	return true;
-}
-
-void maroloDAQ::createStatusBar() {
-    statusBar()->showMessage(tr("Pronto"));
 }
 
 void maroloDAQ::documentWasModified() {

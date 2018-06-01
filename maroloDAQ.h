@@ -61,6 +61,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
+    void formatarEntradas();
     void WriteData(const QByteArray data);
     void scanPortas();
     void setDesconectado();
@@ -109,6 +110,9 @@ private slots:
     void commitData(QSessionManager &);
 #endif
     */
+    void createActions();
+    bool saveFile(const QString &fileName);
+    void setCurrentFile(const QString &fileName);
 
 private:
     Ui::maroloDAQ *ui;
@@ -137,11 +141,6 @@ private:
     QString AdcReadString;
     bool stopFlag;
     int baudrate;
-
-    void createStatusBar();
-    void createActions();
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
 
     QPlainTextEdit *teLog;
     QString curFile;
