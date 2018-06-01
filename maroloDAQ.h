@@ -94,6 +94,7 @@ private slots:
     double round_to_decimal(float f);
     void setupGrace ();
     void plotaGrace (double x, double y, double dx, double dy);
+    int decimalSensor(double value);
 
     bool maybeSave();
     //void about();

@@ -990,6 +990,10 @@ void maroloDAQ::doReadings() {
     // tolerância no tempo máximo de leitura
     double tolerance = deltaT * 0.3;
     
+    // número de casas decimais no erroY
+    int ndig = decimalSensor(erroY);
+    qDebug() << "AQUI ndig =" << ndig;
+
     // inicializando o relogio
     timer.start();
     timer_deltaT.start();
@@ -1596,4 +1600,19 @@ bool maroloDAQ::saveFile(const QString &fileName)
     //qDebug() << "AQUI saveFile";
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
+}
+
+int maroloDAQ::decimalSensor(double value) { 
+    
+    int ndig;
+    const int inteiro = floor(value);
+    const double decimal = value - inteiro;
+    if (decimal > 0) {
+	    QString decimal_string = QString::number(decimal, 'g', 1);
+	    ndig = decimal_string.length() - 2;
+    } else {
+	    ndig = 0;
+    }
+
+    return ndig;
 }
