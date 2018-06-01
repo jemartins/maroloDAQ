@@ -977,12 +977,12 @@ void maroloDAQ::doReadings() {
     QElapsedTimer timer;
     QElapsedTimer timer_deltaT;
     
+    // variáveis temporárias
     double mysound,myvoltage,myresistence,mytemperature, mylight,myangle;
     // contador
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
-    qDebug() << "AQUI deltaT * 1000 = " << deltaT;
     //tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
     //erro indicado no gui para o sensor
@@ -991,8 +991,8 @@ void maroloDAQ::doReadings() {
     double tolerance = deltaT * 0.3;
     
     // número de casas decimais no erroY
-    int ndig = decimalSensor(erroY);
-    qDebug() << "AQUI ndig =" << ndig;
+    const int ndig = decimalSensor(erroY);
+    //qDebug() << "AQUI ndig =" << ndig;
 
     // inicializando o relogio
     timer.start();
@@ -1053,20 +1053,18 @@ void maroloDAQ::doReadings() {
                 case 3:
                     mytemperature = readTemperature(myCALL);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(mytemperature/10, 'f', 1))+"    "+\
+                    (QString::number(mytemperature/10, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    (QString::number(erroY, 'g', 1)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
                         plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
-                        //GracePrintf ("autoscale");
-                        //GracePrintf ("redraw");
                     }
                     break;
                 case 4:
@@ -1448,12 +1446,16 @@ void maroloDAQ::setupGrace () {
 void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
+	
+	// número de casas decimais no erroY
+	const int ndig = decimalSensor(dy);
+	//qDebug() << "AQUI ndig =" << ndig;
         
         // formating xy_point
         QString xy_point;
         QTextStream xyout(&xy_point);
         xyout << "s0 point " << QString::number(x, 'f', 2) << \
-        ", " << QString::number(y, 'f', 1);
+        ", " << QString::number(y, 'f', ndig);
         QByteArray xy_point_tmp = xy_point.toUtf8();
         const char *xy_expr = xy_point_tmp.simplified();
         //qDebug() << "AQUI xy_expr = " << xy_expr;
@@ -1475,7 +1477,7 @@ void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
         // formating dy_point
         QString dy_point;
         QTextStream dyout(&dy_point);
-        dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', 1);
+        dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'g', 1);
         QByteArray dy_point_tmp = dy_point.toUtf8();
         const char *dy_expr = dy_point_tmp.simplified();
         //qDebug() << "AQUI dy_expr = " << dy_expr;
@@ -1607,7 +1609,7 @@ int maroloDAQ::decimalSensor(double value) {
     int ndig;
     const int inteiro = floor(value);
     const double decimal = value - inteiro;
-    if (decimal > 0) {
+    if (inteiro == 0 && decimal > 0) {
 	    QString decimal_string = QString::number(decimal, 'g', 1);
 	    ndig = decimal_string.length() - 2;
     } else {
