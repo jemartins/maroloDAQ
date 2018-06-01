@@ -37,6 +37,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QElapsedTimer>
+#include <QLocale>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -890,30 +891,28 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
 }
 
 bool maroloDAQ::validarEntradas() {
+
+    // Configurando Localização
+    //QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
     
-    //Se ERRO for vazio apresenta mensagem de erro e para operação, senão...
-    //Se DeltaT for vazio apresenta mensagem de erro e para operação, senão...
-    //Se Tmax for vazio apresenta mensagem de erro e para operação, senão...
+    //Se ERRO for menor que zero apresenta mensagem de erro e para operação, senão...
+    //Se DeltaT for menor que zero apresenta mensagem de erro e para operação, senão...
+    //Se Tmax for menor que zedo apresenta mensagem de erro e para operação, senão...
+    //Se Angulo1 ou Angulo 2 for menor que zedo apresenta mensagem de erro e para operação, senão...
     //Tudo ok e continua a operação.
-    if(ui->editErroSensor->text()==NULL) {
-        //msgBox.setText("Digite o Erro");
-        //msgBox.exec();
+    if(ui->editErroSensor->text().toDouble() <= 0) {
         QMessageBox::warning(this, tr("maroloDAQ"),
                              tr("Por favor, digite o valor do Erro no Sensor."));
         ui->editErroSensor->setFocus();
         return false;
     } else {
-        if(ui->editDeltaT->text()==NULL) {
-            //msgBox.setText("Digite o intervalo de amostragem");
-            //msgBox.exec();
+        if(ui->editDeltaT->text().toDouble() <= 0) {
             QMessageBox::warning(this, tr("maroloDAQ"),
                                  tr("Por favor, digite o Intervalo de Tempo da medição."));
             ui->editDeltaT->setFocus();
             return false;
         } else {
-            if(ui->editTmax->text()==NULL) {
-                //msgBox.setText("Digite o tempo máximo da amostra");
-                //msgBox.exec();
+            if(ui->editTmax->text().toDouble() <= 0) {
                 QMessageBox::warning(this, tr("maroloDAQ"),
                                      tr("Por favor, digite o Tempo Máximo da medição."));
                 ui->editTmax->setFocus();
@@ -925,12 +924,12 @@ bool maroloDAQ::validarEntradas() {
                     return false;
                 } else {
                     if (ui->cbSensorList->currentText() == "Pêndulo") {
-                        if (ui->editAngulo1->text() == NULL) {
+                        if (ui->editAngulo1->text().toDouble() <= 0) {
                             QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK."));
                             ui->editAngulo1->setFocus();
                             return false;
                         } else {
-                            if (ui->editAngulo2->text() == NULL) {
+                            if (ui->editAngulo2->text().toDouble() <= 0) {
                                 QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK."));
                                 ui->editAngulo2->setFocus();
                                 return false;
@@ -968,7 +967,7 @@ void maroloDAQ::on_btnCalibrar2_clicked() {
 }
 
 void maroloDAQ::doReadings() {
-    
+   
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
 
@@ -981,6 +980,7 @@ void maroloDAQ::doReadings() {
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
+    qDebug() << "AQUI deltaT * 1000 = " << deltaT;
     //tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
     //erro indicado no gui para o sensor

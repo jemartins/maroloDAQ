@@ -31,15 +31,8 @@
 #define PROJMAROLO_H
 
 #include <QMainWindow>
-//#include <QApplication>
 #include <QActionGroup>
-//#include <QMessageBox>
-//#include <QFileDialog>
 #include <QPlainTextEdit>
-//#include <QCloseEvent>
-//#include <QTextDocument>
-//#include <QGuiApplication>
-//#include <QSessionManager>
 #include "comserial.h"
 #include <grace_np.h>
 
