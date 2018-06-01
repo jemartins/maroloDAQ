@@ -903,9 +903,9 @@ bool maroloDAQ::validarEntradas() {
         ui->editErroSensor->setFocus();
         return false;
     } else {
-        if(ui->editDeltaT->text().toDouble() <= 0) {
+        if(ui->editDeltaT->text().toDouble() < 0.03) {
             QMessageBox::warning(this, tr("maroloDAQ"),
-                                 tr("Por favor, digite o Intervalo de Tempo da medição. \n"
+                                 tr("Por favor, digite o Intervalo de Tempo [ < 0.03s ]. \n"
                                  "Digite \"ponto\" para os decimais"));
             ui->editDeltaT->setFocus();
             return false;
