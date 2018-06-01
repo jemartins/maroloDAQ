@@ -37,7 +37,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QElapsedTimer>
-#include <QLocale>
 #include <unistd.h>
 #include <stdlib.h>
 #include <iostream>
@@ -891,9 +890,6 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
 }
 
 bool maroloDAQ::validarEntradas() {
-
-    // Configurando Localização
-    //QLocale::setDefault(QLocale(QLocale::Portuguese, QLocale::Brazil));
     
     //Se ERRO for menor que zero apresenta mensagem de erro e para operação, senão...
     //Se DeltaT for menor que zero apresenta mensagem de erro e para operação, senão...
@@ -902,40 +898,46 @@ bool maroloDAQ::validarEntradas() {
     //Tudo ok e continua a operação.
     if(ui->editErroSensor->text().toDouble() <= 0) {
         QMessageBox::warning(this, tr("maroloDAQ"),
-                             tr("Por favor, digite o valor do Erro no Sensor."));
+                             tr("Por favor, digite o valor do Erro no Sensor. \n"
+                             "Digite \"ponto\" para os decimais"));
         ui->editErroSensor->setFocus();
         return false;
     } else {
         if(ui->editDeltaT->text().toDouble() <= 0) {
             QMessageBox::warning(this, tr("maroloDAQ"),
-                                 tr("Por favor, digite o Intervalo de Tempo da medição."));
+                                 tr("Por favor, digite o Intervalo de Tempo da medição. \n"
+                                 "Digite \"ponto\" para os decimais"));
             ui->editDeltaT->setFocus();
             return false;
         } else {
             if(ui->editTmax->text().toDouble() <= 0) {
                 QMessageBox::warning(this, tr("maroloDAQ"),
-                                     tr("Por favor, digite o Tempo Máximo da medição."));
+                                     tr("Por favor, digite o Tempo Máximo da medição. \n"                                         "Digite \"ponto\" para os decimais"));
                 ui->editTmax->setFocus();
                 return false;
             } else {
                 if (ui->editDeltaT->text().toDouble() > ui->editTmax->text().toDouble()) {
-                    QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o delta T menor que Tmax."));
+                    QMessageBox::warning(this, tr("maroloDAQ"),                                             tr("Por favor, digite o Tmax maior que Tmax. \n"
+                    "Digite \"ponto\" para os decimais"));
                     ui->editDeltaT->setFocus();
                     return false;
                 } else {
                     if (ui->cbSensorList->currentText() == "Pêndulo") {
-                        if (ui->editAngulo1->text().toDouble() <= 0) {
-                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK."));
+                        if (ui->editAngulo1->text() == NULL) {
+                            QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK. \n"
+                            "Digite \"ponto\" para os decimais"));
                             ui->editAngulo1->setFocus();
                             return false;
                         } else {
-                            if (ui->editAngulo2->text().toDouble() <= 0) {
-                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK."));
+                            if (ui->editAngulo2->text() == NULL) {
+                                QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK. \n"
+                                "Digite \"ponto\" para os decimais"));
                                 ui->editAngulo2->setFocus();
                                 return false;
                             } else {
                                 if (calibrationArray[1].voltage == calibrationArray[1].voltage) {
-                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem."));
+                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem. \n"
+                                    "Digite \"ponto\" para os decimais"));
                                     ui->editAngulo1->setFocus();
                                     return false;
                                 } else {
