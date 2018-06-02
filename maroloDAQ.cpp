@@ -969,10 +969,10 @@ void maroloDAQ::on_btnCalibrar2_clicked() {
 }
 
 void maroloDAQ::doReadings() {
-   
+    
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
-
+    
     // dois timers para medicoes
     QElapsedTimer timer;
     QElapsedTimer timer_deltaT;
@@ -997,62 +997,84 @@ void maroloDAQ::doReadings() {
     double tempo_atual = timer.elapsed();
     // define timeout
     double timeout = Tmax + tolerance;
-
+    
     // verificando numero de digitos decimais no erroY
     const int ndig = decimalSensor(erroY);
-
+    
     if (GraceIsOpen()) {
         setupGrace();
     }
-
+    
     ui->teLog->appendPlainText("########## início: Dados Adquiridos via marolodaAQ");
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
-
+        
         // descongelando o GUI
         QCoreApplication::processEvents();
-            
+        
         if ( (timer_deltaT.hasExpired(cont * deltaT)) && (!stopFlag) ) {
-
+            
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(mysound/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mysound, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(mysound/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(mysound, 'f', 1))+"    "+\
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    // Envia ao Console
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(mysound/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    (QString::number(erroY, 'g', 1)));
                     
+                    // send to Grace?
+                    if (ui->checkBoxGrace->isChecked()) {
+                        plotaGrace(tempo_atual/1000.0, mysound/10.0, 0.01, erroY);
+                    }
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(myvoltage/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myvoltage, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(myvoltage/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(myvoltage, 'f', 1))+"    "+\
-		    (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    // Envia ao Console
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(myvoltage/10.0, 'f', ndig))+"    "+\
+                    (QString::number(0.01, 'f', 2))+"    "+\
+                    (QString::number(erroY, 'g', 1)));
+                    
+                    // send to Grace?
+                    if (ui->checkBoxGrace->isChecked()) {
+                        plotaGrace(tempo_atual/1000.0, myvoltage/10.0, 0.01, erroY);
+                    }
                     break;
                 case 2:
                     myresistence = readResistence(myCALL);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(myresistence/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myresistence, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(myresistence/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(myresistence, 'f', 1))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(myresistence/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    (QString::number(erroY, 'g', 1)));
+                    
+                    // send to Grace?
+                    if (ui->checkBoxGrace->isChecked()) {
+                        plotaGrace(tempo_atual/1000.0, myresistence/10.0, 0.01, erroY);
+                    }
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
-		    // formatando Display antes de enviar valores
-		    formatDisplay(mytemperature/10.0, tempo_atual/1000.0);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(mytemperature/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1065,35 +1087,45 @@ void maroloDAQ::doReadings() {
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, mytemperature/10, 0.01, erroY);
+                        plotaGrace(tempo_atual/1000.0, mytemperature/10.0, 0.01, erroY);
                     }
                     break;
                 case 4:
                     mylight = readLight(myCALL);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(mylight/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mylight, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(mylight/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(mylight, 'f', 1))+"    "+\
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    // Envia ao Console
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(mylight/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    (QString::number(erroY, 'g', 1)));
+                    
+                    // send to Grace?
+                    if (ui->checkBoxGrace->isChecked()) {
+                        plotaGrace(tempo_atual/1000.0, mylight/10.0, 0.01, erroY);
+                    }
                     break;
                 case 5:
                     myangle = readAngle(myCALL);
+                    // formatando Display antes de enviar valores
+                    formatDisplay(myangle/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myangle, 'f', 1));
+                    ui->lcdMonitorY->display(QString::number(myangle/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(myangle, 'f', 1))+"    "+\
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    // Envia ao Console
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(myangle/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'f', 1)));
+                    (QString::number(erroY, 'g', 1)));
+                    
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
-                        plotaGrace(tempo_atual/1000, myangle, 0.01, erroY);
-                        GracePrintf ("autoscale");
-                        GracePrintf ("redraw");
+                        plotaGrace(tempo_atual/1000.0, myangle/10.0, 0.01, erroY);
                     }
                     break;
             } // end switch sensor
@@ -1108,12 +1140,12 @@ void maroloDAQ::doReadings() {
         tempo_atual = timer.elapsed();
         
     } // end while timeout
-
+    
     if (GraceIsOpen()) {
-	 GracePrintf("autoscale");
-	 GracePrintf("redraw");
+        GracePrintf("autoscale");
+        GracePrintf("redraw");
     }
-   
+    
     ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
     
     // habilitar actionSalvar
