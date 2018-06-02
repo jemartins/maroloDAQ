@@ -1005,7 +1005,7 @@ void maroloDAQ::doReadings() {
         setupGrace();
     }
     
-    ui->teLog->appendPlainText("########## início: Dados Adquiridos via marolodaAQ");
+    ui->teLog->appendPlainText("########## início: Dados Adquiridos via maroloDAQ");
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
         
         // descongelando o GUI
@@ -1016,6 +1016,7 @@ void maroloDAQ::doReadings() {
             switch(ui->cbSensorList->currentIndex()) {
                 case 0:
                     mysound = readSound(myCALL);
+                    mysound = roundValue(mysound, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(mysound/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1035,6 +1036,7 @@ void maroloDAQ::doReadings() {
                     break;
                 case 1:
                     myvoltage = readVoltage(myCALL);
+                    myvoltage = roundValue(myvoltage, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(myvoltage/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1054,6 +1056,7 @@ void maroloDAQ::doReadings() {
                     break;
                 case 2:
                     myresistence = readResistence(myCALL);
+                    myresistence = roundValue(myresistence, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(myresistence/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1073,6 +1076,7 @@ void maroloDAQ::doReadings() {
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
+                    mytemperature = roundValue(mytemperature, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(mytemperature/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1092,6 +1096,7 @@ void maroloDAQ::doReadings() {
                     break;
                 case 4:
                     mylight = readLight(myCALL);
+                    mylight = roundValue(mylight, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(mylight/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1111,6 +1116,7 @@ void maroloDAQ::doReadings() {
                     break;
                 case 5:
                     myangle = readAngle(myCALL);
+                    myangle = roundValue(myangle, erroY);
                     // formatando Display antes de enviar valores
                     formatMonitor(myangle/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
@@ -1146,7 +1152,7 @@ void maroloDAQ::doReadings() {
         GracePrintf("redraw");
     }
     
-    ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via marolodaAQ");
+    ui->teLog->appendPlainText("##########    fim: Dados Adquiridos via maroloDAQ");
     
     // habilitar actionSalvar
     ui->actionSalvar->setEnabled(true);
@@ -1476,7 +1482,7 @@ void maroloDAQ::setupGrace () {
     
 } // end setupGrace
 
-void maroloDAQ::plotaGrace (double x, double y, double dx, double dy) {
+void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
     
     if (GraceIsOpen()) {
 	
@@ -1652,7 +1658,7 @@ int maroloDAQ::decimalSensor(double value) {
     return ndig;
 }
 
-void maroloDAQ::formatMonitor (double value, double time) {
+void maroloDAQ::formatMonitor(double value, double time) {
     
     // lcdDisplayX
     if (time >= 1000) {
@@ -1693,3 +1699,26 @@ void maroloDAQ::formatMonitor (double value, double time) {
         }
     }
 }
+
+double maroloDAQ::roundValue(double value, double error) {
+    
+    const int inteiro =  floor(error);
+    const double decimal = double (error - inteiro);
+    QString inteiro_string = QString::number(int(inteiro));
+    int ntrunc = inteiro_string.length();
+    double value_resp = 0;
+    int resto_value = 0;
+    int factor = 1;
+    
+    if (decimal == 0) {
+        for (int k=0; k<ntrunc; k++) {
+            factor = factor * 10;
+            resto_value = round(value/factor);
+        }
+        value_resp = double (resto_value * factor);
+        return value_resp;
+    } else {
+        return value;
+    }
+}
+

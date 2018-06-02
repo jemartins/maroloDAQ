@@ -92,10 +92,11 @@ private slots:
     double readSound(QByteArray myCALL);
     double readResistence(QByteArray myCALL);
     double round_to_decimal(float f);
-    void setupGrace ();
-    void plotaGrace (double x, double y, double dx, double dy);
+    void setupGrace();
+    void plotaGrace(double x, double y, double dx, double dy);
     int decimalSensor(double value);
     void formatMonitor(double value, double time);
+    double roundValue(double value, double error);
 
     bool maybeSave();
     //void about();
