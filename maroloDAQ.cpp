@@ -589,7 +589,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         stopFlag = false;
         doReadings();
         
-    } // end if validarEntradas
+    } // end if on_btnIniciar
     
 } // end on_btnIniciar_clicked
 
@@ -990,10 +990,6 @@ void maroloDAQ::doReadings() {
     // tolerância no tempo máximo de leitura
     double tolerance = deltaT * 0.3;
     
-    // número de casas decimais no erroY
-    const int ndig = decimalSensor(erroY);
-    //qDebug() << "AQUI ndig =" << ndig;
-
     // inicializando o relogio
     timer.start();
     timer_deltaT.start();
@@ -1001,7 +997,10 @@ void maroloDAQ::doReadings() {
     double tempo_atual = timer.elapsed();
     // define timeout
     double timeout = Tmax + tolerance;
-   
+
+    // verificando numero de digitos decimais no erroY
+    const int ndig = decimalSensor(erroY);
+
     if (GraceIsOpen()) {
         setupGrace();
     }
@@ -1035,7 +1034,7 @@ void maroloDAQ::doReadings() {
                     ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
                     (QString::number(myvoltage, 'f', 1))+"    "+\
-                    (QString::number(0.01, 'f', 2))+"    "+\
+		    (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'f', 1)));
                     break;
                 case 2:
@@ -1052,13 +1051,15 @@ void maroloDAQ::doReadings() {
                     break;
                 case 3:
                     mytemperature = readTemperature(myCALL);
+		    // formatando Display antes de enviar valores
+		    formatDisplay(mytemperature/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mytemperature/10, 'f', ndig));
+                    ui->lcdMonitorY->display(QString::number(mytemperature/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000, 'f', 2));
+                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
-                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000, 'f', 2))+"    "+\
-                    (QString::number(mytemperature/10, 'f', ndig))+"    "+\
+                    ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
+                    (QString::number(mytemperature/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
                     (QString::number(erroY, 'g', 1)));
                     
@@ -1617,4 +1618,40 @@ int maroloDAQ::decimalSensor(double value) {
     }
 
     return ndig;
+}
+
+void maroloDAQ::formatDisplay (double value, double time) {
+    
+    if (time >= 1000) {
+        ui->lcdMonitorX->setDigitCount(7);
+    } else { 
+        if (time >= 100) {
+            ui->lcdMonitorX->setDigitCount(6);
+        } else {
+            ui->lcdMonitorX->setDigitCount(5);
+        }
+    }
+    
+    const int ndig = decimalSensor(value);
+    if (ndig <= 2) {
+        if (time >= 1000) {
+            ui->lcdMonitorY->setDigitCount(7);
+        } else {
+            if (time >= 100) {
+                ui->lcdMonitorY->setDigitCount(6);
+            } else {
+                ui->lcdMonitorY->setDigitCount(5);
+            }
+        }
+    } else {
+        if (time >= 1000) {
+            ui->lcdMonitorY->setDigitCount(ndig + 5);
+        } else {
+            if (time >= 100) {
+                ui->lcdMonitorY->setDigitCount(ndig + 4);
+            } else {
+                ui->lcdMonitorY->setDigitCount(ndig + 3);
+            }
+        }
+    }
 }
