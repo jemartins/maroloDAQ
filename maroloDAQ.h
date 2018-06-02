@@ -95,7 +95,7 @@ private slots:
     void setupGrace ();
     void plotaGrace (double x, double y, double dx, double dy);
     int decimalSensor(double value);
-    void formatDisplay(double value, double time);
+    void formatMonitor(double value, double time);
 
     bool maybeSave();
     //void about();

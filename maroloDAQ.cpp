@@ -1017,7 +1017,7 @@ void maroloDAQ::doReadings() {
                 case 0:
                     mysound = readSound(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(mysound/10.0, tempo_atual/1000.0);
+                    formatMonitor(mysound/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mysound/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1036,7 +1036,7 @@ void maroloDAQ::doReadings() {
                 case 1:
                     myvoltage = readVoltage(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(myvoltage/10.0, tempo_atual/1000.0);
+                    formatMonitor(myvoltage/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myvoltage/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1055,7 +1055,7 @@ void maroloDAQ::doReadings() {
                 case 2:
                     myresistence = readResistence(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(myresistence/10.0, tempo_atual/1000.0);
+                    formatMonitor(myresistence/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myresistence/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1074,7 +1074,7 @@ void maroloDAQ::doReadings() {
                 case 3:
                     mytemperature = readTemperature(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(mytemperature/10.0, tempo_atual/1000.0);
+                    formatMonitor(mytemperature/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mytemperature/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1093,7 +1093,7 @@ void maroloDAQ::doReadings() {
                 case 4:
                     mylight = readLight(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(mylight/10.0, tempo_atual/1000.0);
+                    formatMonitor(mylight/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(mylight/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1112,7 +1112,7 @@ void maroloDAQ::doReadings() {
                 case 5:
                     myangle = readAngle(myCALL);
                     // formatando Display antes de enviar valores
-                    formatDisplay(myangle/10.0, tempo_atual/1000.0);
+                    formatMonitor(myangle/10.0, tempo_atual/1000.0);
                     // Envia o valor medido ao lcdMonitorY
                     ui->lcdMonitorY->display(QString::number(myangle/10.0, 'f', ndig));
                     // Envia o tempo decorrido para o lcdMonitorX
@@ -1652,7 +1652,7 @@ int maroloDAQ::decimalSensor(double value) {
     return ndig;
 }
 
-void maroloDAQ::formatDisplay (double value, double time) {
+void maroloDAQ::formatMonitor (double value, double time) {
     
     // lcdDisplayX
     if (time >= 1000) {
