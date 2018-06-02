@@ -1622,6 +1622,7 @@ int maroloDAQ::decimalSensor(double value) {
 
 void maroloDAQ::formatDisplay (double value, double time) {
     
+    // lcdDisplayX
     if (time >= 1000) {
         ui->lcdMonitorX->setDigitCount(7);
     } else { 
@@ -1632,25 +1633,30 @@ void maroloDAQ::formatDisplay (double value, double time) {
         }
     }
     
+    // lcdDisplayY
     const int ndig = decimalSensor(value);
-    if (ndig <= 2) {
-        if (time >= 1000) {
-            ui->lcdMonitorY->setDigitCount(7);
-        } else {
-            if (time >= 100) {
-                ui->lcdMonitorY->setDigitCount(6);
-            } else {
-                ui->lcdMonitorY->setDigitCount(5);
-            }
-        }
+    if (ndig == 0) {
+        ui->lcdMonitorY->setDigitCount(5);
     } else {
-        if (time >= 1000) {
-            ui->lcdMonitorY->setDigitCount(ndig + 5);
-        } else {
-            if (time >= 100) {
-                ui->lcdMonitorY->setDigitCount(ndig + 4);
+        if ((ndig != 0) && (ndig <= 2)) {
+            if (value >= 1000) {
+                ui->lcdMonitorY->setDigitCount(7);
             } else {
-                ui->lcdMonitorY->setDigitCount(ndig + 3);
+                if (value >= 100) {
+                    ui->lcdMonitorY->setDigitCount(6);
+                } else {
+                    ui->lcdMonitorY->setDigitCount(5);
+                }
+            }
+        } else {
+            if (value >= 1000) {
+                ui->lcdMonitorY->setDigitCount(ndig + 5);
+            } else {
+                if (value >= 100) {
+                    ui->lcdMonitorY->setDigitCount(ndig + 4);
+                } else {
+                    ui->lcdMonitorY->setDigitCount(ndig + 3);
+                }
             }
         }
     }
