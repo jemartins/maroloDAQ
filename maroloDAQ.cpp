@@ -79,7 +79,7 @@ void maroloDAQ::formatarEntradas() {
     ui->editAngulo2->setMaxLength(3);
     //ui->editAngulo2->setInputMask("#99");
     
-    ui->editErroSensor->setValidator(new QDoubleValidator(0.03,999999,4,ui->editDeltaT));
+    ui->editErroSensor->setValidator(new QDoubleValidator(0.03,999999,4,ui->editErroSensor));
     //QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
     //dvVal1->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editErroSensor->setValidator(dvVal1);
@@ -94,10 +94,10 @@ void maroloDAQ::formatarEntradas() {
     ui->editDeltaT->setMaxLength(6);
     //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999999,5,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999999,4,ui->editTmax));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
-    ui->editTmax->setMaxLength(7);
+    ui->editTmax->setMaxLength(6);
     //ui->editTmax->setInputMask("999.99");
     
     ui->editDevCompiler->setReadOnly(true);
@@ -906,7 +906,7 @@ bool maroloDAQ::validarEntradas() {
     } else {
         if(ui->editDeltaT->text().toDouble() < 0.03) {
             QMessageBox::warning(this, tr("maroloDAQ"),
-                                 tr("Por favor, digite o Intervalo de Tempo [ < 0.03s ]. \n"
+                                 tr("Por favor, digite o Intervalo de Tempo [ > 0.03s ]. \n"
                                  "Digite \"ponto\" para os decimais"));
             ui->editDeltaT->setFocus();
             return false;
@@ -991,6 +991,16 @@ void maroloDAQ::doReadings() {
     // tolerância no tempo máximo de leitura
     double tolerance = deltaT * 0.3;
     
+    // verificando numero de digitos decimais no erroY
+    const int ndig = decimalSensor(erroY);
+    // convertendo erroY com 1 algarismo significativo
+    QString erroY_temp = QString::number(erroY, 'g', 1);
+    erroY = erroY_temp.toDouble();
+    
+    if (GraceIsOpen()) {
+        setupGrace();
+    }
+    
     // inicializando o relogio
     timer.start();
     timer_deltaT.start();
@@ -998,13 +1008,6 @@ void maroloDAQ::doReadings() {
     double tempo_atual = timer.elapsed();
     // define timeout
     double timeout = Tmax + tolerance;
-    
-    // verificando numero de digitos decimais no erroY
-    const int ndig = decimalSensor(erroY);
-    
-    if (GraceIsOpen()) {
-        setupGrace();
-    }
     
     ui->teLog->appendPlainText("########## início: Dados Adquiridos via maroloDAQ");
     while ( (!timer.hasExpired(timeout)) && (!stopFlag) ) {
@@ -1028,7 +1031,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mysound/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1048,7 +1051,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myvoltage/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1068,7 +1071,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myresistence/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1088,7 +1091,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1108,7 +1111,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mylight/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1128,7 +1131,7 @@ void maroloDAQ::doReadings() {
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myangle/10.0, 'f', ndig))+"    "+\
                     (QString::number(0.01, 'f', 2))+"    "+\
-                    (QString::number(erroY, 'g', 1)));
+                    (QString::number(erroY, 'f', ndig)));
                     
                     // send to Grace?
                     if (ui->checkBoxGrace->isChecked()) {
@@ -1517,7 +1520,7 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
         // formating dy_point
         QString dy_point;
         QTextStream dyout(&dy_point);
-        dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'g', 1);
+        dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', ndig);
         QByteArray dy_point_tmp = dy_point.toUtf8();
         const char *dy_expr = dy_point_tmp.simplified();
         //qDebug() << "AQUI dy_expr = " << dy_expr;
