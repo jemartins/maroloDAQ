@@ -79,21 +79,22 @@ void maroloDAQ::formatarEntradas() {
     ui->editAngulo2->setMaxLength(3);
     //ui->editAngulo2->setInputMask("#99");
     
-    QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
-    dvVal1->setNotation(QDoubleValidator::ScientificNotation);
-    ui->editErroSensor->setValidator(dvVal1);
-    ui->editErroSensor->setMaxLength(7);
+    ui->editErroSensor->setValidator(new QDoubleValidator(0.03,999999,4,ui->editDeltaT));
+    //QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
+    //dvVal1->setNotation(QDoubleValidator::ScientificNotation);
+    //ui->editErroSensor->setValidator(dvVal1);
+    ui->editErroSensor->setMaxLength(6);
     //ui->editErroSensor->setInputMask("9e#99");
     
-    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,999.99,2,ui->editDeltaT));
-    //QDoubleValidator *dvVal2 = new QDoubleValidator(0.03,999.99,2,ui->editDeltaT);
+    ui->editDeltaT->setValidator(new QDoubleValidator(0.03,999999,4,ui->editDeltaT));
+    //QDoubleValidator *dvVal2 = new QDoubleValidator(0.03,999,2,ui->editDeltaT);
     //dvVal2->setNotation(QDoubleValidator::StandardNotation);
     //dvVal2->setBottom(0.03);
     //ui->editDeltaT->setValidator(dvVal2);
     ui->editDeltaT->setMaxLength(6);
     //ui->editDeltaT->setInputMask("99.99");
 
-    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999.99,2,ui->editErroSensor));
+    ui->editTmax->setValidator(new QDoubleValidator(0.03,9999999,5,ui->editErroSensor));
     //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
     //ui->editTmax->setValidator(dvVal3);
     ui->editTmax->setMaxLength(7);
