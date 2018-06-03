@@ -573,7 +573,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
         // send to Grace?
         if (ui->checkBoxGrace->isChecked()) {
             if (!GraceIsOpen()) {
-                /* Start Grace with a buffer size of 8192 and open the pipe */
+                /* Start Grace with a buffer size of 4096409640964096 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
                     //fprintf(stderr, "Can't run Grace. \n");
                     //ui->teLog->appendPlainText("Can't run Grace. \n");
@@ -989,7 +989,7 @@ void maroloDAQ::doReadings() {
     //erro indicado no gui para o sensor
     double erroY = ui->editErroSensor->text().toDouble();
     // tolerância no tempo máximo de leitura
-    double tolerance = deltaT * 0.3;
+    double tolerance = deltaT * 0.1;
     
     // verificando numero de digitos decimais no erroY
     const int ndig = decimalSensor(erroY);
