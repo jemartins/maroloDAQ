@@ -253,13 +253,12 @@ void maroloDAQ::scanPortas() {
                 }
                 else {
                     //ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
-		    statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
+                    statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
                 }
-                
                 //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             } else {
                 //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
-		statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
+                statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
             }
         }
         
@@ -601,81 +600,7 @@ void maroloDAQ::on_actionSair_triggered() {
 
 void maroloDAQ::on_actionConectar_triggered() {
     
-    QString GetInfoHw;
-    QStringList InfoHW;
-    QString devport;
-    QStringList devport_list;
-    bool statusOpenSerial;
-    //int baudrate;
-    
-    foreach (QAction* action, ui->menuPortas->actions()) {
-        if (action->isChecked()) {
-            devport = action->text();
-            devport = devport.simplified();
-            devport_list = devport.split(" [");
-            devport = devport_list[0];
-        }    
-    }
-    
-    foreach (QAction* action, ui->menuBaudRate->actions()) {
-        if (action->isChecked()) {
-            baudrate = action->text().toInt();
-        }    
-    }
-    
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
-    statusOpenSerial = procSerial->Conectar(devport,baudrate);
-    
-    /*
-     * aguardando a porta "aquecer" ;_(((
-     *
-     */
-    sleep(2);
-    
-    if (statusOpenSerial) {
-        /*
-         * Se conectou com sucesso no disposito serial
-         * Desabilito o botão Conectar e Sair
-         * Habilito Desconectar, Versao, Hardware e Ligar [F10]
-         */
-        
-        // * Enviando comando para obter informações do Device *
-        WriteData("12\n");
-        // * Recebendo as informações *
-        GetInfoHw = ReadData();
-        GetInfoHw = GetInfoHw.simplified();
-        
-        // * Confirmando se recebeu os dados *
-        if( GetInfoHw.size() > 0 ) {
-            
-            
-            // * Ex: 4.3.2|UNO
-            //  * O que chegou pela serial foi adicionado na variavel GetInfoHW
-            //  * então acima removemos qualquer tabulação e abaixo um split
-            //  * baseado no caractere |, então sera quebrado em 2 posicoes
-            //  * 0 - 4.3.2
-            //  * 1 - UNO
-            //  *
-            InfoHW = GetInfoHw.split("|");
-            
-            // Inserindo nos devidos Edits
-            ui->editDevCompiler->setText(InfoHW[0]);
-            ui->editDevModel->setText(InfoHW[1]);
-            
-            setConectado();
-            
-            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
-	statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
-        }
-        else {
-            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
-	statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
-        }
-    }
-    else {
-        //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
-	statusBar()->showMessage(tr("### FALHA ao ABRIR Porta Serial. Tente de Novo!"));
-    }
+    on_btnDevOpen_clicked();
     
 } // end on_actionConectar_triggered
 
