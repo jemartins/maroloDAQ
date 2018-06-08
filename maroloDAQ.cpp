@@ -861,9 +861,8 @@ bool maroloDAQ::validarEntradas() {
                                 ui->editAngulo2->setFocus();
                                 return false;
                             } else {
-                                if (calibrationArray[1].voltage == calibrationArray[1].voltage) {
-                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem. \n"
-                                    "Digite \"ponto\" para os decimais"));
+                                if (calibrationArray[0].voltage == calibrationArray[1].voltage) {
+                                    QMessageBox::warning(this, tr("maroloDAQ"),                                                     tr("Falha ao Calibrar. Por favor, refazer a calibragem."));
                                     ui->editAngulo1->setFocus();
                                     return false;
                                 } else {
@@ -1207,20 +1206,12 @@ double maroloDAQ::readAngle(QByteArray myCALL) {
 
 	// v0
 	v0 = (float)calibrationArray[0].voltage;	
-    	qDebug() << "AQUI calibrationArray[0].voltage = " << \
-    		calibrationArray[0].voltage << endl;
 	// v1
 	v1 = (float)calibrationArray[1].voltage;
-    	qDebug() << "AQUI calibrationArray[1].voltage = " << \
-    		calibrationArray[1].voltage << endl;
 	// teta0
 	teta0 = (float)(calibrationArray[0].angle);
-    	qDebug() << "AQUI calibrationArray[0].angle = " << \
-    		calibrationArray[0].angle << endl;
 	// teta1
 	teta1 = (float)(calibrationArray[1].angle);
-    	qDebug() << "AQUI calibrationArray[1].angle = " << \
-    		calibrationArray[1].angle << endl;
 	
 	teta0 = (teta0)*(pi/180); // conversion to rad
 	teta1 = (teta1)*(pi/180); // conversion to rad
@@ -1232,7 +1223,6 @@ double maroloDAQ::readAngle(QByteArray myCALL) {
 
 	// Here, conversion voltage into degree
 	angle = (180/pi)*asin((voltage-b)/a);
-	qDebug() << "AQUI angle = " << angle << endl;
 	
     return angle;
     
@@ -1369,7 +1359,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("g0 type XY");
         GracePrintf ("with g0");
         GracePrintf ("legend on");
-        GracePrintf ("legend 0.8, 0.8");
+        GracePrintf ("legend 0.8, 0.873");
         GracePrintf ("title \"Insira Aqui o T\\#{ed}tulo\"");
         GracePrintf ("title font 0");
         GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
