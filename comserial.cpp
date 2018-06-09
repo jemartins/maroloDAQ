@@ -76,32 +76,23 @@ bool comserial::Conectar(QString Port, u_int32_t bd)
 {
     /* Device Serial Port */
     devSerial->setPortName(Port);
-    //qDebug() << "Dispositivo Porta Serial: " << Port;
-
 
     /* Conectar SerialPort */
-    //qDebug() << "Baudrate: " << bd;
-
         /* BaudRate */
         switch (bd) {
         case 2400:
-            //qDebug() << "Baudrate: 2400";
             devSerial->setBaudRate(QSerialPort::Baud2400);
             break;
         case 4800:
-            //qDebug() << "Baudrate: 4800";
             devSerial->setBaudRate(QSerialPort::Baud4800);
             break;
         case 9600:
-            //qDebug() << "Baudrate: 9600";
             devSerial->setBaudRate(QSerialPort::Baud9600);
             break;
         case 19200:
-            //qDebug() << "Baudrate: 19200";
             devSerial->setBaudRate(QSerialPort::Baud19200);
             break;
         case 115200:
-            //qDebug() << "Baudrate: 115200";
             devSerial->setBaudRate(QSerialPort::Baud115200);
             break;
         }
@@ -117,12 +108,9 @@ bool comserial::Conectar(QString Port, u_int32_t bd)
 
 
         if(devSerial->open(QIODevice::ReadWrite)) {
-            //qDebug() << "Porta serial aberta com sucesso!";
             return true;
         }
         else {
-            //qDebug() << "Falha ao abrir porta serial!";
-            //qDebug() << "Erro: " << devSerial->error();
             return false;
         }
 
@@ -145,11 +133,9 @@ bool comserial::Desconectar()
 
 
     if(devSerial->error() == 0 || !devSerial->isOpen()) {
-        //qDebug() << "Porta serial fechada com sucesso!";
         return true;
     }
     else {
-        //qDebug() << "Falha ao fechar a porta serial! ERRO: " << devSerial->error();
         return false;
     }
 

@@ -48,8 +48,6 @@ public:
     explicit maroloDAQ(QWidget *parent = 0);
     ~maroloDAQ();
 
-    //void loadFile(const QString &fileName);
-
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -99,13 +97,7 @@ private slots:
     double roundValue(double value, double error);
 
     bool maybeSave();
-    //void about();
     void documentWasModified();
-    /*
-#ifndef QT_NO_SESSIONMANAGER
-    void commitData(QSessionManager &);
-#endif
-    */
     void createActions();
     bool saveFile(const QString &fileName);
     void setCurrentFile(const QString &fileName);
@@ -116,7 +108,6 @@ private:
     QSerialPort *devserial;
     comserial *procSerial;
     void CarregarInfoDispSerial(void);
-    //QAction *viewst;
     QAction *actionACM0;
     QAction *actionACM1;
     QAction *actionACM2;
@@ -133,7 +124,6 @@ private:
     QActionGroup *PortasGroup;
     QActionGroup *BaudRateGroup;
     //variáveis adicionas por Rafael
-    //QMessageBox msgBox;
     QString AdcReadString;
     bool stopFlag;
     int baudrate;

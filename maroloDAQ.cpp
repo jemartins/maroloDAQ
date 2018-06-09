@@ -243,7 +243,6 @@ void maroloDAQ::scanPortas() {
                     minhaSerial = minhaSerial+" [maroloDAQ]";
                 }
                 
-                //qDebug() << "AQUI minhaSerial = " << minhaSerial;
                 
                 setPortasSeriais(minhaSerial);
                 
@@ -255,7 +254,6 @@ void maroloDAQ::scanPortas() {
                     //ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
                     statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
                 }
-                //qDebug() << "AQUI minhaSerial = " << minhaSerial << endl;
             } else {
                 //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
                 statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
@@ -270,7 +268,6 @@ void maroloDAQ::scanPortas() {
             PortasGroup->addAction(action);
             
             myAction_split = action->text().split("]");
-            //qDebug() << "$$$$ AQUI action = " << action->text();
             if ( myAction_split.length() > 1 ) {
                 if (  myAction_split[1] == "maroloDAQ]") {
                     action->setCheckable(true);
@@ -630,8 +627,6 @@ void maroloDAQ::on_actionRecarregar_triggered() {
 
 void maroloDAQ::setPortasSeriais(QString myAction) {
     
-    //qDebug() << ">>>>> AQUI myAction = " << myAction;
-    
     //////////////////////////////////////////////////////
     //ref.: http://zetcode.com/gui/qt5/menusandtoolbars/
     QString myAction_spare;
@@ -642,7 +637,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     myAction_split = myAction.split(" [");
     myAction_temp = myAction_split[0];
     myAction = "/dev/"+myAction;
-    //qDebug() << ">>>>> AQUI myAction_temp = " << myAction_temp;
     
     int ihavename = 0;
     foreach (QAction *action, ui->menuPortas->actions()) {
@@ -655,7 +649,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     }
     if ( ihavename == 0 ) {
         if ( myAction_temp == "ttyACM0" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
             actionACM0 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM0);
             if (myAction_split.length() > 1 ) {
@@ -666,7 +659,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyACM1" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionACM1 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM1);
             if (myAction_split.length() > 1 ) {
@@ -677,7 +669,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyACM2" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionACM2 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM2);
             if (myAction_split.length() > 1 ) {
@@ -688,7 +679,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyACM3" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionACM3 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionACM3);
             if (myAction_split.length() > 1 ) {
@@ -699,7 +689,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyUSB0" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[1] = " << myAction_split[1];
             actionUSB0 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionUSB0);
             if (myAction_split.length() > 1 ) {
@@ -710,7 +699,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyUSB1" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionUSB1 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionUSB1);
             if (myAction_split.length() > 1 ) {
@@ -721,7 +709,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyUSB2" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionUSB2 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionUSB2);
             if (myAction_split.length() > 1 ) {
@@ -732,7 +719,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if ( myAction_temp == "ttyUSB3" ) {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionUSB3 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionUSB3);
             if (myAction_split.length() > 1 ) {
@@ -743,25 +729,16 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             }
         }
         if (  myAction_temp == "ttyS0") {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionS0 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionS0);
             actionS0->setCheckable(true);
         }
         if (  myAction_temp == "ttyS1") {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
-            actionS1 = new QAction(myAction, this);
-            ui->menuPortas->addAction(actionS1);
-            actionS1->setCheckable(true);
-        }
-        if (  myAction_temp == "ttyS2") {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionS2 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionS2);
             actionS2->setCheckable(true);
         }
         if (  myAction_temp == "ttyS3") {
-            //qDebug() << ">>>>> AQUI myAction_split[0] = " << myAction_split[0];
             actionS3 = new QAction(myAction, this);
             ui->menuPortas->addAction(actionS3);
             actionS3->setCheckable(true);
@@ -786,21 +763,15 @@ void maroloDAQ::enumerateMenu(QMenu *menu) {
     foreach (QAction *action, menu->actions()) {
         
         if (action->isSeparator()) {
-            //qDebug() << "this action is a separator.";// << "" << endl;
         } else if (action->menu()) {
-            //qDebug() << "action1: %s:" << qUtf8Printable(action->text());// << endl;
-            //qDebug() << "this action is associated with a submenu, iterating it recursively...";// << "" << endl;
             enumerateMenu(action->menu());
-            //qDebug() << "finished iterating the submenu";// << "" << endl;
         } else {
-            //qDebug() << "action2: %s" << qUtf8Printable(action->text());// << endl;
         }
     }
 }
 
 void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
     
-    //qDebug() << "----> AQUI cbSensorList e &arg1 = " << arg1;
     if ( arg1 == "Pêndulo" ) {
         ui->editAngulo1->setEnabled(true);
         ui->editAngulo2->setEnabled(true);
@@ -1177,16 +1148,12 @@ void maroloDAQ::angleCalibrate(double myangle, int index) {
     
     // Configura myCALL com o valor do pino do Arduino
     QByteArray myCALL = infoCALL();
-    //qDebug() << "AQUI myCALL = " << myCALL << endl;
-    //qDebug() << "AQUI index  = " << index << endl;
     
     double myvoltage = readVoltage(myCALL);
     
     calibrationArray[index].angle = myangle;
-    //qDebug() << "AQUI calibrationArray[index].angle = " << 
     //	    calibrationArray[index].angle << endl;
     calibrationArray[index].voltage = myvoltage;
-    //qDebug() << "AQUI calibrationArray[index].voltage = " <<
     //      calibrationArray[index].voltage << endl;
 
 } // end angleCalibrate
@@ -1407,7 +1374,6 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
 	
 	// número de casas decimais no erroY
 	const int ndig = decimalSensor(dy);
-	//qDebug() << "AQUI ndig =" << ndig;
         
         // formating xy_point
         QString xy_point;
@@ -1416,7 +1382,6 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
         ", " << QString::number(y, 'f', ndig);
         QByteArray xy_point_tmp = xy_point.toUtf8();
         const char *xy_expr = xy_point_tmp.simplified();
-        //qDebug() << "AQUI xy_expr = " << xy_expr;
         
         GracePrintf(xy_expr);
         xy_point.clear();
@@ -1427,7 +1392,6 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
         dxout << "s0.y1[s0.length -1] = " << QString::number(dx, 'f', 2);
         QByteArray dx_point_tmp = dx_point.toUtf8();
         const char *dx_expr = dx_point_tmp.simplified();
-        //qDebug() << "AQUI dx_expr = " << dx_expr;
         
         GracePrintf(dx_expr);
         dx_point.clear();
@@ -1438,7 +1402,6 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
         dyout << "s0.y2[s0.length -1] = " << QString::number(dy, 'f', ndig);
         QByteArray dy_point_tmp = dy_point.toUtf8();
         const char *dy_expr = dy_point_tmp.simplified();
-        //qDebug() << "AQUI dy_expr = " << dy_expr;
         
         GracePrintf(dy_expr);
         dy_point.clear();
@@ -1555,9 +1518,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
     #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
     #endif
-    //qDebug() << "AQUI saveFile";
     setCurrentFile(fileName);
-    //qDebug() << "AQUI saveFile";
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
 }
