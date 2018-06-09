@@ -70,41 +70,25 @@ maroloDAQ::~maroloDAQ()
 
 void maroloDAQ::formatarEntradas() {
 
-        // Formatando entradas
+    // Formatando entradas
     ui->editAngulo1->setValidator(new QIntValidator(-90,90,ui->editAngulo1));
     ui->editAngulo1->setMaxLength(3);
-    //ui->editAngulo1->setInputMask("#99");
 
     ui->editAngulo2->setValidator(new QIntValidator(-90,90,ui->editAngulo2));
     ui->editAngulo2->setMaxLength(3);
-    //ui->editAngulo2->setInputMask("#99");
     
     ui->editErroSensor->setValidator(new QDoubleValidator(0.03,999999,4,ui->editErroSensor));
-    //QDoubleValidator *dvVal1 = new QDoubleValidator(0,1e99,1,ui->editErroSensor);
-    //dvVal1->setNotation(QDoubleValidator::ScientificNotation);
-    //ui->editErroSensor->setValidator(dvVal1);
     ui->editErroSensor->setMaxLength(6);
-    //ui->editErroSensor->setInputMask("9e#99");
     
     ui->editDeltaT->setValidator(new QDoubleValidator(0.03,999999,4,ui->editDeltaT));
-    //QDoubleValidator *dvVal2 = new QDoubleValidator(0.03,999,2,ui->editDeltaT);
-    //dvVal2->setNotation(QDoubleValidator::StandardNotation);
-    //dvVal2->setBottom(0.03);
-    //ui->editDeltaT->setValidator(dvVal2);
     ui->editDeltaT->setMaxLength(6);
-    //ui->editDeltaT->setInputMask("99.99");
 
     ui->editTmax->setValidator(new QDoubleValidator(0.03,9999999,4,ui->editTmax));
-    //dvVal3->setNotation(QDoubleValidator::ScientificNotation);
-    //ui->editTmax->setValidator(dvVal3);
     ui->editTmax->setMaxLength(6);
-    //ui->editTmax->setInputMask("999.99");
     
     ui->editDevCompiler->setReadOnly(true);
     ui->editDevModel->setReadOnly(true);
      
-    //connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
-    
 }
 
 void maroloDAQ::on_btnAppClose_clicked()
@@ -171,8 +155,6 @@ void maroloDAQ::createActions() {
     ui->actionSalvar_como->setEnabled(false);
     ui->actionSalvar_tbox->setEnabled(false);
     ui->actionSalvar_como_tbox->setEnabled(false);
-    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar, &QAction::setEnabled);
-    //connect(ui->teLog, &QPlainTextEdit::copyAvailable, ui->actionSalvar_como, &QAction::setEnabled);
     
 } // end createActions
 
@@ -197,10 +179,7 @@ void maroloDAQ::scanPortas() {
     
     // algumas variaveis temporarias
     int count = DispSeriais.count();
-    //const char * meuAction;
-    //const char * meuAction_tmp;
     QString minhaSerial;
-    //int baudrate;
     
     if(count > 0) {
         
@@ -219,7 +198,6 @@ void maroloDAQ::scanPortas() {
             
             minhaSerial = DispSeriais[i];
             
-            //statusOpenSerial = procSerial->Conectar(minhaSerial,9600);
             statusOpenSerial = procSerial->Conectar(minhaSerial,baudrate);
             
             // aguardando a porta "aquecer" ;_(((
@@ -281,7 +259,6 @@ void maroloDAQ::scanPortas() {
         }   
     }
     else {
-        //ui->teLog->appendPlainText("### Nenhuma porta serial foi detectada!");
 	statusBar()->showMessage(tr("### Nenhuma porta serial foi detectada!"));
     }
 }
@@ -330,8 +307,6 @@ void maroloDAQ::setDesconectado() {
 void maroloDAQ::setConectado() {
 
     // limpando os edits
-    //ui->editDevCompiler->clear();
-    //ui->editDevModel->clear();
     ui->editAngulo1->clear();
     ui->editAngulo2->clear();
     ui->editErroSensor->clear();
@@ -350,7 +325,7 @@ void maroloDAQ::setConectado() {
     ui->btnCalibrar2->setEnabled(false);
     ui->cbSensorList->setEnabled(true);
     ui->cbPinoList->setEnabled(true);
-    //modificado para teste btnIniciar
+    // modificado para teste btnIniciar
     ui->btnIniciar->setEnabled(true);
     ui->btnParar->setEnabled(false);
     ui->actionSair->setEnabled(false);
@@ -395,11 +370,9 @@ void maroloDAQ::maroloDevClose()
         
         setDesconectado();
         
-        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
         statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
         statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
@@ -434,7 +407,6 @@ void maroloDAQ::on_btnDevOpen_clicked() {
     QString devport;
     QStringList devport_list;
     bool statusOpenSerial;
-    //int baudrate;
 
     foreach (QAction* action, ui->menuPortas->actions()) {
         if (action->isChecked()) {
@@ -451,7 +423,6 @@ void maroloDAQ::on_btnDevOpen_clicked() {
         }    
     }
 
-    //statusOpenSerial = procSerial->Conectar(devport,9600);
     statusOpenSerial = procSerial->Conectar(devport,baudrate);
     
     /*
@@ -492,19 +463,14 @@ void maroloDAQ::on_btnDevOpen_clicked() {
             
             setConectado();
             
-            //ui->teLog->appendPlainText("### maroloDAQ Aberto com Sucesso!");
         statusBar()->showMessage(tr("### maroloDAQ Aberto com Sucesso!"));
         }
         else {
-            //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
-            //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
             QMessageBox::warning(this, tr("maroloDAQ"),
                                  tr("Falha ao Abrir maroloDAQ.\nO maroloDAQ está Conectado?\nRecarregar e Tentar de Novo."));
         }
     }
     else {
-        //ui->teLog->appendPlainText("### Erro ao obter informações do maroloDAQ, tente novamente.");
-        //statusBar()->showMessage(tr("### Erro ao obter informações do maroloDAQ, tente novamente."));
         QMessageBox::warning(this, tr("maroloDAQ"),
                              tr("Falha ao Abrir maroloDAQ.\nO maroloDAQ está Conectado?\nRecarregar e Tentar de Novo."));
     }
@@ -519,11 +485,9 @@ void maroloDAQ::on_btnDevClose_clicked() {
     
     if (statusCloseSerial) {
         setDesconectado();        
-        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
         statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
         statusBar()->showMessage(tr("### Falha ao Fechar maroloDAQ."));
     }
     
@@ -571,7 +535,6 @@ void maroloDAQ::on_btnIniciar_clicked() {
             if (!GraceIsOpen()) {
                 /* Start Grace with a buffer size of 4096409640964096 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
-                    //fprintf(stderr, "Can't run Grace. \n");
                     //ui->teLog->appendPlainText("Can't run Grace. \n");
                     statusBar()->showMessage(tr("Can't run Grace."));
                 } 
@@ -610,11 +573,9 @@ void maroloDAQ::on_actionDesconectar_triggered() {
     
     if (statusCloseSerial) {
         setDesconectado();
-        //ui->teLog->appendPlainText("### maroloDAQ Fechado com Sucesso!");
         statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
-        //ui->teLog->appendPlainText("### Falha ao fechar maroloDAQ.");
         statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
 }
@@ -633,7 +594,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     QString myAction_temp;
     QStringList myAction_split;
     myAction = myAction.simplified();
-    //myAction_temp = myAction;
     myAction_split = myAction.split(" [");
     myAction_temp = myAction_split[0];
     myAction = "/dev/"+myAction;
@@ -641,7 +601,6 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
     int ihavename = 0;
     foreach (QAction *action, ui->menuPortas->actions()) {
         if ( !(action->isSeparator()) || !(action->menu()) ) {
-            //if ( QString::compare(myAction_temp, myAction_spare, Qt::CaseInsensitive) ) {
             if ( myAction == action->text() ) {
                 ihavename = ihavename + 1;
             }
@@ -744,15 +703,7 @@ void maroloDAQ::setPortasSeriais(QString myAction) {
             actionS3->setCheckable(true);
         }
     }
-    /*
-     / / ref.: *https://stackoverflow.com/questions/9399840/how-to-iterate-through-a-menus-actions-in-qt
-     PortasGroup = new QActionGroup(this);
-     foreach (QAction* action, ui->menuPortas->actions())
-     {
-     PortasGroup->addAction(action);
-     actions->setCheckable(true);
-}
-*/
+
 } // end setPortasSeriais
 
 void maroloDAQ::enumerateMenu(QMenu *menu) {
@@ -788,11 +739,11 @@ void maroloDAQ::on_cbSensorList_activated(const QString &arg1) {
 
 bool maroloDAQ::validarEntradas() {
     
-    //Se ERRO for menor que zero apresenta mensagem de erro e para operação, senão...
-    //Se DeltaT for menor que zero apresenta mensagem de erro e para operação, senão...
-    //Se Tmax for menor que zedo apresenta mensagem de erro e para operação, senão...
-    //Se Angulo1 ou Angulo 2 for menor que zedo apresenta mensagem de erro e para operação, senão...
-    //Tudo ok e continua a operação.
+    // Se ERRO for menor que zero apresenta mensagem de erro e para operação, senão...
+    // Se DeltaT for menor que zero apresenta mensagem de erro e para operação, senão...
+    // Se Tmax for menor que zedo apresenta mensagem de erro e para operação, senão...
+    // Se Angulo1 ou Angulo 2 for menor que zedo apresenta mensagem de erro e para operação, senão...
+    // Tudo ok e continua a operação.
     if(ui->editErroSensor->text().toDouble() <= 0) {
         QMessageBox::warning(this, tr("maroloDAQ"),
                              tr("Por favor, digite o valor do Erro no Sensor. \n"
@@ -879,9 +830,9 @@ void maroloDAQ::doReadings() {
     int cont = 0;
     //intervalo de tempo para as leituras
     double deltaT = ui->editDeltaT->text().toDouble() * 1000;
-    //tempo para as leituras
+    // tempo para as leituras
     double Tmax = ui->editTmax->text().toDouble() * 1000;
-    //erro indicado no gui para o sensor
+    // erro indicado no gui para o sensor
     double erroY = ui->editErroSensor->text().toDouble();
     // tolerância no tempo máximo de leitura
     double tolerance = deltaT * 0.1;
@@ -1121,12 +1072,10 @@ double maroloDAQ::readTemperature(QByteArray myCALL) {
 
 }
 
-//Converte valor de leitura do ADC em valor de temperatura
+// Converte valor de leitura do ADC em valor de temperatura
 double maroloDAQ::scale_temp(double adcCount) {
     
-    //int i, diffScaled, diffRaw, diffAdc, scaledValue=0;
     int i, diffScaled, diffRaw, diffAdc;
-        //double scaleFactor;
         double scaleFactor, scaledValue=0;
         for (i=0; i<100; i++)
         {
@@ -1152,9 +1101,7 @@ void maroloDAQ::angleCalibrate(double myangle, int index) {
     double myvoltage = readVoltage(myCALL);
     
     calibrationArray[index].angle = myangle;
-    //	    calibrationArray[index].angle << endl;
     calibrationArray[index].voltage = myvoltage;
-    //      calibrationArray[index].voltage << endl;
 
 } // end angleCalibrate
 
@@ -1207,7 +1154,6 @@ double maroloDAQ::readVoltage(QByteArray myCALL) {
     double AdcReadDouble = AdcReadString.toDouble();
 
     // Converte Inteiro em Temperatura
-    //int voltage = (int(AdcReadDouble * (5/1023)));
     double voltage = AdcReadDouble;
     
     return voltage;
@@ -1341,13 +1287,7 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
         GracePrintf ("subtitle font 0");
         GracePrintf ("xaxis label \"Tempo (s)\"");
-        //GracePrintf ("xaxis ticklabel on");
-        //GracePrintf ("xaxis ticklabel format general");
-        //GracePrintf ("xaxis ticklabel prec 2");
         GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
-        //GracePrintf ("yaxis ticklabel on");
-        //GracePrintf ("yaxis ticklabel format general");
-        //GracePrintf ("yaxis ticklabel prec 1");
         
         GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
@@ -1405,9 +1345,6 @@ void maroloDAQ::plotaGrace(double x, double y, double dx, double dy) {
         
         GracePrintf(dy_expr);
         dy_point.clear();
-        
-        //GracePrintf ("autoscale");
-        //GracePrintf ("redraw");
         
     } // end if GraceIsOpen
     
