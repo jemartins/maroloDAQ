@@ -55,6 +55,16 @@ ui(new Ui::maroloDAQ)
     // create new actions and toolbar
     createActions();
     // Procurando por portar seriais abertas
+    
+    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
+    connect(ui->actionSalvar_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
+    connect(ui->actionSalvar_como_tbox,&QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);
+    connect(ui->teLog->document(), &QTextDocument::contentsChanged, this, &maroloDAQ::documentWasModified);
+    
+    setCurrentFile(QString());
+    setUnifiedTitleAndToolBarOnMac(true);
+    
     scanPortas();
     // Configurado stado inicial dos objetos
     setDesconectado();
@@ -132,12 +142,12 @@ void maroloDAQ::createActions() {
     ui->actionSalvar_como->setIcon(saveasIcon);
     ui->actionSalvar_como_tbox->setIcon(saveasIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_como_tbox);
-
+    /*
     connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
     connect(ui->actionSalvar_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
     connect(ui->actionSalvar_como_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
-    
+    */
     ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
     ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
     ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
@@ -149,7 +159,6 @@ void maroloDAQ::createActions() {
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
-
     // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
     ui->actionSalvar->setEnabled(false);
     ui->actionSalvar_como->setEnabled(false);
@@ -379,21 +388,21 @@ void maroloDAQ::maroloDevClose()
     }
 }
 
-//void maroloDAQ::on_btnBWTerminal_clicked() {
-void maroloDAQ::mousePressEvent(QMouseEvent *e) {
+void maroloDAQ::on_btnBWTerminal_clicked() {
+//void maroloDAQ::mousePressEvent(QMouseEvent *e) {
 //void maroloDAQ::mouseDoubleClickEvent(QMouseEvent *e) {
     
     // posicoes do ponteiro do mouse
-    int x = e->x(); int y = e->y();
-    qDebug() << "mousePressEvent: " << x << y; 
+    //int x = e->x(); int y = e->y();
+    //qDebug() << "mousePressEvent: " << x << y; 
     
-    //QPalette paleta;
+    QPalette paleta;
     /*
      * Verifica se PaletaBW é True ou False
      * Se True: Fundo Preto, Fonte Branco
      * Se False: Fundo Branco, Fonte Preto
      */
-    /*
+    
     if(PaletaLogBW) {
         paleta.setColor(QPalette::Base,Qt::black);
         paleta.setColor(QPalette::Text,Qt::white);
@@ -406,7 +415,7 @@ void maroloDAQ::mousePressEvent(QMouseEvent *e) {
         ui->teLog->setPalette(paleta);
         PaletaLogBW=true;
     }
-    */
+    
 }
 
 void maroloDAQ::on_btnDevOpen_clicked() {
@@ -1415,7 +1424,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName) {
         shownName = "untitled.txt";
     }
     setWindowFilePath(shownName);
-}
+} // end setCurrentFile
 
 bool maroloDAQ::on_actionSalvar_como_triggered() {
     QFileDialog dialog(this);
@@ -1472,7 +1481,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
-}
+} // end saveFile
 
 int maroloDAQ::decimalSensor(double value) { 
     
