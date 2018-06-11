@@ -998,6 +998,8 @@ void maroloDAQ::doReadings() {
     } // end while timeout
     
     if (GraceIsOpen()) {
+	GracePrintf ("yaxis  ticklabel format decimal");
+        GracePrintf ("yaxis  ticklabel prec %d", ndig);
         GracePrintf("autoscale");
         GracePrintf("redraw");
     }
@@ -1267,6 +1269,7 @@ void maroloDAQ::setupGrace () {
     
     if (GraceIsOpen()) {
         GracePrintf ("map font 0 to \"Times-Roman\", \"Times-Roman\"");
+	GracePrintf ("page size 842, 595");
         GracePrintf ("default font 0");
         GracePrintf ("g0 on");
         GracePrintf ("g0 type XY");
@@ -1279,15 +1282,17 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("subtitle font 0");
         GracePrintf ("xaxis label \"Tempo (s)\"");
         GracePrintf ("xaxis tick minor ticks 2");
+	GracePrintf ("xaxis  ticklabel format decimal");
+	GracePrintf ("xaxis  ticklabel prec 2");
         GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
         GracePrintf ("yaxis tick minor ticks 2");
         
         GracePrintf ("kill s0");	
-        GracePrintf ("title font 0");
-        GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
-        GracePrintf ("subtitle font 0");
-        GracePrintf ("xaxis label \"Tempo (s)\"");
-        GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
+        //GracePrintf ("title font 0");
+        //GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
+        //GracePrintf ("subtitle font 0");
+        //GracePrintf ("xaxis label \"Tempo (s)\"");
+        //GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
         
         GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
