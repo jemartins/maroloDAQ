@@ -281,7 +281,7 @@ void maroloDAQ::setDesconectado() {
     ui->gbSensor->setEnabled(true);
     ui->gbTempo->setEnabled(true);
     ui->gbCalibrar->setEnabled(true);
-    ui->gbMonitor->setEnabled(true);
+    ui->gbDisplay->setEnabled(true);
     ui->btnCalibrar1->setEnabled(false);
     ui->btnCalibrar2->setEnabled(false);
     ui->cbSensorList->setEnabled(false);
@@ -320,7 +320,7 @@ void maroloDAQ::setConectado() {
     ui->gbSensor->setEnabled(true);
     ui->gbTempo->setEnabled(true);
     ui->gbCalibrar->setEnabled(true);
-    ui->gbMonitor->setEnabled(true);
+    ui->gbDisplay->setEnabled(true);
     ui->btnCalibrar1->setEnabled(false);
     ui->btnCalibrar2->setEnabled(false);
     ui->cbSensorList->setEnabled(true);
@@ -868,11 +868,11 @@ void maroloDAQ::doReadings() {
                     mysound = readSound(myCALL);
                     mysound = roundValue(mysound, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(mysound/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mysound/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(mysound/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(mysound/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mysound/10.0, 'f', ndig))+"    "+\
@@ -888,11 +888,11 @@ void maroloDAQ::doReadings() {
                     myvoltage = readVoltage(myCALL);
                     myvoltage = roundValue(myvoltage, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(myvoltage/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myvoltage/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(myvoltage/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(myvoltage/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myvoltage/10.0, 'f', ndig))+"    "+\
@@ -908,11 +908,11 @@ void maroloDAQ::doReadings() {
                     myresistence = readResistence(myCALL);
                     myresistence = roundValue(myresistence, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(myresistence/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myresistence/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(myresistence/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(myresistence/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myresistence/10.0, 'f', ndig))+"    "+\
@@ -928,11 +928,11 @@ void maroloDAQ::doReadings() {
                     mytemperature = readTemperature(myCALL);
                     mytemperature = roundValue(mytemperature, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(mytemperature/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mytemperature/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(mytemperature/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(mytemperature/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mytemperature/10.0, 'f', ndig))+"    "+\
@@ -948,11 +948,11 @@ void maroloDAQ::doReadings() {
                     mylight = readLight(myCALL);
                     mylight = roundValue(mylight, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(mylight/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(mylight/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(mylight/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(mylight/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(mylight/10.0, 'f', ndig))+"    "+\
@@ -968,11 +968,11 @@ void maroloDAQ::doReadings() {
                     myangle = readAngle(myCALL);
                     myangle = roundValue(myangle, erroY);
                     // formatando Display antes de enviar valores
-                    formatMonitor(myangle/10.0, tempo_atual/1000.0);
-                    // Envia o valor medido ao lcdMonitorY
-                    ui->lcdMonitorY->display(QString::number(myangle/10.0, 'f', ndig));
-                    // Envia o tempo decorrido para o lcdMonitorX
-                    ui->lcdMonitorX->display(QString::number(tempo_atual/1000.0, 'f', 2));
+                    formatDisplay(myangle/10.0, tempo_atual/1000.0, erroY);
+                    // Envia o valor medido ao lcdDisplayY
+                    ui->lcdDisplayY->display(QString::number(myangle/10.0, 'f', ndig));
+                    // Envia o tempo decorrido para o lcdDisplayX
+                    ui->lcdDisplayX->display(QString::number(tempo_atual/1000.0, 'f', 2));
                     // Envia ao Console
                     ui->teLog->appendPlainText((QString::number(tempo_atual/1000.0, 'f', 2))+"    "+\
                     (QString::number(myangle/10.0, 'f', ndig))+"    "+\
@@ -1480,42 +1480,51 @@ int maroloDAQ::decimalSensor(double value) {
     return ndig;
 }
 
-void maroloDAQ::formatMonitor(double value, double time) {
+void maroloDAQ::formatDisplay(double value, double time, double erroY) {
     
     // lcdDisplayX
     if (time >= 1000) {
-        ui->lcdMonitorX->setDigitCount(7);
+        ui->lcdDisplayX->setDigitCount(7);
     } else { 
         if (time >= 100) {
-            ui->lcdMonitorX->setDigitCount(6);
+            ui->lcdDisplayX->setDigitCount(6);
         } else {
-            ui->lcdMonitorX->setDigitCount(5);
+            ui->lcdDisplayX->setDigitCount(5);
         }
     }
     
     // lcdDisplayY
-    const int ndig = decimalSensor(value);
+    const int ndig = decimalSensor(erroY);
+    
     if (ndig == 0) {
-        ui->lcdMonitorY->setDigitCount(5);
+        ui->lcdDisplayY->setDigitCount(5);
     } else {
         if ((ndig != 0) && (ndig <= 2)) {
             if (value >= 1000) {
-                ui->lcdMonitorY->setDigitCount(7);
+                ui->lcdDisplayY->setDigitCount(7);
             } else {
                 if (value >= 100) {
-                    ui->lcdMonitorY->setDigitCount(6);
+                    ui->lcdDisplayY->setDigitCount(6);
                 } else {
-                    ui->lcdMonitorY->setDigitCount(5);
+                    ui->lcdDisplayY->setDigitCount(5);
                 }
             }
         } else {
-            if (value >= 1000) {
-                ui->lcdMonitorY->setDigitCount(ndig + 5);
+            if (value >= 100000) {
+                ui->lcdDisplayY->setDigitCount(ndig + 7);
             } else {
-                if (value >= 100) {
-                    ui->lcdMonitorY->setDigitCount(ndig + 4);
+                if (value >= 10000) {
+                    ui->lcdDisplayY->setDigitCount(ndig + 6);
                 } else {
-                    ui->lcdMonitorY->setDigitCount(ndig + 3);
+                    if (value >= 1000) {
+                        ui->lcdDisplayY->setDigitCount(ndig + 5);
+                    } else {
+                        if (value >= 100) {
+                            ui->lcdDisplayY->setDigitCount(ndig + 4);
+                        } else {
+                            ui->lcdDisplayY->setDigitCount(ndig + 3);
+                        }
+                    }
                 }
             }
         }

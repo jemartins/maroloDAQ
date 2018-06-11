@@ -93,7 +93,7 @@ private slots:
     void setupGrace();
     void plotaGrace(double x, double y, double dx, double dy);
     int decimalSensor(double value);
-    void formatMonitor(double value, double time);
+    void formatDisplay(double value, double time, double erroY);
     double roundValue(double value, double error);
 
     bool maybeSave();

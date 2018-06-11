@@ -958,7 +958,7 @@
      <string>F2</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="gbMonitor">
+   <widget class="QGroupBox" name="gbDisplay">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -1031,7 +1031,7 @@
        <number>6</number>
       </property>
       <item row="0" column="1">
-       <widget class="QLabel" name="lbLCDmonitorY">
+       <widget class="QLabel" name="lbLCDdisplayY">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -1053,7 +1053,7 @@
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QLCDNumber" name="lcdMonitorY">
+       <widget class="QLCDNumber" name="lcdDisplayY">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1148,7 +1148,7 @@
        <number>6</number>
       </property>
       <item row="0" column="1">
-       <widget class="QLabel" name="lbLCDmonitorX">
+       <widget class="QLabel" name="lbLCDdisplayX">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -1170,7 +1170,7 @@
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
-       <widget class="QLCDNumber" name="lcdMonitorX">
+       <widget class="QLCDNumber" name="lcdDisplayX">
         <property name="enabled">
          <bool>false</bool>
         </property>
