@@ -155,6 +155,8 @@ void maroloDAQ::createActions() {
     ui->actionSalvar_como->setEnabled(false);
     ui->actionSalvar_tbox->setEnabled(false);
     ui->actionSalvar_como_tbox->setEnabled(false);
+    // teLog is read only
+    ui->teLog->setReadOnly(true);
     
 } // end createActions
 
