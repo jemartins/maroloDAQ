@@ -50,7 +50,7 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
-    void mousePressEvent(QMouseEvent *e);
+    //void mousePressEvent(QMouseEvent *e);
     //void mouseDoubleClickEvent(QMouseEvent *e) override;
 
 private slots:
@@ -62,7 +62,7 @@ private slots:
     void maroloDevClose();
     void on_btnDevOpen_clicked();
     void on_btnDevClose_clicked();
-    //void on_btnBWTerminal_clicked();
+    void on_btnBWTerminal_clicked();
     void on_btnCalibrar1_clicked();
     void on_btnCalibrar2_clicked();
     void on_btnIniciar_clicked();
