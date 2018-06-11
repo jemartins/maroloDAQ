@@ -240,11 +240,9 @@ void maroloDAQ::scanPortas() {
                 if (statusCloseSerial) {
                 }
                 else {
-                    //ui->teLog->appendPlainText("### FALHA ao FECHAR Porta Serial!");
                     statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
                 }
             } else {
-                //ui->teLog->appendPlainText("### FALHA ao ABRIR Porta Serial. Tente de Novo!");
                 statusBar()->showMessage(tr("### FALHA ao FECHAR Porta Serial!"));
             }
         }
@@ -389,12 +387,6 @@ void maroloDAQ::maroloDevClose()
 }
 
 void maroloDAQ::on_btnBWTerminal_clicked() {
-//void maroloDAQ::mousePressEvent(QMouseEvent *e) {
-//void maroloDAQ::mouseDoubleClickEvent(QMouseEvent *e) {
-    
-    // posicoes do ponteiro do mouse
-    //int x = e->x(); int y = e->y();
-    //qDebug() << "mousePressEvent: " << x << y; 
     
     QPalette paleta;
     /*
@@ -510,8 +502,6 @@ void maroloDAQ::on_btnDevClose_clicked() {
     }
     
     if (GraceIsOpen()) {
-        /* Tell Grace to save the data */
-        //GracePrintf("saveall \"sample.agr\"");
         /* Flush the output buffer and close Grace */
         GraceClose();
     }
@@ -553,7 +543,6 @@ void maroloDAQ::on_btnIniciar_clicked() {
             if (!GraceIsOpen()) {
                 /* Start Grace with a buffer size of 4096409640964096 and open the pipe */
                 if (GraceOpenVA((char*)"xmgrace", 4096, "-nosafe", "-noask", NULL) == -1) {
-                    //ui->teLog->appendPlainText("Can't run Grace. \n");
                     statusBar()->showMessage(tr("Can't run Grace."));
                 } 
             }
@@ -1306,13 +1295,6 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("yaxis tick minor ticks 2");
         
         GracePrintf ("kill s0");	
-        //GracePrintf ("title font 0");
-        //GracePrintf ("subtitle \"insira aqui o subt\\#{ed}tulo\"");
-        //GracePrintf ("subtitle font 0");
-        //GracePrintf ("xaxis label \"Tempo (s)\"");
-        //GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
-        
-        GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
         GracePrintf ("s0 symbol 1");
         GracePrintf ("s0 symbol size 0.4");
@@ -1424,6 +1406,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName) {
         shownName = "untitled.txt";
     }
     setWindowFilePath(shownName);
+
 } // end setCurrentFile
 
 bool maroloDAQ::on_actionSalvar_como_triggered() {
@@ -1481,6 +1464,7 @@ bool maroloDAQ::saveFile(const QString &fileName)
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
     return true;
+
 } // end saveFile
 
 int maroloDAQ::decimalSensor(double value) { 

@@ -50,8 +50,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
-    void mousePressEvent(QMouseEvent *e);
-    //void mouseDoubleClickEvent(QMouseEvent *e) override;
 
 private slots:
     void formatarEntradas();
@@ -62,7 +60,7 @@ private slots:
     void maroloDevClose();
     void on_btnDevOpen_clicked();
     void on_btnDevClose_clicked();
-    //void on_btnBWTerminal_clicked();
+    void on_btnBWTerminal_clicked();
     void on_btnCalibrar1_clicked();
     void on_btnCalibrar2_clicked();
     void on_btnIniciar_clicked();
@@ -125,12 +123,12 @@ private:
     void enumerateMenu(QMenu *menu);
     QActionGroup *PortasGroup;
     QActionGroup *BaudRateGroup;
-    //variáveis adicionas por Rafael
     QString AdcReadString;
     bool stopFlag;
     int baudrate;
 
     QPlainTextEdit *teLog;
     QString curFile;
+
 };
 #endif // PROJMAROLO_H
