@@ -379,15 +379,21 @@ void maroloDAQ::maroloDevClose()
     }
 }
 
-void maroloDAQ::on_btnBWTerminal_clicked() {
+//void maroloDAQ::on_btnBWTerminal_clicked() {
+void maroloDAQ::mousePressEvent(QMouseEvent *e) {
+//void maroloDAQ::mouseDoubleClickEvent(QMouseEvent *e) {
     
-    QPalette paleta;
+    // posicoes do ponteiro do mouse
+    int x = e->x(); int y = e->y();
+    qDebug() << "mousePressEvent: " << x << y; 
+    
+    //QPalette paleta;
     /*
      * Verifica se PaletaBW é True ou False
      * Se True: Fundo Preto, Fonte Branco
      * Se False: Fundo Branco, Fonte Preto
      */
-    
+    /*
     if(PaletaLogBW) {
         paleta.setColor(QPalette::Base,Qt::black);
         paleta.setColor(QPalette::Text,Qt::white);
@@ -400,6 +406,7 @@ void maroloDAQ::on_btnBWTerminal_clicked() {
         ui->teLog->setPalette(paleta);
         PaletaLogBW=true;
     }
+    */
 }
 
 void maroloDAQ::on_btnDevOpen_clicked() {
