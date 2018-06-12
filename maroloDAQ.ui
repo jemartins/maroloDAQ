@@ -1705,10 +1705,6 @@
   <tabstop>btnParar</tabstop>
   <tabstop>btnDevClose</tabstop>
   <tabstop>btnAppClose</tabstop>
-  <tabstop>teLog</tabstop>
-  <tabstop>editDevModel</tabstop>
-  <tabstop>editDevCompiler</tabstop>
-  <tabstop>btnBWTerminal</tabstop>
  </tabstops>
  <resources/>
  <connections/>

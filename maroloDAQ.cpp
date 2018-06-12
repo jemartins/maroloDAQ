@@ -50,6 +50,8 @@ ui(new Ui::maroloDAQ)
 {
     ui->setupUi(this);
     
+    setWindowTitle(QApplication::translate("maroloDAQ[*]", "maroloDAQ[*]", Q_NULLPTR));
+
     // Formatando entradas
     formatarEntradas();
     // create new actions and toolbar
@@ -64,13 +66,16 @@ ui(new Ui::maroloDAQ)
     
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
-    setWindowTitle(QApplication::translate("maroloDAQ[*]", "maroloDAQ[*]", Q_NULLPTR));
+    ui->teLog->setFocusPolicy(Qt::NoFocus);
+    ui->editDevModel->setFocusPolicy(Qt::NoFocus);
+    ui->editDevCompiler->setFocusPolicy(Qt::NoFocus);
+    ui->btnDevOpen->setFocus();
     
     scanPortas();
     // Configurado stado inicial dos objetos
     setDesconectado();
     // Tudo OK
-    statusBar()->showMessage(tr("Pronto"));
+    statusBar()->showMessage(tr("Pronto. Clique em Conectar"));
 
 }
 
@@ -143,12 +148,6 @@ void maroloDAQ::createActions() {
     ui->actionSalvar_como->setIcon(saveasIcon);
     ui->actionSalvar_como_tbox->setIcon(saveasIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_como_tbox);
-    /*
-    connect(ui->actionSalvar, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
-    connect(ui->actionSalvar_como, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
-    connect(ui->actionSalvar_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_triggered);
-    connect(ui->actionSalvar_como_tbox, &QAction::triggered, this, &maroloDAQ::on_actionSalvar_como_triggered);    
-    */
     ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
     ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
     ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
@@ -385,30 +384,6 @@ void maroloDAQ::maroloDevClose()
     else {
         statusBar()->showMessage(tr("### Falha ao fechar maroloDAQ."));
     }
-}
-
-void maroloDAQ::on_btnBWTerminal_clicked() {
-    
-    QPalette paleta;
-    /*
-     * Verifica se PaletaBW é True ou False
-     * Se True: Fundo Preto, Fonte Branco
-     * Se False: Fundo Branco, Fonte Preto
-     */
-    
-    if(PaletaLogBW) {
-        paleta.setColor(QPalette::Base,Qt::black);
-        paleta.setColor(QPalette::Text,Qt::white);
-        ui->teLog->setPalette(paleta);
-        PaletaLogBW=false;
-    }
-    else {
-        paleta.setColor(QPalette::Base,Qt::white);
-        paleta.setColor(QPalette::Text,Qt::black);
-        ui->teLog->setPalette(paleta);
-        PaletaLogBW=true;
-    }
-    
 }
 
 void maroloDAQ::on_btnDevOpen_clicked() {
@@ -1405,7 +1380,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName) {
     
     QString shownName = curFile;
     if (curFile.isEmpty()) {
-        shownName = "untitled.txt";
+        shownName = "untitled.dat";
     }
     setWindowFilePath(shownName);
 
@@ -1413,6 +1388,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName) {
 
 bool maroloDAQ::on_actionSalvar_como_triggered() {
     QFileDialog dialog(this);
+    dialog.setWindowTitle(QApplication::translate("maroloDAQ Save as", "maroloDAQ Salvar como", Q_NULLPTR));
     dialog.setWindowModality(Qt::WindowModal);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
     if (dialog.exec() != QDialog::Accepted)
