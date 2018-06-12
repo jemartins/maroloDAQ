@@ -64,6 +64,7 @@ ui(new Ui::maroloDAQ)
     
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+    setWindowTitle(QApplication::translate("maroloDAQ[*]", "maroloDAQ[*]", Q_NULLPTR));
     
     scanPortas();
     // Configurado stado inicial dos objetos
@@ -138,7 +139,7 @@ void maroloDAQ::createActions() {
     ui->actionSalvar_tbox->setIcon(saveIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_tbox);
 
-    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/save-as.png"));
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
     ui->actionSalvar_como->setIcon(saveasIcon);
     ui->actionSalvar_como_tbox->setIcon(saveasIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_como_tbox);
@@ -159,11 +160,6 @@ void maroloDAQ::createActions() {
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
-    // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
-    ui->actionSalvar->setEnabled(false);
-    ui->actionSalvar_como->setEnabled(false);
-    ui->actionSalvar_tbox->setEnabled(false);
-    ui->actionSalvar_como_tbox->setEnabled(false);
     // teLog is read only
     ui->teLog->setReadOnly(true);
     
@@ -301,6 +297,11 @@ void maroloDAQ::setDesconectado() {
     ui->actionConectar->setEnabled(true);
     ui->actionDesconectar->setEnabled(false);
     ui->actionRecarregar->setEnabled(true);
+    // Actions "Salvar" e "Salvar como" desabilitadas ao btnIniciar
+    ui->actionSalvar->setEnabled(false);
+    ui->actionSalvar_como->setEnabled(false);
+    ui->actionSalvar_tbox->setEnabled(false);
+    ui->actionSalvar_como_tbox->setEnabled(false);
     
     ui->editDevCompiler->setEnabled(false);
     ui->editDevModel->setEnabled(false);
@@ -1400,6 +1401,7 @@ void maroloDAQ::setCurrentFile(const QString &fileName) {
     ui->teLog->document()->setModified(false);
     setWindowModified(false);
     ui->actionSalvar_como->setEnabled(true);
+    ui->actionSalvar_como_tbox->setEnabled(true);
     
     QString shownName = curFile;
     if (curFile.isEmpty()) {
