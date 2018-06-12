@@ -486,7 +486,7 @@
          </size>
         </property>
         <property name="toolTip">
-		<string>Intervalo de Tempo [min 0.03] entre Cada Medição em segundos</string>
+         <string>Intervalo de Tempo [min 0.03] entre Cada Medição em segundos</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -1589,14 +1589,14 @@
    </property>
   </action>
   <action name="actionNoFlowControl">
-   <property name="text">
-    <string> NoFlowControl</string>
-   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="checked">
     <bool>true</bool>
+   </property>
+   <property name="text">
+    <string> NoFlowControl</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No Flow Control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1689,6 +1689,27 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>btnDevOpen</tabstop>
+  <tabstop>cbSensorList</tabstop>
+  <tabstop>cbPinoList</tabstop>
+  <tabstop>editErroSensor</tabstop>
+  <tabstop>editDeltaT</tabstop>
+  <tabstop>editTmax</tabstop>
+  <tabstop>checkBoxGrace</tabstop>
+  <tabstop>editAngulo1</tabstop>
+  <tabstop>btnCalibrar1</tabstop>
+  <tabstop>editAngulo2</tabstop>
+  <tabstop>btnCalibrar2</tabstop>
+  <tabstop>btnIniciar</tabstop>
+  <tabstop>btnParar</tabstop>
+  <tabstop>btnDevClose</tabstop>
+  <tabstop>btnAppClose</tabstop>
+  <tabstop>teLog</tabstop>
+  <tabstop>editDevModel</tabstop>
+  <tabstop>editDevCompiler</tabstop>
+  <tabstop>btnBWTerminal</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
