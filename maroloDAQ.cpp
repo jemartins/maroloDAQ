@@ -482,7 +482,7 @@ void maroloDAQ::on_btnDevClose_clicked() {
         /* Flush the output buffer and close Grace */
         GraceClose();
     }
-    qDebug() << "on_btnDevClose_clicked triggered";
+
 } // end on_btnDevClose_clicked
 
 void maroloDAQ::on_btnParar_clicked() {
