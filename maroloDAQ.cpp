@@ -470,10 +470,11 @@ void maroloDAQ::on_btnDevClose_clicked() {
     statusCloseSerial = procSerial->Desconectar();
     
     if (statusCloseSerial) {
-        setDesconectado();        
+        setDesconectado();
         statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
     }
     else {
+        setDesconectado();
         statusBar()->showMessage(tr("### Falha ao Fechar maroloDAQ."));
     }
     
@@ -481,6 +482,7 @@ void maroloDAQ::on_btnDevClose_clicked() {
         /* Flush the output buffer and close Grace */
         GraceClose();
     }
+    qDebug() << "on_btnDevClose_clicked triggered";
 } // end on_btnDevClose_clicked
 
 void maroloDAQ::on_btnParar_clicked() {
@@ -537,8 +539,7 @@ void maroloDAQ::on_btnIniciar_clicked() {
 } // end on_btnIniciar_clicked
 
 void maroloDAQ::on_actionSair_triggered() {
-    on_btnDevClose_clicked();
-    exit(0);
+    on_btnAppClose_clicked();
 }
 
 void maroloDAQ::on_actionConectar_triggered() {

@@ -1245,7 +1245,7 @@
       <string>Sair da aplicação</string>
      </property>
      <property name="text">
-      <string>Sair [F4]</string>
+      <string>Sair</string>
      </property>
      <property name="iconSize">
       <size>
@@ -1515,9 +1515,9 @@
      </property>
      <addaction name="action9600"/>
      <addaction name="action19200"/>
+     <addaction name="action48000"/>
      <addaction name="action56700"/>
      <addaction name="action115200"/>
-     <addaction name="action48000"/>
     </widget>
     <widget class="QMenu" name="menuFlowControl">
      <property name="title">
@@ -1607,6 +1607,20 @@
     <string>Recarregar</string>
    </property>
   </action>
+  <action name="action9600">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>9600</string>
+   </property>
+   <property name="toolTip">
+    <string>9600 bps</string>
+   </property>
+  </action>
   <action name="action19200">
    <property name="checkable">
     <bool>true</bool>
@@ -1616,6 +1630,17 @@
    </property>
    <property name="toolTip">
     <string>19200 bps</string>
+   </property>
+  </action>
+  <action name="action48000">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>48000</string>
+   </property>
+   <property name="toolTip">
+    <string>48000 bps</string>
    </property>
   </action>
   <action name="action56700">
@@ -1638,31 +1663,6 @@
    </property>
    <property name="toolTip">
     <string>115200 bps</string>
-   </property>
-  </action>
-  <action name="action48000">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>48000</string>
-   </property>
-   <property name="toolTip">
-    <string>48000 bps</string>
-   </property>
-  </action>
-  <action name="action9600">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>9600</string>
-   </property>
-   <property name="toolTip">
-    <string>9600 bps</string>
    </property>
   </action>
   <action name="actionSalvar_tbox">
