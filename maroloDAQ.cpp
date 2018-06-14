@@ -1265,11 +1265,11 @@ void maroloDAQ::setupGrace () {
         GracePrintf ("subtitle \"insira aqui o sub-t\\#{ed}tulo\"");
         GracePrintf ("subtitle font 0");
         GracePrintf ("xaxis label \"Tempo (s)\"");
-        GracePrintf ("xaxis tick minor ticks 2");
+        GracePrintf ("xaxis tick minor ticks 1");
 	GracePrintf ("xaxis  ticklabel format decimal");
 	GracePrintf ("xaxis  ticklabel prec 2");
         GracePrintf ("yaxis label \"insira aqui nome eixoY (unid)\"");
-        GracePrintf ("yaxis tick minor ticks 2");
+        GracePrintf ("yaxis tick minor ticks 1");
         
         GracePrintf ("kill s0");	
         GracePrintf ("s0 on");
