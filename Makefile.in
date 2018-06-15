@@ -43,7 +43,7 @@ AR            = ar cqs
 RANLIB        = 
 SED           = sed
 STRIP         = strip
-
+ACLOCAL_AMFLAGS = -I m4
 ####### Output directory
 
 OBJECTS_DIR   = ./

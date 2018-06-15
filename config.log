@@ -372,7 +372,7 @@ configure:4291: gcc -o conftest -g -O2   conftest.c -lpthread -lgrace_np -lQt5Wi
 conftest.c:52:6: warning: conflicting types for built-in function 'floor'
  char floor ();
       ^
-/bin/ld: /tmp/cczQOgw4.o: undefined reference to symbol 'floor@@GLIBC_2.2.5'
+/bin/ld: /tmp/cc1IrlhM.o: undefined reference to symbol 'floor@@GLIBC_2.2.5'
 /usr/lib64/libm.so.6: error adding symbols: DSO missing from command line
 collect2: error: ld returned 1 exit status
 configure:4291: $? = 1
