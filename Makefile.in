@@ -156,7 +156,7 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		maroloDAQ.cpp \
 		comserial.cpp
 QMAKE_TARGET  = maroloDAQ
-DESTDIR       = 
+DESTDIR       = /usr/local/maroloDAQ
 TARGET        = maroloDAQ
 
 
@@ -995,9 +995,28 @@ moc_maroloDAQ.o: moc_maroloDAQ.cpp
 
 ####### Install
 
+#install:  maroloDAQ INSTALL AUTHORS ChangeLog COPYING LICENSE README
 install:  FORCE
+	$(MKDIR) $(DESTDIR)
+	$(INSTALL_PROGRAM) $(TARGET) $(DESTDIR)/
+	$(SYMLINK) $(DESTDIR)/$(TARGET) /usr/bin/
+	$(INSTALL_FILE) INSTALL	  $(DESTDIR)/
+	$(INSTALL_FILE) AUTHORS	  $(DESTDIR)/
+	$(INSTALL_FILE) ChangeLog $(DESTDIR)/
+	$(INSTALL_FILE) COPYING	  $(DESTDIR)/
+	$(INSTALL_FILE) LICENSE	  $(DESTDIR)/
+	$(INSTALL_FILE) README	  $(DESTDIR)/
 
-uninstall:  FORCE
+uninstall: FORCE
+	$(DEL_FILE) $(DESTDIR)/$(TARGET)
+	$(DEL_FILE) /usr/bin/$(TARGET)
+	$(DEL_FILE) $(DESTDIR)/INSTALL
+	$(DEL_FILE) $(DESTDIR)/AUTHORS
+	$(DEL_FILE) $(DESTDIR)/ChangeLog
+	$(DEL_FILE) $(DESTDIR)/COPYING
+	$(DEL_FILE) $(DESTDIR)/LICENSE
+	$(DEL_FILE) $(DESTDIR)/README
+	$(DEL_DIR) $(DESTDIR)
 
-FORCE:
+FORCE: 	
 
