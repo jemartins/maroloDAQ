@@ -103,10 +103,10 @@ private slots:
 
 private:
     Ui::maroloDAQ *ui;
-    bool PaletaLogBW;
     QSerialPort *devserial;
     comserial *procSerial;
     void CarregarInfoDispSerial(void);
+    bool statusOpenSerial;
     QAction *actionACM0;
     QAction *actionACM1;
     QAction *actionACM2;

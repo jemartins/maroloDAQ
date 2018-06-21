@@ -472,6 +472,7 @@ void maroloDAQ::on_btnDevClose_clicked() {
     if (statusCloseSerial) {
         setDesconectado();
         statusBar()->showMessage(tr("### maroloDAQ Fechado com Sucesso!"));
+	statusOpenSerial = false;
     }
     else {
         setDesconectado();
@@ -1352,17 +1353,17 @@ bool maroloDAQ::maybeSave() {
         return true;
         const QMessageBox::StandardButton ret = \
         QMessageBox::warning(this, tr("maroloDAQ"), \
-        tr("The document has been modified.\n" \
-        "Do you want to save your changes?"), \
+        tr("Os Dados Foram Modificados.\n" \
+        "Você Quer Salvar?"), \
         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         switch (ret) {
             case QMessageBox::Save:
                 return on_actionSalvar_triggered();
             case QMessageBox::Cancel:
-                on_btnDevClose_clicked();
+		if (statusOpenSerial) on_btnDevClose_clicked();
                 return false;
             default:
-                on_btnDevClose_clicked();
+		if (statusOpenSerial) on_btnDevClose_clicked();
                 break;
 	}
     	return true;
