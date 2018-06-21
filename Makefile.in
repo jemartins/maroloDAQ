@@ -410,14 +410,14 @@ compiler_rcc_clean:
 	-$(DEL_FILE) qrc_maroloDAQ.cpp
 qrc_maroloDAQ.cpp: maroloDAQ.qrc \
 		/usr/lib64/qt5/bin/rcc \
-		images/save-as.png \
-		images/close.png \
-		images/irc-channel-inactive.png \
-		images/save.png \
-		images/irc-channel-active.png \
-		images/quickopen-class.png \
-		images/help-about.png \
-		images/code-class.png
+		icons/save-as.png \
+		icons/close.png \
+		icons/irc-channel-inactive.png \
+		icons/save.png \
+		icons/irc-channel-active.png \
+		icons/quickopen-class.png \
+		icons/help-about.png \
+		icons/code-class.png
 	/usr/lib64/qt5/bin/rcc -name maroloDAQ maroloDAQ.qrc -o qrc_maroloDAQ.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h

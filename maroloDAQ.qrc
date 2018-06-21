@@ -1,12 +1,12 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-    <file>images/close.png</file>
-    <file>images/code-class.png</file>
-    <file>images/help-about.png</file>
-    <file>images/irc-channel-active.png</file>
-    <file>images/irc-channel-inactive.png</file>
-    <file>images/quickopen-class.png</file>
-    <file>images/save.png</file>
-    <file>images/save-as.png</file>
+    <file>icons/close.png</file>
+    <file>icons/code-class.png</file>
+    <file>icons/help-about.png</file>
+    <file>icons/irc-channel-active.png</file>
+    <file>icons/irc-channel-inactive.png</file>
+    <file>icons/quickopen-class.png</file>
+    <file>icons/save.png</file>
+    <file>icons/save-as.png</file>
 </qresource>
 </RCC>

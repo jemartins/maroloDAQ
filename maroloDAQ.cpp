@@ -139,23 +139,23 @@ void maroloDAQ::createActions() {
         }
     }
      
-    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/icons/save.png"));
     ui->actionSalvar->setIcon(saveIcon);
     ui->actionSalvar_tbox->setIcon(saveIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_tbox);
 
-    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/images/save-as.png"));
+    const QIcon saveasIcon = QIcon::fromTheme("document-save-as", QIcon(":/icons/save-as.png"));
     ui->actionSalvar_como->setIcon(saveasIcon);
     ui->actionSalvar_como_tbox->setIcon(saveasIcon);
     ui->mainToolBar->addAction(ui->actionSalvar_como_tbox);
-    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/images/close.png")));        
-    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/images/help-about.png")));        
-    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
-    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
-    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/images/code-class.png")));        
-    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/images/quickopen-class.png")));        
-    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/images/irc-channel-active.png")));        
-    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/images/irc-channel-inactive.png")));        
+    ui->actionSair->setIcon(QIcon::fromTheme("document-close", QIcon(":/icons/close.png")));        
+    ui->actionSobre->setIcon(QIcon::fromTheme("help-about", QIcon(":/icons/help-about.png")));        
+    ui->menuPortas->setIcon(QIcon::fromTheme("code-class", QIcon(":/icons/code-class.png")));        
+    ui->menuBaudRate->setIcon(QIcon::fromTheme("code-class", QIcon(":/icons/code-class.png")));        
+    ui->menuFlowControl->setIcon(QIcon::fromTheme("code-class", QIcon(":/icons/code-class.png")));        
+    ui->actionRecarregar->setIcon(QIcon::fromTheme("quickopen-class", QIcon(":/icons/quickopen-class.png")));        
+    ui->actionConectar->setIcon(QIcon::fromTheme("irc-channel-active", QIcon(":/icons/irc-channel-active.png")));        
+    ui->actionDesconectar->setIcon(QIcon::fromTheme("irc-channel-inactive", QIcon(":/icons/irc-channel-inactive.png")));        
     ui->mainToolBar->setFloatable(false);
     ui->mainToolBar->setMovable(false);
     
