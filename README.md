@@ -1,6 +1,6 @@
 # maroloDAQ
 
-O objetivo deste projeto é criar um sistema de medição assistida por computador com dois componentes interconectados: Arduino e Software.
+objetivo deste projeto é criar um sistema de medição assistida por computador com dois componentes interconectados: Arduino e Software.
 
 ## Comunicação
 A comunicação entre eles ocorre por meio de portas seriais e de cabo USB. Ela é bidirecional, permitindo que ambos recebam e transmitam comandos ou dados entre si.
