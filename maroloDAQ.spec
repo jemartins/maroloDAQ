@@ -83,7 +83,7 @@ rm -fr %buildroot/usr/local
 %doc LICENSE
 %{_libdir}
 #%{_libdir}/maroloDAQ
-%{_datadir}/applications/%{_real_vendor}-%{name}.desktop
+%{_datadir}/applications/%{name}.desktop
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
