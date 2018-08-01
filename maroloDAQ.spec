@@ -20,11 +20,15 @@ License:	GPLv3+
 Group:		Sciences/Other
 Url:		https://github.com/jemartins/maroloDAQ
 Source0:	https://github.com/jemartins/maroloDAQ/archive/%{tarballdir}/maroloDAQ-%{tarballver}.tar.gz
-BuildRequires:	qt5-devel >= 4.4.0
+BuildRequires:	qt5-devel >= 5.9.4
 BuildRequires:	icoutils
 BuildRequires:	imagemagick
-BuildRequires:	qt5serialport-devel
-Requires:	qt5serialport
+BuildRequires:	qt5serialport-devel >= 5.9.4
+BuildRequires:	grace-devel
+Requires:	lib64qt5serialport5 >= 5.9.4
+Requires:	lib64qt5gui5 >= 5.9.4
+Requires:	lib64qt5xcbqpa5 >= 5.9.4
+Requires:	grace
 
 %description
 Data Logger with Arduino Board
@@ -40,7 +44,7 @@ Data Logger with Arduino Board
 make install INSTALL_ROOT=%{buildroot}
 
 mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/%{_real_vendor}-%{name}.desktop << EOF
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
 [Desktop Entry]
 Name=maroloDAQ
 Comment=Data Logger with Arduino Board 
@@ -52,12 +56,11 @@ Categories=Qt;Science;DataVisualization;
 StartupNotify=true
 EOF
 
-mkdir -p %{buildroot}%{_libdir}/maroloDAQ
-cp maroloDAQ %{buildroot}%{_libdir}/maroloDAQ/maroloDAQ
 mkdir -p %{buildroot}%{_bindir}
-ln -sf %{buildroot}%{_libdir}/maroloDAQ/maroloDAQ %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_libdir}/maroloDAQ/fw_maroloDAQ
-cp fw_maroloDAQ/fw_maroloDAQ.ino %{buildroot}/%{_libdir}/maroloDAQ/fw_maroloDAQ/fw_maroloDAQ.ino
+cp maroloDAQ %{buildroot}%{_bindir}/
+mkdir -p %{buildroot}%{_libdir}/%{name}
+mkdir -p %{buildroot}%{_libdir}/%{name}/fw_maroloDAQ
+cp fw_maroloDAQ/fw_maroloDAQ.ino %{buildroot}/%{_libdir}/%{name}/fw_%{name}/fw_maroloDAQ.ino
 
 cd icons
 mkdir -p %{buildroot}{%{_liconsdir},%{_iconsdir},%{_miconsdir}}
@@ -82,13 +85,11 @@ rm -fr %buildroot/usr/local
 %doc INSTALL
 %doc LICENSE
 %{_libdir}
-#%{_libdir}/maroloDAQ
 %{_datadir}/applications/%{name}.desktop
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 %{_iconsdir}/hicolor/*/apps/*.png
-#%{_libdir}/maroloDAQ/fw_maroloDAQ/fw_maroloDAQ.ino
 
 %changelog
 * Tue Jul 31 2018 jemartins <jemartins@fis.unb.br> 1.0.0-1rc1.1.mga6
