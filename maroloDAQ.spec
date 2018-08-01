@@ -1,21 +1,20 @@
 %define rc_ver          1
+%define rel 		1
 %define rc_name         1rc1
 %if %{rc_ver}
 %define tarballver      %{version}-%{rc_name}
 %define tarballdir      %{version}-%{rc_name}
-%define release		%mkrel -c %{rc_name} %{rel}
+%define release		%mkrel %{rc_name}.%{rel}
 %else
 %define tarballver      %{version}
 %define tarballdir      v%{version}
 %define release		%mkrel %{rel}
 %endif
 
-%define rel 	1
-
 Summary:	Data analysis and scientific plotting
 Name:		maroloDAQ
 Version:	1.0.0
-Release:	%mkrel -c %{rc_name} %{rel}
+Release:	%{release}
 License:	GPLv3+
 Group:		Sciences/Other
 Url:		https://github.com/jemartins/maroloDAQ
@@ -64,16 +63,22 @@ cp fw_maroloDAQ/fw_maroloDAQ.ino %{buildroot}/%{_libdir}/%{name}/fw_%{name}/fw_m
 
 cd icons
 mkdir -p %{buildroot}{%{_liconsdir},%{_iconsdir},%{_miconsdir}}
-convert -scale 48 marolodaq_icon_edited.jpeg %{buildroot}%{_liconsdir}/%{name}.png
-convert -scale 32 marolodaq_icon_edited.jpeg %{buildroot}%{_iconsdir}/%{name}.png
-convert -scale 16 marolodaq_icon_edited.jpeg %{buildroot}%{_miconsdir}/%{name}.png
+convert -scale 128 marolodaq_icon.png %{buildroot}%{_liconsdir}/%{name}.png
+convert -scale 64 marolodaq_icon.png %{buildroot}%{_liconsdir}/%{name}.png
+convert -scale 48 marolodaq_icon.png %{buildroot}%{_liconsdir}/%{name}.png
+convert -scale 32 marolodaq_icon.png %{buildroot}%{_iconsdir}/%{name}.png
+convert -scale 16 marolodaq_icon.png %{buildroot}%{_miconsdir}/%{name}.png
 
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/16x16/apps/
-convert -geometry 16x16 marolodaq_icon_edited.jpeg %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+convert -geometry 16x16 marolodaq_icon.png %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/32x32/apps/
-convert -geometry 32x32 marolodaq_icon_edited.jpeg %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+convert -geometry 32x32 marolodaq_icon.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/48x48/apps/
-convert -geometry 48x48 marolodaq_icon_edited.jpeg %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+convert -geometry 48x48 marolodaq_icon.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/64x64/apps/
+convert -geometry 64x64 marolodaq_icon.png %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/128x128/apps/
+convert -geometry 128x128 marolodaq_icon.png %{buildroot}%{_iconsdir}/hicolor/128x128/apps/%{name}.png
 
 rm -fr %buildroot/usr/local
 
