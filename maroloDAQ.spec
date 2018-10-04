@@ -24,9 +24,9 @@ BuildRequires:	icoutils
 BuildRequires:	imagemagick
 BuildRequires:	qt5serialport-devel >= 5.9.4
 BuildRequires:	grace-devel
-Requires:	lib64qt5serialport5 >= 5.9.4
-Requires:	lib64qt5gui5 >= 5.9.4
-Requires:	lib64qt5xcbqpa5 >= 5.9.4
+Requires:	qt5serialport5 >= 5.9.4
+Requires:	qt5gui5 >= 5.9.4
+Requires:	qt5xcbqpa5 >= 5.9.4
 Requires:	grace
 
 %description
