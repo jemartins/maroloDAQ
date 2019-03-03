@@ -37,7 +37,7 @@ all:
 	@echo "$(PROJECT) $(TASK) build <all> starting"
 	@echo `date`
 	@cd $(SRC_DIR); make -i
-	@cd $(TEST_DIR); make -i
+	#@cd $(TEST_DIR); make -i
 	@echo "$(PROJECT) $(TASK) <all> done"
 	@echo `date`
 
@@ -57,6 +57,6 @@ install:
 	@echo "$(PROJECT) $(TASK) build <install> starting"
 	@echo `date`
 	@cd $(SRC_DIR); make -i install
-	@cd $(TEST_DIR); make -i install
+	#@cd $(TEST_DIR); make -i install
 	@echo "$(PROJECT) $(TASK) <install> done"
 	@echo `date`

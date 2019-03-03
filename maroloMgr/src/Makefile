@@ -52,7 +52,8 @@ SIMPL_DIR=$(SIMPL_HOME)
 INSTALL_BIN_DIR=../../bin
 
 LOCAL_INCL_DIR=../include
-INCL_DIR=../../include
+#INCL_DIR=../../include
+INCL_DIR=../include
 PICO_INCL_DIR=../../../pico
 SIMPL_INCL_DIR=$(SIMPL_DIR)/include
 
