@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 int main(int argc, char *argv[])
 {
@@ -69,35 +69,42 @@ int main(int argc, char *argv[])
     SerialPortSettings.c_oflag &= ~OPOST;/*No Output Processing*/
     
     /* Setting Time outs */
-    SerialPortSettings.c_cc[VMIN] = 10; /* Read at least 10 characters */
-    SerialPortSettings.c_cc[VTIME] = 0; /* Wait indefinetly   */
+    SerialPortSettings.c_cc[VMIN] = 20; /* Read at least 10 characters */
+    SerialPortSettings.c_cc[VTIME] = 1; /* Wait indefinetly   */
     
     
     if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) /* Set the attributes to the termios structure*/
         printf("\n  ERROR ! in Setting attributes");
     else
-        printf("\n  BaudRate = 9600 \n  StopBits = 1 \n  Parity   = none");
+        printf("\n  BaudRate = 9600 \n  StopBits = 1 \n  Parity   = none \n");
     
     /*------------------------------- Read data from serial port -----------------------------*/
     
     tcflush(fd, TCIFLUSH);   /* Discards old data in the rx buffer            */
     /* Send byte to trigger Arduino to send string back */
-    char buf_call[] = "14\n";
-    char buf_read[20];
+    //char buf_call[] = "14\n";
+    char buf_read[256];
     //strncpy(buf_call, "14", sizeof(buf_call));
     //buf_call[sizeof(buf_call)] = '\n';
-    printf("AQUI buf_call = %s", buf_call);
+    //printf("  AQUI buf_call = %s", buf_call);
     //tcflush(fd, TCIFLUSH);
-    write(fd, buf_call, sizeof(buf_call));
+    //write(fd, buf_call, sizeof(buf_call));
     
-    printf("AQUI passou write, buf_call = %s", buf_call);
+    const char* str="14\n";
+    int len = strlen(str);
+    n = write(fd, str, len);
+    if( n!=len ) {
+        perror("serialport_write: couldn't write whole string\n");
+    }
+
+    //printf("  AQUI passou write, buf_call = %s", buf_call);
     /* Receive string from Arduino */
     n = read(fd, &buf_read, 20);
-    printf("AQUI passou read\n");
+    //printf("    AQUI passou read\n");
     /* insert terminating zero in the string */
-    //buf_read[n] = 0;
+    buf_read[n] = 0;
     
-    printf("%i bytes read, buffer contains: %s\n", n, buf_read);
+    printf("  %i bytes read, buffer contains: %s\n", n, buf_read);
     
     if(DEBUG)
     {
