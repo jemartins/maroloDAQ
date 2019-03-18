@@ -60,7 +60,8 @@ SIMPL_INCL_DIR=$(SIMPL_DIR)/include
 PICO_MGR_OBJECT =\
 	$(OBJ_DIR)/picoMgr.o\
 	$(OBJ_DIR)/picoMgrInit.o\
-	$(OBJ_DIR)/picoMgrUtils.o
+	$(OBJ_DIR)/picoMgrUtils.o\
+	$(OBJ_DIR)/arduino-serial-lib.o
 
 CDFLAGS=-c\
 	-Wall \
@@ -133,6 +134,10 @@ $(OBJ_DIR)/picoMgrUtils.o : picoMgrUtils.c
 $(OBJ_DIR)/rpcFuncs.o : rpcFuncs.c
 	@make -s description PROGRAM_NAME="$<" OBJ_NAME="$@"
 	$(CC) $(CDFLAGS) -o $(OBJ_DIR)/rpcFuncs.o rpcFuncs.c
+
+$(OBJ_DIR)/arduino-serial-lib.o : arduino-serial-lib.c
+	@make -s description PROGRAM_NAME="$<" OBJ_NAME="$@"
+	$(CC) $(CDFLAGS) -o $(OBJ_DIR)/arduino-serial-lib.o arduino-serial-lib.c
 
 #========================
 # cleanup

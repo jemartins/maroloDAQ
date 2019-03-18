@@ -1,9 +1,3 @@
-//
-// arduino-serial-lib -- simple library for reading/writing serial ports
-//
-// 2006-2013, Tod E. Kurt, http://todbot.com/blog/
-//
-
 #include "arduino-serial-lib.h"
 
 #include <stdio.h>    // Standard input/output definitions 

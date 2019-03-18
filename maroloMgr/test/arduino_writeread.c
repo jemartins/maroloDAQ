@@ -1,8 +1,3 @@
-/*
- * read write on arduino.
- * ref.: https://stackoverflow.com/questions/17675127/reading-from-a-serial-port-after-writing-on-it
-*/
-
 #include<string.h>
 #include<stdlib.h>
 #include<stdio.h>

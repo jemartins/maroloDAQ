@@ -1,16 +1,3 @@
-/* www.chrisheydrick.com
- *     
- *   June 23 2012
- * 
- *   CanonicalArduinoRead write a byte to an Arduino, and then
- *   receives a serially transmitted string in response.
- * 
- *   The call/response Arduino sketch is here:
- *   https://gist.github.com/2980344
- * 
- *   Arduino sketch details at www.chrisheydrick.com
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
