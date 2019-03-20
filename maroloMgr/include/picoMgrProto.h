@@ -61,6 +61,7 @@ int turnLedOff();
 int turnLedOn();
 
 int drdaq_open(int);
+int marolo_open();
 
 int readWaveForm();
 int readSoundLevel();

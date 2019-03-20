@@ -15,6 +15,16 @@
 #include "picoMgrProto.h"
 #include "loggerProto.h"
 
+// arduino-serial
+#include <stdio.h>    // Standard input/output definitions
+#include <stdlib.h>
+#include <string.h>   // String function definitions
+#include <unistd.h>   // for usleep()
+#include <getopt.h>
+
+#include "arduino-serial-lib.h"
+
+
 /*============================================
 	turnLedOn - entry point
 ============================================*/
@@ -44,7 +54,7 @@ int turnLedOff()
 {
 static char *fn="turnLedOff";
 int value;
-int rc;
+//int rc;
 
 fcLogx(__FILE__, fn,
 	globalMask,
@@ -55,9 +65,56 @@ fcLogx(__FILE__, fn,
       value = 0 * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
       ioctl (picofd, IOCTL_PICO_SET_DIGITAL_OUT, &value);
 
-return(rc);
+//return(rc);
+return(0);
 
 } // turnLedOff
+
+//
+void error(char* msg)
+{
+    fprintf(stderr, "%s\n",msg);
+    exit(EXIT_FAILURE);
+}
+
+int marolo_open() {
+static char *fn="marolo_open";
+    const int buf_max = 256;
+
+    int fd = -1;
+    char serialport[buf_max];
+    strcpy(serialport, "/dev/ttyACM0");
+    int baudrate = 9600;  // default
+    char quiet=1;
+    //char eolchar = '\n';
+    //int timeout = 5000;
+    //char buf[buf_max];
+    //int rc,n;
+fcLogx(__FILE__, fn,
+        globalMask,
+        PICOMGR_FUNC_IO,
+        "ding 1"
+        );
+                if( fd!=-1 ) {
+                serialport_close(fd);
+                if(!quiet) printf("closed port %s\n",serialport);
+            }
+           
+            fd = serialport_init(serialport, baudrate);
+            if( fd==-1 ) error("couldn't open port");
+            if(!quiet) printf("opened port %s\n",serialport);
+	    sleep(2);
+            serialport_flush(fd);
+
+fcLogx(__FILE__, fn,
+        globalMask,
+        PICOMGR_FUNC_IO,
+        "opened port %s - fd=%i\n", serialport, fd
+        );
+	//exit(EXIT_SUCCESS);
+	return(fd);
+}
+
 
 /****************************************************************************
  *

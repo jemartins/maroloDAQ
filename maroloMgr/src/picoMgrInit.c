@@ -25,7 +25,7 @@ static char *fn="initialize";
 int i;                          /* loop variable */
 char myName[32];
 int myslot;
-int value;
+//int value;
 
 globalMask=0xff;
 myName[0]=0;
@@ -112,15 +112,21 @@ fcLogx(__FILE__, fn,
 	globalMask);
 
 // default state of LED
-ledState = 0;
-turnLedOff();
+//ledState = 0;
+//turnLedOff();
 
 // open the fd to driver
-picofd=drdaq_open(0);
+//picofd=drdaq_open(0);
+picofd=marolo_open();
+
+fcLogx(__FILE__, fn,
+	PICOMGR_MARK,	// force it to log
+	PICOMGR_MARK,
+  	"picofd =  %d", picofd);
 
 // set some stuff in driver
-ioctl (picofd, IOCTL_PICO_GET_VERSION, &value);
-
+//ioctl (picofd, IOCTL_PICO_GET_VERSION, &value);
+/*
 fcLogx(__FILE__, fn,
 	PICOMGR_MARK,	// force it to log
 	PICOMGR_MARK,
@@ -128,8 +134,8 @@ fcLogx(__FILE__, fn,
 
 value = PRODUCT_DRDAQ;
 ioctl (picofd, IOCTL_PICO_SET_PRODUCT, &value);
-
-// 
+*/
+ 
 for (i=0; i<128; i++) {
         routingTable[i].picoReaderPending=NULL;
         routingTable[i].stopFlag=0;

@@ -1,0 +1,99 @@
+#!/bin/bash
+# drdaq-server
+# 
+# autor: José Eduardo Martins
+#        jemartins@fis.unb.br
+##################################################
+
+DESC="DrDAQ Application project"
+
+if [ ! -d $HOME/tmp ]; then
+  mkdir $HOME/tmp
+fi
+
+if [ ! -d $HOME/.drdaq ]; then
+  mkdir $HOME/.drdaq
+  mkdir $HOME/.drdaq/fifo
+fi
+
+# set this two vars to your drdaq and simpl installation tree
+#export DRDAQ_HOME=/usr/lib/drdaq
+#export SIMPL_HOME=/usr/lib/simpl
+
+WORK_DIR=$HOME/.drdaq
+export FIFO_PATH=$WORK_DIR/fifo
+OUTFILE=$WORK_DIR/drdaq.log
+
+#NAMESERVER=10.41.10.169
+
+#
+# bulk of script goes here
+# 
+
+echo "==============================" > $OUTFILE
+echo $DESC >>  $OUTFILE
+date >> $OUTFILE
+echo "==============================" >> $OUTFILE
+echo "" >> $OUTFILE
+
+kill_process > /dev/null 2>&1
+
+cd $SIMPL_HOME/bin
+
+./protocolRouter &
+./surrogateTcp &
+./fclogger -n LOGGER > $OUTFILE &
+
+#cd $DRDAQ_HOME/bin
+cd $maroloDAQ_HOME/maroloMgr/bin
+
+./picoMgr \
+        -n PICOMGR\
+        -l LOGGER &
+
+cd $DRDAQ_HOME/nameServer/bin
+./nameServer \
+        -n NAMESERVER \
+	-g PICOGUI \
+	-r PICOREADER \
+        -l LOGGER
+
+kill_process > /dev/null 2>&1
+
+function kill_process { 
+
+	$SIMPL_HOME/bin/fcslay NAMESERVER
+	$SIMPL_HOME/bin/fcslay PICOMGR	
+	$SIMPL_HOME/bin/fcslay LOGGER
+
+	process=$(ps ax | grep logger | awk '{print $1}')
+	for i in $process; do > /dev/null 2>&1
+		kill -9 $i  > /dev/null 2>&1
+	done
+
+	process=$(ps ax | grep protocolRouter | awk '{print $1}')
+	for i in $process; do > /dev/null 2>&1
+		kill -9 $i > /dev/null 2>&1
+	done
+
+	process=$(ps ax | grep surrogateTcp | awk '{print $1}')
+	for i in $process; do > /dev/null 2&>1
+		kill -9 $i > /dev/null 2>&1
+	done
+
+	process=$(ps ax | grep picoReader | awk '{print $1}')
+	for i in $process; do > /dev/null 2&>1
+		kill -9 $i > /dev/null 2>&1
+	done
+
+	process=$(ps ax | grep picoMgr | awk '{print $1}')
+	for i in $process; do > /dev/null 2&>1
+		kill -9 $i > /dev/null 2>&1
+	done
+
+	process=$(ps ax | grep nameServer | awk '{print $1}')
+	for i in $process; do > /dev/null 2&>1
+		kill -9 $i > /dev/null 2>&1
+	done
+
+}
