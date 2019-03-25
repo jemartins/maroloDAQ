@@ -43,8 +43,7 @@ void error(char* msg)
 
 int main(int argc, char *argv[])
 {
-    const int buf_max = 256;
-
+    //const int buf_max = 256;
     int fd = -1;
     char serialport[buf_max];
     int baudrate = 9600;  // default

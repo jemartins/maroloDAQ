@@ -71,7 +71,7 @@ int readPH();
 int readTemperature();
 int readLight();
 float readAngle();
-
+int readMarolo(int CALL);
 int scale_light();
 int scale_temp();
 int scale_sound();

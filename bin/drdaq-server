@@ -49,14 +49,14 @@ cd $maroloDAQ_HOME/maroloMgr/bin
 
 ./picoMgr \
         -n PICOMGR\
-        -l LOGGER &
+        -l LOGGER > /dev/null 2>&1 &
 
 cd $DRDAQ_HOME/nameServer/bin
 ./nameServer \
         -n NAMESERVER \
 	-g PICOGUI \
 	-r PICOREADER \
-        -l LOGGER
+        -l LOGGER 
 
 kill_process > /dev/null 2>&1
 

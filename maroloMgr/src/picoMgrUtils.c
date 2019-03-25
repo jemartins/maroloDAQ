@@ -6,7 +6,7 @@
 #include <sys/ioctl.h>
 #include <math.h>
 
-#include "pico_lnx.h"
+//#include "pico_lnx.h"
 
 #define _ALLOC extern
 #include "picoMgr.h"
@@ -31,7 +31,7 @@
 int turnLedOn()
 {
     static char *fn="turnLedOn";
-    int value;
+    //int value;
     int rc=0;
     
     fcLogx(__FILE__, fn,
@@ -40,8 +40,8 @@ int turnLedOn()
            "ding"
     );
     
-    value = 1 * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
-    ioctl (picofd, IOCTL_PICO_SET_DIGITAL_OUT, &value);
+    //value = 1 * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
+    //ioctl (picofd, IOCTL_MAROLO_SET_DIGITAL_OUT, &value);
     
     return(rc);
     
@@ -53,7 +53,7 @@ int turnLedOn()
 int turnLedOff()
 {
     static char *fn="turnLedOff";
-    int value;
+    //int value;
     //int rc;
     
     fcLogx(__FILE__, fn,
@@ -62,8 +62,8 @@ int turnLedOff()
            "ding"
     );
     
-    value = 0 * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
-    ioctl (picofd, IOCTL_PICO_SET_DIGITAL_OUT, &value);
+    //value = 0 * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
+    //ioctl (picofd, IOCTL_MAROLO_SET_DIGITAL_OUT, &value);
     
     //return(rc);
     return(0);
@@ -89,7 +89,6 @@ int marolo_open() {
         "/dev/ttyACM3"\
     };
     static char *fn="marolo_open";
-    //const int buf_max = 256;
     const int buf_max = 20;
     int fd = -1;
     char serialport[buf_max];
@@ -110,7 +109,7 @@ int marolo_open() {
             serialport_flush(fd);
             strcpy(buf,"12\n");
             rc = serialport_write(fd, buf);
-            if(rc==-1) error("error writing");
+            if(rc==-1) error("error writing"); 
             sleep(1);
             memset(buf,0,buf_max);
             serialport_read_until(fd, buf, eolchar, buf_max, timeout);
@@ -120,9 +119,10 @@ int marolo_open() {
             devinfo[1] = buf_split;
             if (devinfo[1]!=NULL) {
                 strcpy(serialport, serialavailable[i]);
+	    	serialport_close(fd);
             }
+	    serialport_close(fd);
         }
-        
     }
     fd = serialport_init(serialport, baudrate);
     if( fd==-1 ) error("couldn't open port");
@@ -149,375 +149,35 @@ int marolo_open() {
     return(fd);
 }
 
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-int drdaq_open (int lp)
-{
-    static 		char *fn="drdaq_open";
-    int 		file;
-    char 		dev_name [20];
-    
-    /* 
-     * Open the device for this printer port
-     */
-    sprintf (dev_name, "/dev/picopar%d", lp);
-    file = open (dev_name, 0);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "open device"
-    );
-    
-    return file;
-}
-
 /********************************************************************
  * 
  ********************************************************************/
 
-int readWaveForm(int set_value)
+int readMarolo(int myCALL)
 {
-    static char *fn="readWaveForm";
-    int value;
-    int waveform;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = 1; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read wave in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to dB
-    waveform = value;
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "waveform=%d set_value=%d",
-           waveform, set_value
-    );
-    
-    return waveform;
-}
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readSoundLevel(int set_value)
-{
-    static char *fn="readSoundLevel";
-    int value;
-    int soundlevel;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = 3; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read soundlevel in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to dB
-    soundlevel = scale_sound(value);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "soundlevel=%d set_value=%d",
-           soundlevel, set_value
-    );
-    
-    return soundlevel;
-}
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readVoltage(int set_value)
-{
-    static char *fn="readVoltage";
-    int value;
-    int voltage;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = 4; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read voltage in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to mV
-    if (set_value == 4) {
-        voltage = (value * 5000)/4095;
-    } else {
-        voltage = (value * 2500)/4095;
-    }
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "voltage=%d set_value=%d",
-           voltage, set_value
-    );
-    
-    return voltage;
-}
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readResistance(int set_value)
-{
-    static char *fn="readResistance";
-    int value;
-    int resistance;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
+    static char *fn="readMarolo";
+    int adcReading;
     
     //value = ?; // internal sensor
     //value = 5; // conector EXT1
     //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read resistence in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to dB
-    resistance = value;
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "resistance=%d set_value=%d",
-           resistance, set_value
-    );
-    
-    return resistance;
-}
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readPH(int set_value)
-{
-    static char *fn="readPH";
-    int value;
-    int ph;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = ?; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
+    //value = set_value;
     
     // read ph in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
+    //ioctl(picofd, IOCTL_MAROLO_GET_VALUE, &value);
+    //value = 9999;
     // convert ADC units to dB
-    ph = value;
+    adcReading = 9999;
     
     fcLogx(__FILE__, fn,
            globalMask,
            PICOMGR_FUNC_IO,
-           "PH=%d set_value=%d",
-           ph, set_value
+           "AdcReading=%d myCALL=%s",
+           adcReading, myCALL
     );
     
-    return ph;
+    return adcReading;
 }
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readTemperature(int set_value)
-{
-    static char *fn="readTemperature";
-    int value;
-    int temperature;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = 11; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read temperature in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to C degree
-    temperature = scale_temp(value);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "temperature=%d set_value=%d",
-           temperature, set_value
-    );
-    
-    return temperature;
-}
-
-/********************************************************************
- * 
- ********************************************************************/
-
-int readLight(int set_value)
-{
-    static char *fn="readLight";
-    int value;
-    int light;
-    
-    // Set scale ADC
-    value = SCALE_ADC;
-    ioctl(picofd, IOCTL_PICO_SET_SCALE, &value);
-    
-    // Set read mode to double
-    value = READ_MODE_DOUBLE;
-    ioctl(picofd, IOCTL_PICO_SET_READ_MODE, &value);
-    
-    //value = 6; // internal sensor
-    //value = 5; // conector EXT1
-    //value = 10; // conector EXT2
-    value = set_value;
-    
-    // read light in ADC units
-    ioctl(picofd, IOCTL_PICO_GET_VALUE, &value);
-    
-    // convert ADC units to 
-    light = scale_light(value);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "light=%d set_value=%d",
-           light, set_value
-    );
-    
-    return light;
-}
-
-float readAngle(int set_value, int sensor)
-{
-    static char *fn="readAngle";
-    
-    int voltage;
-    float angle;
-    
-    float a;
-    float b;
-    float pi=3.1415926;
-    float v0;
-    float v1;
-    float teta0;
-    float teta1;
-    
-    v0 = (float)calibrationArray[0][sensor].voltage;	
-    v1 = (float)calibrationArray[1][sensor].voltage;
-    teta0 = (float)(calibrationArray[0][sensor].angle);
-    teta1 = (float)(calibrationArray[1][sensor].angle);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "teta0=%5.2f teta1=%5.2f",
-           teta0, teta1
-    );
-    
-    teta0 = (teta0)*(pi/180); // conversion to rad
-    teta1 = (teta1)*(pi/180); // conversion to rad
-    
-    a = (v0-v1)/(sin(teta0)-sin(teta1));
-    b = v0-a*sin(teta0);
-    
-    voltage = readVoltage(set_value);
-    
-    // Here, conversion voltage into degree
-    angle = (180/pi)*asin((voltage-b)/a);
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "pi=%5.7f v0=%5.2f v1=%5.2f",
-           pi, v0, v1
-    );
-    
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "a=%5.2f b=%5.2f",
-           a, b
-    );
-    
-    fcLogx(__FILE__, fn,
-           globalMask,
-           PICOMGR_FUNC_IO,
-           "angle=%f sensor=%d set_value=%d voltage=%d",
-           angle, 
-           sensor,
-           set_value,
-           voltage
-    );
-    
-    return angle;
-}
-
 /********************************************************************
  * 
  ********************************************************************/
@@ -766,389 +426,6 @@ int scale_light(int adcCount)
     return -1;
 }
 
-/********************************************************************
- * 
- ********************************************************************/
-
-#if 0
-/****************************************************************************
- * 
- * Pico DrDAQ example program
- *
- * Module:       ddtest.c
- *
- * Copyright 2001 Pico Technology Limited
- *
- * Description:
- * This module demonstrates how to access the DrDAQ driver.
- *
- * The following IOCTLs are supported:
- *	IOCTL_PICO_SET_PRODUCT
- *		67 - product is DrDAQ
- *
- * 	IOCTL_PICO_SET_SCALE
- *		SCALE_ADC - return values in ADC counts
- *		SCALE_MV - return values in engineering units, eg degC for temperature
- *
- *	DrDAQ is a 10-bit device, but the driver treats it as a 12-bit device and
- *	returns a value between 0 and 4095. The external inputs accept signals in the 0..2500mV input range.
- *      the driver applies the following conversions:
- *		ADC	mV
- *		0	0
- *		4095    2500
- *
- *	IOCTL_PICO_SET_READ_MODE
- *		READ_MODE_SINGLE - take a single conversion for each call
- *		READ_MODE_DOUBLE - take two conversions for each call
- *
- *	On each conversion, the ADC returns the value of the previous conversion.
- *	If READ_MODE_SINGLE is used, the returned value is the value for the previous call.
- *	This may be acceptable when reading at high speed, but could cause problems
- *	if you take (say) one reading per second.
- *
- *	If READ_MODE_DOUBLE is used, each call takes twice as long, butthe
- *      returned value is the value for the first of the two conversions- ie
- *      it is a current reading, rather than one from the previous call.
- *
- *	IOCTL_PICO_SET_DO
- *		0 - digital output is off
- *		1 - digital output is on
- *		2 - LED is on
- *		3 - LED and digital output are on
- *
- *	IOCTL_PICO_GET_VALUE
- *	  accepts:
- *        	1 - Sound waveform
- *		2 - Sound level
- *		3 - Voltage
- *		4 - Resistance
- *		5 - pH
- *		6 - Temperature
- *		7 - Light
- *		8 - External input 1
- *		9 - External input 2
- *		10 - resistance value for EXT1
- *		11 - resistance value for EXT2
- *	  returns:
- *		adc value or reading in engineering units
- *
- * Revision Info: "file %n date %f revision %v"
- *                "file a11test.c date 11-Feb-95,17:40:10 revision 1"
- *
- ****************************************************************************/
-
-
-#include <stdio.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <asm/ioctl.h>
-
-#include "pico_lnx.h"
-
-#define FALSE 		0
-#define TRUE 		1
-#define MAX_SAMPLES 	1000
-#define MAX_CHANNELS	2      /* No of channels you can record from at once
-* You can increase this if required */
-#define MAX_DRDAQ_CHANNELS 9
-
-
-int	file;
-int	values [MAX_CHANNELS] [MAX_SAMPLES];
-long	times [MAX_SAMPLES];
-int	scale_values = TRUE;
-int	digital_output;
-int	led;
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-int drdaq_open (int lp)
-{
-int 		file;
-char 		dev_name [20];
-int		value;
-
-/* Open the device for this printer port
- */
-sprintf (dev_name, "/dev/pico%d", lp);
-file = open (dev_name, 0);
-return file;
-}
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-void time_readings (void)
-{
-struct timeval 	start;
-struct timeval 	end;
-struct timezone 	tz;
-int			i;
-int			value;
-int			interval;
-
-/* Set single read mode
- *  (fast, but each call gives you get the result of the previous conversion)
- */
-
-value = READ_MODE_SINGLE;
-ioctl (file, IOCTL_PICO_SET_READ_MODE, &value);
-
-gettimeofday (&start, &tz);
-for (i = 0; i < MAX_SAMPLES; i++)
-{
-/* Single read from channel 3
- */
-value = 3;
-ioctl (file, IOCTL_PICO_GET_VALUE, &value);
-values [0] [i] = value;
-}
-gettimeofday (&end, &tz);
-
-interval = end.tv_usec - start.tv_usec;
-if (interval < 0)
-{
-interval += 1000000;
-}
-
-printf ("%d readings in %ld us\n", MAX_SAMPLES, interval);
-}
-
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-void write_block_to_file (void)
-{
-struct timeval 	time;
-struct timezone 	tz;
-int			i;
-int			j;
-int			value;
-int			interval;
-FILE *		out_fp;
-
-printf ("Writing data to drdaq.txt\n");
-
-/* Set single read mode
- *  (fast, but each call gives you get the result of the previous conversion)
- */
-
-value = READ_MODE_SINGLE;
-ioctl (file, IOCTL_PICO_SET_READ_MODE, &value);
-
-for (i = 0; i < MAX_SAMPLES; i++)
-{
-/* This is how to vary the sampling interval...
- *  or omit for full-speed operation
- */
-for (j = 0; j < 1000; j++);
-
-/* Single read  from channels 3 and 5
- *  remember that each ioctl gives the result of the PREVIOUS conversion,
- * So we have to take one extra reading to get the last conversion
- */
-value = 6;
-ioctl (file, IOCTL_PICO_GET_VALUE, &value);
-value = 7;
-ioctl (file, IOCTL_PICO_GET_VALUE, &value);
-values [0] [i] = value;
-value = 7;
-ioctl (file, IOCTL_PICO_GET_VALUE, &value);
-values [1] [i] = value;
-
-gettimeofday (&time, &tz);
-times [i] = time.tv_usec;
-}
-
-out_fp = fopen ("drdaq.txt", "w");
-if (out_fp != NULL)
-{
-for (i = 0; i < MAX_SAMPLES; i++)
-{
-interval = times [i] - times [0];
-if (interval < 0)
-    interval += 1000000;
-
-fprintf (out_fp, "%d %d %d\n", interval, values [0] [i], values [1] [i]);
-}
-fclose (out_fp);
-
-}
-}
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-long get_ms (void)
-{
-struct timeval 	time;
-struct timezone 	tz;
-
-gettimeofday (&time, &tz);
-
-return time.tv_sec * 1000 + time.tv_usec / 1000;
-}
-
-void write_continuous_to_file (void)
-{
-int			i;
-int			j;
-int			value;
-int			start_ms;
-int			next_ms;
-int			ms;
-FILE *		out_fp;
-int			ch;
-
-value = READ_MODE_DOUBLE;
-ioctl (file, IOCTL_PICO_SET_READ_MODE, &value);
-
-out_fp = fopen ("drdaq.txt", "w");
-if (out_fp != NULL)
-{
-start_ms = get_ms ();
-ms = 0;
-next_ms = 0;
-for (i = 0; i < 50; i++)
-{
-while (ms < next_ms)
-{
-ms = get_ms () - start_ms;
-}
-next_ms += 10;
-
-for (ch = 1; ch <= 11; ch++)
-{
-value = ch;
-ioctl (file, IOCTL_PICO_GET_VALUE, &value);
-
-fprintf (out_fp, "%5d", value);
-printf ("%5d", value);
-}
-fprintf (out_fp, "\n");
-printf ("\n");
-}
-
-fclose (out_fp);
-
-}
-}
-
-
-/****************************************************************************
- * 
- *
- ****************************************************************************/
-
-int main (void)
-{
-char 		line [80];
-char		ch;
-int		port;
-int		value;
-
-printf ("Pico DrDAQ example for Linux V1.0\n");
-printf ("Enter printer port (0..2)\n");
-fgets (line, sizeof (line), stdin);
-port = line [0] - '0';
-
-file = drdaq_open (port);
-if (file == 0)
-{
-printf ("Unable to open port\n");
-exit (99);
-}
-
-ioctl (file, IOCTL_PICO_GET_VERSION, &value);
-printf ("Kernel driver version %04x\n", value);
-
-value = PRODUCT_DRDAQ;
-ioctl (file, IOCTL_PICO_SET_PRODUCT, &value);
-
-
-ch = ' ';
-while (ch != 'X')
-{
-printf ("A - switch between ADC values and measurement units\n");
-printf ("D - Toggle the digital output\n");
-printf ("L - Toggle the LED\n");
-printf ("T - timed readings\n");
-printf ("B - write block to file\n");
-printf ("C - write continuous data to file\n");
-printf ("X - exit\n");
-
-fgets (line, sizeof (line), stdin);
-ch = toupper (line [0]);
-switch (ch)
-{
-    case 'A':
-        scale_values = !scale_values;
-        value = scale_values;
-        ioctl (file, IOCTL_PICO_SET_SCALE, &value);
-        if (scale_values)
-        {
-        printf ("Values will be displayed in measurement units\n");
-        }
-        else
-        {
-        printf ("Values will be displayed in ADC counts\n");
-        }
-        break;
-        
-    case 'D':
-        digital_output = !digital_output;
-        value = led * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
-        ioctl (file, IOCTL_PICO_SET_DIGITAL_OUT, &value);
-        if (digital_output)
-        {
-        printf ("Digital output is ON\n");
-        }
-        else
-        {
-        printf ("Digital output is OFF\n");
-        }
-        break;
-        
-    case 'L':
-        led = !led;
-        value = led * DRDAQ_LED + digital_output * DRDAQ_DIGITAL_OUTPUT;
-        ioctl (file, IOCTL_PICO_SET_DIGITAL_OUT, &value);
-        if (led)
-        {
-        printf ("LED is ON\n");
-        }
-        else
-        {
-        printf ("LED is OFF\n");
-        }
-        break;
-        
-    case 'T':
-        time_readings ();
-        break;
-        
-    case 'B':
-        write_block_to_file ();
-        break;
-        
-    case 'C':
-        write_continuous_to_file ();
-        break;
-        }
-        }
-        
-        
-        close (file);
-        
-        return 0;
-        }
-        #endif
         
         
         

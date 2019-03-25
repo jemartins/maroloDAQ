@@ -4,9 +4,10 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
-#include "pico_lnx.h"
+//#include "pico_lnx.h"
 
-#include "drdaqMsgs.h"
+//#include "drdaqMsgs.h"
+#include "maroloMsgs.h"
 
 #define _ALLOC extern
 #include "picoMgr.h"
@@ -161,7 +162,7 @@ void initialize(int argc, char **argv)
            PICOMGR_MARK,
            "device name = <%s>, version = <%s>, picofd = %i",devinfo[1], devinfo[0], picofd);
     
-    //ioctl (picofd, IOCTL_PICO_GET_VERSION, &value);
+    //ioctl (picofd, IOCTL_MAROLO_GET_VERSION, &value);
     /*
      * fcLogx(__FILE__, fn,
      *	PICOMGR_MARK,	// force it to log
@@ -169,7 +170,7 @@ void initialize(int argc, char **argv)
      *  	"Kernel driver version %04x", value);
      * 
      * value = PRODUCT_DRDAQ;
-     * ioctl (picofd, IOCTL_PICO_SET_PRODUCT, &value);
+     * ioctl (picofd, IOCTL_MAROLO_SET_PRODUCT, &value);
      */
     
     for (i=0; i<128; i++) {
