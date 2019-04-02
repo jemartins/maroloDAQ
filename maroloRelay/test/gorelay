@@ -1,0 +1,17 @@
+echo starting relay unit test
+
+MYDIR=`pwd`
+
+cd $SIMPL_HOME/bin
+fclogger -n LOGGER > $MYDIR/junk &
+
+cd $SIMPL_HOME/softwareICs/relay/bin
+relay -n BOBY -l LOGGER &
+sleep 1
+receiverSim -n BOBR -r BOBY -l LOGGER -b &
+relayStim -n BOBS -r BOBY -l LOGGER
+
+echo stopping relay unit test
+$SIMPL_HOME/bin/fcslay BOBR
+$SIMPL_HOME/bin/fcslay BOBY
+$SIMPL_HOME/bin/fcslay LOGGER

@@ -1,0 +1,38 @@
+Relay SIMPL softwareIC.
+
+There are 3 processes involved in this demo of the relay IC.
+	relay - the main relay process
+	relayStim - the process which sends to relay
+	rly_receiverSim - the process which receives the message
+
+======================================
+How to run relay unit testing.
+======================================
+
+You will need one console logged onto 
+
+	$SIMPL_HOME/softwareICs/relay/test
+
+for this test.
+
+You will need to run the startup script:
+
+	gorelay
+
+This will startup the following processes:
+	fclogger - trace logger
+	relay
+	rly_receiverSim
+	relayStim
+
+You can terminate this script with a <ctrl C> or by entering "q" at the
+-> relayStim prompt.
+
+At the -> relayStim prompt you can try entering the following 
+-> ?   - this will display all the relayStim UI options
+-> t hi - this will send this message to the relay and on to the recvr 
+-> q - this will cause the relayStim to terminate gently
+
+NOTE:
+The trace logger output is being routed to file
+	$SIMPL_HOME/bin/junk
