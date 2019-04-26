@@ -33,7 +33,7 @@ typedef enum
     MAROLO_LED,
     MAROLO_INFO,
     MAROLO_VERSION,
-    MAROLO_WHAT_READINGS,
+    MAROLO_DO_READING,
     MAX_NUM_MAROLO_TOKENS
 }MAROLO_TOKEN;
 
@@ -58,7 +58,7 @@ typedef enum
 typedef struct 
 {
     MAROLO_TOKEN token;	// MAROLO_WHAT_YA_GOT
-    int ID;
+    //int ID;
 }MAROLO_WHAT_YA_GOT_MSG;
 
 typedef struct 

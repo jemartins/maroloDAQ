@@ -109,7 +109,7 @@ int main(int argc, char **argv)
             break;
 	    case MAROLO_INFO:
 	    case MAROLO_VERSION:
-            case MAROLO_WHAT_READINGS:
+            case MAROLO_DO_READINGS:
             {
                 int myvalue;
                 
