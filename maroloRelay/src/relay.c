@@ -84,80 +84,50 @@ int main(int argc, char **argv, char **envp)
     while(!x_it)
     {
         MAROLO_WHAT_YA_GOT_MSG *outMsg;
-        //MAROLO_WHAT_YA_GOT_MSG *inMsg;
-        
-        //inMsg=(MAROLO_WHAT_YA_GOT_MSG *)inArea;
         outMsg=(MAROLO_WHAT_YA_GOT_MSG *)outArea;
-        
         outMsg->token=MAROLO_WHAT_YA_GOT;
-        //outMsg->token=1;
-        Send(picoMgrID, outArea, NULL, sizeof(MAROLO_WHAT_YA_GOT_MSG), MAX_NUM_MAROLO_TOKENS);
         
-        token=(UINT16 *)inArea;
+        Send(maroloMgrID, outArea, NULL, sizeof(MAROLO_WHAT_YA_GOT_MSG), MAX_NUM_MAROLO_TOKENS);
         
         nbytes = Receive(&sender, inArea, MAX_MSG_SIZE);
         
         switch(*token)
         {
-            case RELAY_REGISTER:
+            case MAROLO_DO_READING:
             {
-                RELAY_REGISTER_MSG *inMsg;
                 
-                inMsg=(RELAY_REGISTER_MSG *)inArea;
+                MAROLO_DO_READING_MSG *inMsg;
+                inMsg=(MAROLO_DO_READING_MSG *)inArea;
+                
+                //MAROLO_DO_READING_MSG *outMsg;
+                //outMsg=(MAROLO_DO_READING_MSG *)outArea;
+                
+                //outMsg->ID=inMsg->ID;
+                //outMsg->call=inMsg->call;
                 
                 fcLogx(__FILE__, fn,
                        globalMask,
                        RELAY_MISC,
-                       "REGISTER name=<%s>",
-                       inMsg->myName
+                       "ID=<%d> CALL<%s>", inMsg->ID,0
+                       outMsg->call
                 );
                 
-                #if 0
-                printf("%s: REGISTER name=<%s>\n",
-                fn,
-                inMsg->myName);
-                #endif
-                
-                if(recvID != -1) close(recvID);
-                
-                recvID=name_locate(inMsg->myName);
-                if(recvID == -1)
-                {
-                    printf("%s: can't locate %s\n",
-                           fn,inMsg->myName);
-                    exit(0);
-                }
-                
-                Reply(sender,NULL,0);
-            }
-            break;
-            
-            case RELAY_TEST:
-            {
-                if(recvID != -1)
+                if(maroloMgrID != -1)
                 {
                     int rbytes;
                     
                     fcLogx(__FILE__, fn,
                            globalMask,
                            RELAY_MISC,
-                           "TEST message being relayed to recv at slot=%d",
-                           recvID
+                           "message being relayed to maroloMgr at slot=%d",
+                           maroloMgrID
                     );
                     
-                    rbytes=Send(recvID, inArea, inArea, nbytes, MAX_MSG_SIZE);
+                    rbytes=Send(maroloMgrID, inArea, inArea, nbytes,rbytes);
                     
                     Reply(sender,inArea,rbytes);
                 }
-                else
-                {
-                    RELAY_ERROR_MSG *outMsg;
-                    
-                    outMsg=(RELAY_ERROR_MSG *)outArea;
-                    outMsg->token = RELAY_ERROR;
-                    
-                    Reply(sender,outArea,sizeof(RELAY_ERROR_MSG));
-                }
+                
             }
             break;
             
