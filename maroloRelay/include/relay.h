@@ -48,8 +48,8 @@ _ALLOC unsigned int globalMask;
 #define RELAY_MISC		0x00000010
 
 _ALLOC char recv_name[20];
-_ALLOC int recvID;
-_ALLOC int picoMgrID;
+_ALLOC int RecvHomeID;
+_ALLOC int RecvDestID;
 
 _ALLOC char inArea[MAX_MSG_SIZE];
 _ALLOC char outArea[MAX_MSG_SIZE];

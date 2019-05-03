@@ -51,7 +51,6 @@
 #include <sys/time.h>
 #endif
 
-#include "relayMsgs.h"
 #include "maroloMsgs.h"
 
 #define _ALLOC
@@ -69,9 +68,7 @@ int main(int argc, char **argv, char **envp)
 {
     static char *fn="relay";
     int x_it=0;
-    int nbytes;			
-    char *sender;
-    UINT16 *token;
+    int nbytes;
     
     initialize(argc, argv);
     
@@ -83,73 +80,20 @@ int main(int argc, char **argv, char **envp)
     
     while(!x_it)
     {
-        MAROLO_WHAT_YA_GOT_MSG *outMsg;
-        outMsg=(MAROLO_WHAT_YA_GOT_MSG *)outArea;
-        outMsg->token=MAROLO_WHAT_YA_GOT;
-        
-        Send(maroloMgrID, outArea, NULL, sizeof(MAROLO_WHAT_YA_GOT_MSG), MAX_NUM_MAROLO_TOKENS);
-        
-        nbytes = Receive(&sender, inArea, MAX_MSG_SIZE);
-        
-        switch(*token)
+        if(RecvHomeID != -1)
         {
-            case MAROLO_DO_READING:
-            {
-                
-                MAROLO_DO_READING_MSG *inMsg;
-                inMsg=(MAROLO_DO_READING_MSG *)inArea;
-                
-                //MAROLO_DO_READING_MSG *outMsg;
-                //outMsg=(MAROLO_DO_READING_MSG *)outArea;
-                
-                //outMsg->ID=inMsg->ID;
-                //outMsg->call=inMsg->call;
-                
-                fcLogx(__FILE__, fn,
-                       globalMask,
-                       RELAY_MISC,
-                       "ID=<%d> CALL<%s>", inMsg->ID,0
-                       outMsg->call
-                );
-                
-                if(maroloMgrID != -1)
-                {
-                    int rbytes;
-                    
-                    fcLogx(__FILE__, fn,
-                           globalMask,
-                           RELAY_MISC,
-                           "message being relayed to maroloMgr at slot=%d",
-                           maroloMgrID
-                    );
-                    
-                    rbytes=Send(maroloMgrID, inArea, inArea, nbytes,rbytes);
-                    
-                    Reply(sender,inArea,rbytes);
-                }
-                
-            }
-            break;
+            MAROLO_WHAT_YA_GOT_MSG *outMsg;
+            outMsg=(MAROLO_WHAT_YA_GOT_MSG *)outArea;
+            outMsg->token=MAROLO_WHAT_YA_GOT;
             
-            default:
-            {
-                RELAY_ERROR_MSG *outMsg;
-                
-                outMsg=(RELAY_ERROR_MSG *)outArea;
-                outMsg->token = RELAY_ERROR;
-                
-                Reply(sender,outArea,sizeof(RELAY_ERROR_MSG));
-                
-                fcLogx(__FILE__, fn,
-                       globalMask,
-                       RELAY_MARK,
-                       "unknown token=%d",
-                       *token
-                );
-                printf("%s:unknown token=%d\n",fn,*token);
-            }
-            break;
-        } // end switch
+            nbytes=Send(RecvHomeID, outArea, inArea, sizeof(MAROLO_WHAT_YA_GOT_MSG), 8192);
+        }
+        
+        if(RecvDestID != -1)
+        {
+            Send(RecvDestID, inArea, NULL, nbytes, 0);
+        }
+        
     } // end while
     
     fcLogx(__FILE__, fn,
