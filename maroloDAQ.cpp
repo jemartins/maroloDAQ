@@ -1349,8 +1349,7 @@ void maroloDAQ::closeEvent(QCloseEvent *event) {
 }
 
 bool maroloDAQ::maybeSave() {
-    if (!ui->teLog->document()->isModified()) 
-        return true;
+    if (!ui->teLog->document()->isModified()) return true;
         const QMessageBox::StandardButton ret = \
         QMessageBox::warning(this, tr("maroloDAQ"), \
         tr("Os Dados Foram Modificados.\n" \
