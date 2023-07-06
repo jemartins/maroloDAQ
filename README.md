@@ -21,7 +21,7 @@ O Software, desenvolvido com o framework Qt, configura os parâmetros de sensori
 
 <ol>
 <li>Instale as dependência para compilar programas com QT 5, QSerial e Grace devel</li>
-<li>clone o repositorio: git clone https://github.com/jemartins/maroloDAQ</li>
+<li>Download código em https://github.com/jemartins/maroloDAQ/releases/tag/1.0.0-0.rc2
 <li>cd maroloDAQ.v????</li>
 <li>qmake</li>
 <li>make</li>
