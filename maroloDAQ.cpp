@@ -756,13 +756,13 @@ bool maroloDAQ::validarEntradas() {
                     return false;
                 } else {
                     if (ui->cbSensorList->currentText() == "Pêndulo") {
-                        if (ui->editAngulo1->text() == NULL) {
+                        if (ui->editAngulo1->text() == nullptr) {
                             QMessageBox::warning(this, tr("maroloDAQ"),                                                                             tr("Por favor, digite o Valor do ângulo e Tecle OK. \n"
                             "Digite \"ponto\" para os decimais"));
                             ui->editAngulo1->setFocus();
                             return false;
                         } else {
-                            if (ui->editAngulo2->text() == NULL) {
+                            if (ui->editAngulo2->text() == nullptr) {
                                 QMessageBox::warning(this, tr("maroloDAQ"),                                                 tr("Por favor, digite o Valor do ângulo e Tecle OK. \n"
                                 "Digite \"ponto\" para os decimais"));
                                 ui->editAngulo2->setFocus();
