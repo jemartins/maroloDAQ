@@ -35,6 +35,8 @@
 #include <QPlainTextEdit>
 #include "comserial.h"
 #include <grace_np.h>
+#include <QElapsedTimer>
+#include <QTimer>
 
 namespace Ui {
 class maroloDAQ;
@@ -77,6 +79,8 @@ private slots:
     bool validarEntradas();
     QString ReadData();
     void doReadings();
+    void handleNextReading();
+
     QByteArray infoCALL();
     double scale_temp(double adcCount);
     double readTemperature(QByteArray myCALL);
@@ -128,6 +132,13 @@ private:
 
     QPlainTextEdit *teLog;
     QString curFile;
+    QTimer* m_daqTimer = nullptr;
+    QElapsedTimer m_elapsedTimer;
+    QByteArray m_myCALL;
+    double m_deltaT = 0;
+    double m_Tmax = 0;
+    double m_erroY = 0;
+    int m_ndig = 0;
 
 };
 #endif // PROJMAROLO_H

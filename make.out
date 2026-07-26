@@ -1,33 +1,3 @@
-g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o main.o main.cpp
-g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o maroloDAQ.o maroloDAQ.cpp
-gcc -c -pipe -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o graceutils.o graceutils.c
-/usr/lib64/qt5/bin/moc -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB --include ./moc_predefs.h -I/usr/lib64/qt5/mkspecs/linux-g++ -I/home/jemartins/Projects/maroloDAQ -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I/usr/include/c++/5.5.0 -I/usr/include/c++/5.5.0/x86_64-mageia-linux-gnu -I/usr/include/c++/5.5.0/backward -I/usr/lib/gcc/x86_64-mageia-linux-gnu/5.5.0/include -I/usr/local/include -I/usr/include maroloDAQ.h -o moc_maroloDAQ.cpp
-g++ -c -pipe -std=gnu++0x -O2 -g -pipe -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fno-strict-aliasing -DPIC -fPIC -std=gnu++11 -Wall -W -D_REENTRANT -fPIC -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -I/usr/lib64/qt5/include -I/usr/lib64/qt5/include/QtWidgets -I/usr/lib64/qt5/include/QtGui -I/usr/lib64/qt5/include/QtSerialPort -I/usr/lib64/qt5/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/usr/lib64/qt5/mkspecs/linux-g++ -o moc_maroloDAQ.o moc_maroloDAQ.cpp
-g++ -Wl,-O1 -o maroloDAQ main.o maroloDAQ.o comserial.o graceutils.o moc_maroloDAQ.o   -lQt5Widgets -lQt5Gui -lQt5SerialPort -lQt5Core -lGL -lpthread 
-graceutils.o: In function `OpenGrace':
-/home/jemartins/Projects/maroloDAQ/graceutils.c:6: undefined reference to `GraceOpen'
-graceutils.o: In function `SetEscala':
-/home/jemartins/Projects/maroloDAQ/graceutils.c:15: undefined reference to `GraceIsOpen'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:17: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:18: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:19: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:20: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:21: undefined reference to `GracePrintf'
-graceutils.o:/home/jemartins/Projects/maroloDAQ/graceutils.c:22: more undefined references to `GracePrintf' follow
-graceutils.o: In function `SetSimbolo':
-/home/jemartins/Projects/maroloDAQ/graceutils.c:34: undefined reference to `GraceIsOpen'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:46: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:47: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:48: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:49: undefined reference to `GracePrintf'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:50: undefined reference to `GracePrintf'
-graceutils.o:/home/jemartins/Projects/maroloDAQ/graceutils.c:51: more undefined references to `GracePrintf' follow
-graceutils.o: In function `PlotaGrace':
-/home/jemartins/Projects/maroloDAQ/graceutils.c:68: undefined reference to `GraceIsOpen'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:69: undefined reference to `GracePrintf'
-graceutils.o: In function `GravaDados':
-/home/jemartins/Projects/maroloDAQ/graceutils.c:78: undefined reference to `GraceIsOpen'
-/home/jemartins/Projects/maroloDAQ/graceutils.c:80: undefined reference to `GracePrintf'
-collect2: error: ld returned 1 exit status
-Makefile:163: recipe for target 'maroloDAQ' failed
-make: *** [maroloDAQ] Error 1
+/usr/lib64/qt6/libexec/uic maroloDAQ.ui -o ui_maroloDAQ.h
+g++ -c -pipe -std=gnu++17 -O2 -g -pipe -Wformat -Werror=format-security -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong -m64 -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection=full -fno-strict-aliasing -DPIC -fPIC -Wall -Wextra -D_REENTRANT -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -Iinclude -I/usr/include/qt6 -I/usr/include/qt6/QtWidgets -I/usr/include/qt6/QtGui -I/usr/include/qt6/QtSerialPort -I/usr/include/qt6/QtCore -I. -I. -I/usr/lib64/qt6/mkspecs/linux-g++ -o main.o main.cpp
+g++ -c -pipe -std=gnu++17 -O2 -g -pipe -Wformat -Werror=format-security -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3 -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -fstack-protector-strong -m64 -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection=full -fno-strict-aliasing -DPIC -fPIC -Wall -Wextra -D_REENTRANT -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -I. -Iinclude -I/usr/include/qt6 -I/usr/include/qt6/QtWidgets -I/usr/include/qt6/QtGui -I/usr/include/qt6/QtSerialPort -I/usr/include/qt6/QtCore -I. -I. -I/usr/lib64/qt6/mkspecs/linux-g++ -o maroloDAQ.o maroloDAQ.cpp
